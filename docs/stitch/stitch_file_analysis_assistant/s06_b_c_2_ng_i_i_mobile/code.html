@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "outline-variant": "#ccc3d2", "surface-container-highest": "#e6e2da", "secondary-container": "#aef0da", "primary-fixed-dim": "#d6baff", "surface-bright": "#fdf9f1", "surface-container-lowest": "#ffffff", "error-container": "#ffdad6", "on-tertiary-fixed-variant": "#604100", "on-tertiary-fixed": "#281900", "on-primary": "#ffffff", "surface-container": "#f1ede6", "on-secondary-fixed-variant": "#055141", "tertiary-fixed": "#ffdead", "tertiary-container": "#664500", "tertiary": "#483000", "on-primary-container": "#ceadff", "secondary-fixed-dim": "#93d3bf", "inverse-surface": "#31302b", "surface": "#fdf9f1", "error": "#ba1a1a", "background": "#fdf9f1", "on-secondary-container": "#2f6f5e", "on-primary-fixed": "#280056", "on-background": "#1c1c17", "inverse-primary": "#d6baff", "outline": "#7b7481", "on-error-container": "#93000a", "primary-fixed": "#ecdcff", "on-primary-fixed-variant": "#563587", "on-surface-variant": "#4a4550", "inverse-on-surface": "#f4f0e8", "primary": "#432173", "on-error": "#ffffff", "on-secondary": "#ffffff", "on-tertiary-container": "#e8b358", "secondary": "#286958", "on-secondary-fixed": "#002019", "tertiary-fixed-dim": "#f4bd61", "on-surface": "#1c1c17", "surface-variant": "#e6e2da", "surface-container-high": "#ece8e0", "primary-container": "#5b3a8c", "surface-dim": "#dddad2", "surface-container-low": "#f7f3eb", "on-tertiary": "#ffffff", "secondary-fixed": "#aef0da", "surface-tint": "#6e4da0" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "space-md": "1rem", "gutter-desktop": "1.5rem", "margin-desktop": "3rem", "space-sm": "0.5rem", "margin-tablet": "2rem", "space-lg": "1.5rem", "margin": "1rem" }, "fontFamily": { "label-md": ["Be Vietnam Pro"], "label-lg": ["Be Vietnam Pro"], "headline-sm": ["\"Source Serif 4\""], "display-lg-mobile": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"], "headline-md": ["\"Source Serif 4\""], "body-lg": ["Be Vietnam Pro"], "body-sm": ["Be Vietnam Pro"], "headline-lg-mobile": ["\"Source Serif 4\""], "display-lg": ["\"Source Serif 4\""], "headline-lg": ["\"Source Serif 4\""], "label-sm": ["Be Vietnam Pro"] }, "fontSize": { "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } }</script><style>@layer base { html, body { width: 100%; min-height: 100%; margin: 0; padding: 0; } body { overscroll-behavior-y: none; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface text-on-surface antialiased flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter flex items-center justify-between relative"><button aria-label="Đóng" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-2xl">close</span></button><div class="flex flex-col items-center justify-center"><span class="font-label-md text-label-md tracking-wider text-primary uppercase">Tạo Lịch Trình Bước 2</span></div><div class="flex items-center justify-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div><div class="absolute bottom-0 left-0 w-full h-[3px] bg-surface-container-highest"><div class="h-full bg-primary-container transition-all duration-300" style="width: 33.3333%;"></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface px-gutter"><div class="flex flex-col w-full pb-space-lg">
+<div class="flex items-center gap-space-xs mb-space-sm">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container">
+<span class="material-symbols-outlined text-[16px]">group</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Bước 2 trên 6</span>
+</div>
+</div>
+<div class="mb-space-lg">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb- space-xs">
+      Bạn đi cùng ai?
+    </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+      Thành phần đoàn giúp chúng tôi gợi ý điểm dừng chân, phương tiện và nhịp độ di chuyển phù hợp nhất.
+    </p>
+</div>
+<div aria-label="Lựa chọn người đồng hành" class="flex flex-col gap-space-sm mb-space-xl" id="companion-selector" role="radiogroup">
+<!-- Card 1: Một mình -->
+<div aria-checked="false" class="companion-card relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]" data-count="1" data-hint="Lý tưởng để thong dong dạo bộ hoặc xe máy" data-tip-text="Thong thả thuê một chiếc xe đạp qua cầu dã viên, dạo quanh hồ Tịnh Tâm sáng sớm để cảm nhận trọn vẹn nét u tịch không gian cố đô." data-tip-title="LỜI KHUYÊN DU HÀNH ĐƠN ĐỘC" onclick="selectCompanion(this, 1)" role="radio" tabindex="0">
+<div class="card-icon-box w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-0.5">Một mình</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Tự do khám phá, nhịp điệu tĩnh lặng &amp; linh hoạt</p>
+</div>
+<div class="check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px] text-surface-container">check</span>
+</div>
+</div>
+<!-- Card 2: Cặp đôi (Selected by default) -->
+<div aria-checked="true" class="companion-card relative p-space-md rounded-xl bg-primary-fixed/30 shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]" data-count="2" data-hint="Phù hợp xe 4 chỗ hoặc 2 xe máy" data-tip-text="Nếu đi 2 người, hãy dành một buổi hoàng hôn ngắm cầu Tràng Tiền lên đèn từ bến thuyền sông Hương hoặc các quán cà phê ngắm cổ thành tĩnh mịch." data-tip-title="LỜI KHUYÊN KHI ĐI ĐÔI" onclick="selectCompanion(this, 2)" role="radio" tabindex="0">
+<div class="card-icon-box w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center shrink-0 text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<div class="flex items-center gap-1.5 mb-0.5">
+<h3 class="font-headline-sm text-headline-sm text-primary">Cặp đôi</h3>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">Phổ biến</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Lãng mạn bên sông Hương, quán xá thi vị, góc check-in đôi</p>
+</div>
+<div class="check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-primary-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-primary">check</span>
+</div>
+</div>
+<!-- Card 3: Gia đình có trẻ nhỏ -->
+<div aria-checked="false" class="companion-card relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]" data-count="3" data-hint="Đề xuất taxi 4-7 chỗ để có không gian để xe đẩy" data-tip-text="Nên ưu tiên ghé Đại Nội vào buổi sáng sớm mát mẻ và chọn xe điện di chuyển trong Hoàng thành để các bé đỡ mỏi chân." data-tip-title="LỜI KHUYÊN CHO GIA ĐÌNH NHỎ" onclick="selectCompanion(this, 3)" role="radio" tabindex="0">
+<div class="card-icon-box w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[24px]">escalator_warning</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-0.5">Gia đình có trẻ nhỏ</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Điểm đến an toàn, không gian thoáng đãng, ít bậc thang</p>
+</div>
+<div class="check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px] text-surface-container">check</span>
+</div>
+</div>
+<!-- Card 4: Nhóm bạn -->
+<div aria-checked="false" class="companion-card relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]" data-count="4" data-hint="Rất thích hợp thuê xe 7 chỗ hoặc nhóm xe máy phượt" data-tip-text="Khám phá ẩm thực cồn Hến xế chiều và đặt trước bàn tại các quán chè hẻm nổi tiếng để không phải chờ đợi lâu." data-tip-title="LỜI KHUYÊN CHO HỘI BẠN THÂN" onclick="selectCompanion(this, 4)" role="radio" tabindex="0">
+<div class="card-icon-box w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[24px]">diversity_3</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-0.5">Nhóm bạn</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Trải nghiệm ẩm thực phong phú, check-in rộn ràng, vui vẻ</p>
+</div>
+<div class="check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px] text-surface-container">check</span>
+</div>
+</div>
+<!-- Card 5: Người lớn tuổi -->
+<div aria-checked="false" class="companion-card relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]" data-count="3" data-hint="Đề xuất xe ô tô riêng đưa đón tận cửa điểm tham quan" data-tip-text="Thưởng trà Cung đình yên ả và thăm Chùa Thiên Mụ vào buổi chiều dịu nắng. Giữ nhịp hành trình thư thái, không xếp quá 3 điểm mỗi ngày." data-tip-title="LỜI KHUYÊN ĐOÀN NGƯỜI LỚN TUỔI" onclick="selectCompanion(this, 3)" role="radio" tabindex="0">
+<div class="card-icon-box w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[24px]">elderly</span>
+</div>
+<div class="flex-1 min-w-0 pr-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-0.5">Người lớn tuổi</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Không gian trầm mặc, đường đi êm thuận, hiếu kính thanh tao</p>
+</div>
+<div class="check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[16px] text-surface-container">check</span>
+</div>
+</div>
+</div>
+<!-- Stepper Section -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm mb-space-lg">
+<div class="flex items-center justify-between mb-space-xs">
+<div>
+<h2 class="font-label-lg text-label-lg text-on-surface">Tổng số người</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Không bắt buộc • Bao gồm cả bạn</p>
+</div>
+<div class="flex items-center gap-space-sm bg-surface-container-low px-2 py-1 rounded-full">
+<button aria-label="Giảm số người" class="w-8 h-8 rounded-full bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-sm hover:bg-surface-container active:scale-95 transition-all" onclick="adjustCount(-1)" type="button">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<span class="font-label-lg text-label-lg text-on-surface min-w-[56px] text-center" id="member-display">
+          2 người
+        </span>
+<button aria-label="Tăng số người" class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm hover:bg-primary active:scale-95 transition-all" onclick="adjustCount(1)" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</button>
+</div>
+</div>
+<div class="pt-space-xs flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-secondary">directions_car</span>
+<span class="font-body-sm text-body-sm text-secondary" id="vehicle-hint">
+        Phù hợp xe 4 chỗ hoặc 2 xe máy
+      </span>
+</div>
+</div>
+<!-- Editorial Guide Tip Card -->
+<div class="p-space-md rounded-xl bg-surface-container-high/60 flex items-start gap-space-md relative overflow-hidden">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0 text-on-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[20px]">lightbulb</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-label-sm text-label-sm text-tertiary-container tracking-wider uppercase mb-1" id="editorial-tip-title">
+        Lời khuyên khi đi đôi
+      </h3>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed" id="editorial-tip-text">
+        Nếu đi 2 người, hãy dành một buổi hoàng hôn ngắm cầu Tràng Tiền lên đèn từ bến thuyền sông Hương hoặc các quán cà phê ngắm cổ thành tĩnh mịch.
+      </p>
+</div>
+</div>
+</div>
+<script>
+  let memberCount = 2;
+
+  function updateCountDisplay() {
+    const display = document.getElementById('member-display');
+    if (display) {
+      display.textContent = memberCount + ' người';
+    }
+  }
+
+  function adjustCount(delta) {
+    memberCount = Math.max(1, Math.min(20, memberCount + delta));
+    updateCountDisplay();
+    updateVehicleHintByCount(memberCount);
+  }
+
+  function updateVehicleHintByCount(count) {
+    const hint = document.getElementById('vehicle-hint');
+    if (!hint) return;
+    if (count === 1) {
+      hint.textContent = 'Lý tưởng để thong dong dạo bộ hoặc xe máy';
+    } else if (count === 2) {
+      hint.textContent = 'Phù hợp xe 4 chỗ hoặc 2 xe máy';
+    } else if (count <= 4) {
+      hint.textContent = 'Đề xuất taxi 4-7 chỗ tiện lợi và thoải mái';
+    } else if (count <= 7) {
+      hint.textContent = 'Rất thích hợp thuê xe 7 chỗ trọn gói';
+    } else {
+      hint.textContent = 'Phù hợp xe Limousine 9-16 chỗ cho đoàn đông';
+    }
+  }
+
+  function selectCompanion(element, defaultCount) {
+    const cards = document.querySelectorAll('.companion-card');
+    cards.forEach(card => {
+      card.setAttribute('aria-checked', 'false');
+      card.className = 'companion-card relative p-space-md rounded-xl bg-surface-container-lowest shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]';
+      
+      const iconBox = card.querySelector('.card-icon-box');
+      if (iconBox) {
+        iconBox.className = 'card-icon-box w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center shrink-0 text-on-surface transition-colors';
+      }
+      
+      const title = card.querySelector('h3');
+      if (title) {
+        title.className = 'font-headline-sm text-headline-sm text-on-surface mb-0.5';
+      }
+
+      const pill = card.querySelector('.check-pill');
+      if (pill) {
+        pill.className = 'check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-colors';
+        const icon = pill.querySelector('span');
+        if (icon) icon.className = 'material-symbols-outlined text-[16px] text-surface-container';
+      }
+    });
+
+    // Mark current as selected
+    element.setAttribute('aria-checked', 'true');
+    element.className = 'companion-card relative p-space-md rounded-xl bg-primary-fixed/30 shadow-sm cursor-pointer transition-all flex items-start gap-space-md active:scale-[0.99]';
+    
+    const activeIconBox = element.querySelector('.card-icon-box');
+    if (activeIconBox) {
+      activeIconBox.className = 'card-icon-box w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center shrink-0 text-on-primary transition-colors';
+    }
+
+    const activeTitle = element.querySelector('h3');
+    if (activeTitle) {
+      activeTitle.className = 'font-headline-sm text-headline-sm text-primary mb-0.5';
+    }
+
+    const activePill = element.querySelector('.check-pill');
+    if (activePill) {
+      activePill.className = 'check-pill absolute top-space-md right-space-md w-6 h-6 rounded-full bg-primary-container flex items-center justify-center transition-colors';
+      const icon = activePill.querySelector('span');
+      if (icon) icon.className = 'material-symbols-outlined text-[16px] text-on-primary';
+    }
+
+    // Update editorial tip
+    const tipTitle = element.getAttribute('data-tip-title');
+    const tipText = element.getAttribute('data-tip-text');
+    const tipTitleEl = document.getElementById('editorial-tip-title');
+    const tipTextEl = document.getElementById('editorial-tip-text');
+    if (tipTitleEl && tipTitle) tipTitleEl.textContent = tipTitle;
+    if (tipTextEl && tipText) tipTextEl.textContent = tipText;
+
+    // Suggest companion member count
+    if (defaultCount) {
+      memberCount = defaultCount;
+      updateCountDisplay();
+      const customHint = element.getAttribute('data-hint');
+      const hintEl = document.getElementById('vehicle-hint');
+      if (hintEl && customHint) {
+        hintEl.textContent = customHint;
+      } else {
+        updateVehicleHintByCount(memberCount);
+      }
+    }
+  }
+</script></main><footer class="fixed bottom-0 w-full z-50 pb-safe bg-surface/80 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 px-gutter flex items-center justify-between"><button class="h-11 px-space-md flex items-center justify-center rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" onclick="history.back()" type="button">Quay lại</button><button class="h-11 px-space-lg flex items-center justify-center gap-space-xs rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-colors" type="button"><span>Tiếp tục</span><span class="material-symbols-outlined text-[18px]">arrow_forward</span></button></div></footer></body></html>

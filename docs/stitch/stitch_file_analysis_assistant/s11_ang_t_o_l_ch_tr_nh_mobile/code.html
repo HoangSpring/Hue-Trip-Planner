@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "secondary-container": "#aef0da", "on-secondary-fixed-variant": "#055141", "on-tertiary-fixed-variant": "#604100", "on-primary-fixed-variant": "#563587", "on-tertiary-fixed": "#281900", "primary-fixed": "#ecdcff", "surface-variant": "#e6e2da", "on-surface": "#1c1c17", "on-secondary-container": "#2f6f5e", "inverse-on-surface": "#f4f0e8", "inverse-surface": "#31302b", "on-secondary-fixed": "#002019", "inverse-primary": "#d6baff", "tertiary-container": "#664500", "error": "#ba1a1a", "surface-tint": "#6e4da0", "on-secondary": "#ffffff", "on-background": "#1c1c17", "on-tertiary": "#ffffff", "secondary": "#286958", "surface-dim": "#dddad2", "outline": "#7b7481", "surface-container-low": "#f7f3eb", "tertiary": "#483000", "on-error-container": "#93000a", "surface-container-high": "#ece8e0", "secondary-fixed": "#aef0da", "outline-variant": "#ccc3d2", "primary-container": "#5b3a8c", "surface": "#fdf9f1", "surface-container-highest": "#e6e2da", "on-primary-fixed": "#280056", "on-tertiary-container": "#e8b358", "on-surface-variant": "#4a4550", "primary-fixed-dim": "#d6baff", "on-primary-container": "#ceadff", "tertiary-fixed-dim": "#f4bd61", "on-error": "#ffffff", "surface-container": "#f1ede6", "on-primary": "#ffffff", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff", "surface-bright": "#fdf9f1", "primary": "#432173", "background": "#fdf9f1", "tertiary-fixed": "#ffdead", "secondary-fixed-dim": "#93d3bf" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "space-xl": "2.5rem", "margin": "1rem", "space-sm": "0.5rem", "gutter-desktop": "1.5rem", "space-xs": "0.25rem", "margin-tablet": "2rem", "space-md": "1rem", "gutter": "1rem", "margin-desktop": "3rem" }, fontFamily: { "display-lg": ["\"Source Serif 4\""], "label-md": ["Be Vietnam Pro"], "label-sm": ["Be Vietnam Pro"], "headline-lg-mobile": ["\"Source Serif 4\""], "body-sm": ["Be Vietnam Pro"], "body-lg": ["Be Vietnam Pro"], "headline-lg": ["\"Source Serif 4\""], "label-lg": ["Be Vietnam Pro"], "headline-sm": ["\"Source Serif 4\""], "display-lg-mobile": ["\"Source Serif 4\""], "headline-md": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"] }, fontSize: { "display-lg": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "600" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.03em", fontWeight: "500" }], "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }], "body-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }], "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "headline-lg": ["28px", { lineHeight: "36px", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }], "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }], "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }], "headline-md": ["22px", { lineHeight: "28px", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }] } } } }</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased min-h-full flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><button aria-label="Hủy tạo lịch trình" class="min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[24px]">close</span></button><h1 class="font-headline-sm text-headline-sm text-on-surface text-center flex-1 mx-space-sm truncate">Tạo Lịch Trình</h1><div class="min-w-[44px] min-h-[44px] flex items-center justify-end"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col flex-1 relative w-full pt-16 bg-surface px-margin pb-safe"><div class="flex flex-col w-full pb-8">
+<!-- Mode Switcher Tabs for S11 States -->
+<div class="w-full flex items-center justify-between p-1 bg-surface-container rounded-xl mb-6 shadow-sm">
+<button class="flex-1 py-2 px-2 rounded-lg text-center font-label-sm text-label-sm transition-all duration-300 bg-surface-container-lowest text-primary font-semibold shadow-sm" id="btn-state-loading" onclick="switchState('loading')">
+      Đang tạo
+    </button>
+<button class="flex-1 py-2 px-2 rounded-lg text-center font-label-sm text-label-sm transition-all duration-300 text-on-surface-variant hover:text-on-surface" id="btn-state-error" onclick="switchState('error')">
+      Lỗi kết nối
+    </button>
+<button class="flex-1 py-2 px-2 rounded-lg text-center font-label-sm text-label-sm transition-all duration-300 text-on-surface-variant hover:text-on-surface" id="btn-state-limit" onclick="switchState('limit')">
+      Quá tải (30s)
+    </button>
+</div>
+<!-- State 1: Active Generating State (Default Primary View) -->
+<section class="flex flex-col items-center w-full transition-opacity duration-300" id="view-loading">
+<!-- Poetic Lotus & Perfume River Wave Animation Emblem -->
+<div class="relative w-40 h-40 flex items-center justify-center mb-6">
+<!-- Water ripples -->
+<span class="absolute inset-0 rounded-full bg-secondary-fixed/30 animate-ping opacity-30" style="animation-duration: 3s;"></span>
+<span class="absolute inset-3 rounded-full bg-primary-fixed/40 animate-pulse opacity-40" style="animation-duration: 2.2s;"></span>
+<!-- Central Emblem Card -->
+<div class="relative z-10 w-28 h-28 rounded-full bg-surface-container-lowest shadow-md flex items-center justify-center p-4">
+<svg class="w-20 h-20 text-primary-container" fill="none" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- Flowing Perfume River Waves -->
+<path d="M15 72C28 67 36 77 50 72C64 67 72 77 85 72" stroke="#2F6F5E" stroke-linecap="round" stroke-width="2.5">
+<animate attributename="d" dur="4s" repeatcount="indefinite" values="
+              M15 72C28 67 36 77 50 72C64 67 72 77 85 72;
+              M15 74C28 78 36 68 50 73C64 78 72 68 85 73;
+              M15 72C28 67 36 77 50 72C64 67 72 77 85 72
+            "></animate>
+</path>
+<path d="M20 80C31 77 38 83 50 80C62 77 69 83 80 80" opacity="0.8" stroke="#93D3BF" stroke-linecap="round" stroke-width="1.8">
+<animate attributename="d" dur="3.5s" repeatcount="indefinite" values="
+              M20 80C31 77 38 83 50 80C62 77 69 83 80 80;
+              M20 82C31 84 38 78 50 81C62 84 69 78 80 81;
+              M20 80C31 77 38 83 50 80C62 77 69 83 80 80
+            "></animate>
+</path>
+<!-- Imperial Blooming Lotus Petals -->
+<path d="M50 20C47 34 38 48 30 55C41 55 47 45 50 38C53 45 59 55 70 55C62 48 53 34 50 20Z" fill="#5B3A8C" fill-opacity="0.9"></path>
+<path d="M50 32C42 41 33 51 22 56C33 59 42 54 47 48C48 50 49 52 50 54C51 52 52 50 53 48C58 54 67 59 78 56C67 51 58 41 50 32Z" fill="#C8963E" fill-opacity="0.85"></path>
+<circle cx="50" cy="56" fill="#FAF6EE" r="3"></circle>
+</svg>
+</div>
+<!-- Orbiting Particle Accent -->
+<div class="absolute w-full h-full animate-spin" style="animation-duration: 8s; animation-timing-function: linear;">
+<div class="w-2.5 h-2.5 bg-on-tertiary-container rounded-full shadow-sm"></div>
+</div>
+</div>
+<!-- Editorial Typography Block -->
+<div class="text-center px-2 mb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2 tracking-tight">
+        Đang tạo lịch trình cho bạn...
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto leading-relaxed">
+        Trí tuệ nhân tạo đang phân tích các điểm đến di sản, ẩm thực và đường đi ven sông Hương phù hợp với chuyến đi 2 ngày của bạn.
+      </p>
+</div>
+<!-- Stepped Progress Card -->
+<div class="w-full bg-surface-container-lowest rounded-2xl p-5 shadow-sm space-y-4 mb-8">
+<!-- Step 1: Completed -->
+<div class="flex items-center space-x-3.5">
+<div class="w-7 h-7 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface font-medium truncate">Chọn địa điểm hợp gu bạn</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Đã xong</span>
+</div>
+<div class="w-full h-px bg-surface-container ml-10"></div>
+<!-- Step 2: Processing -->
+<div class="flex items-center space-x-3.5">
+<div class="relative w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping absolute"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-primary relative z-10"></span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-primary font-semibold truncate">Sắp xếp theo từng ngày</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Cân đối thời gian ghé Đại Nội &amp; ngắm hoàng hôn</p>
+</div>
+<div class="flex space-x-1 items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style="animation-delay: 0s;"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style="animation-delay: 0.15s;"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style="animation-delay: 0.3s;"></span>
+</div>
+</div>
+<div class="w-full h-px bg-surface-container ml-10"></div>
+<!-- Step 3: Upcoming -->
+<div class="flex items-center space-x-3.5 opacity-55">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface truncate">Viết lý do gợi ý</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Chờ xử lý</span>
+</div>
+<div class="w-full h-px bg-surface-container ml-10"></div>
+<!-- Step 4: Upcoming -->
+<div class="flex items-center space-x-3.5 opacity-55">
+<div class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-label-lg text-label-lg text-on-surface truncate">Tối ưu hóa thời gian di chuyển trên bản đồ</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Chờ xử lý</span>
+</div>
+</div>
+<!-- Editorial Accent Insight Card -->
+<div class="w-full bg-surface-container-low rounded-xl p-3.5 flex items-center space-x-3 mb-8">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-[18px]" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex-1 leading-snug">
+<strong class="font-medium text-on-surface">Mẹo nhỏ:</strong> Buổi sớm tinh sương tại lăng Minh Mạng rất thanh tịnh và mát lành.
+      </p>
+</div>
+<!-- Bottom Cancel Action Button -->
+<div class="w-full flex justify-center pt-2">
+<button class="py-3 px-6 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:text-error hover:bg-error-container/20 transition-all flex items-center space-x-2" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+<span>Hủy tạo lịch trình</span>
+</button>
+</div>
+</section>
+<!-- State 2: Connection Error Variant -->
+<section class="hidden flex-col items-center w-full transition-opacity duration-300 py-6" id="view-error">
+<!-- Visual Icon -->
+<div class="relative w-28 h-28 rounded-full bg-error-container flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-error text-[48px]" style="font-variation-settings: 'FILL' 1;">wifi_off</span>
+<span class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-surface-container-lowest shadow flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-[20px]">priority_high</span>
+</span>
+</div>
+<!-- Content -->
+<div class="text-center px-4 mb-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">
+        Chưa tạo được lịch trình
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto">
+        Kiểm tra kết nối rồi thử lại nhé.
+      </p>
+</div>
+<!-- Friendly Error Diagnostic Details -->
+<div class="w-full bg-surface-container-lowest rounded-2xl p-4 shadow-sm mb-8 space-y-3">
+<div class="flex items-start space-x-3">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          Đường truyền mạng của bạn có thể bị gián đoạn trong giây lát. Tất cả tùy chọn sở thích chuyến đi của bạn vẫn được lưu giữ an toàn.
+        </p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="w-full space-y-3">
+<button class="w-full py-3.5 px-6 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center space-x-2 shadow-sm hover:opacity-95 active:scale-[0.99] transition-all" onclick="switchState('loading')" type="button">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+<span>Thử lại</span>
+</button>
+<button class="w-full py-3 px-6 rounded-xl bg-surface-container text-primary font-label-lg text-label-lg flex items-center justify-center space-x-2 hover:bg-surface-container-high transition-all" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span>Quay lại chỉnh thông tin</span>
+</button>
+</div>
+</section>
+<!-- State 3: Rate-Limit Variant (Quá tải 30s) -->
+<section class="hidden flex-col items-center w-full transition-opacity duration-300 py-6" id="view-limit">
+<!-- Hourglass Emblem in Imperial Amber/Gold -->
+<div class="relative w-28 h-28 rounded-full bg-tertiary-fixed flex items-center justify-center mb-6 shadow-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-[46px]" style="font-variation-settings: 'FILL' 1;">hourglass_top</span>
+<!-- Subtle Pulse Ring -->
+<span class="absolute inset-0 rounded-full border border-tertiary-fixed-dim animate-ping opacity-30"></span>
+</div>
+<!-- Headline and Subtext -->
+<div class="text-center px-3 mb-6">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">
+        Bạn tạo lịch trình hơi nhanh
+      </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto leading-relaxed">
+        Vui lòng thử lại sau 30 giây để hệ thống chuẩn bị dữ liệu tốt nhất.
+      </p>
+</div>
+<!-- Visual Countdown Badge -->
+<div class="w-full bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col items-center mb-8">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Thời gian chờ khuyến nghị</span>
+<div class="flex items-baseline space-x-1.5 mb-2">
+<span class="font-display-lg-mobile text-display-lg-mobile text-tertiary-container font-semibold tracking-tight" id="countdown-timer">00:28</span>
+<span class="font-label-md text-label-md text-on-tertiary-container font-medium">giây</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-2 overflow-hidden mt-2">
+<div class="bg-on-tertiary-container h-full rounded-full transition-all duration-1000" id="countdown-bar" style="width: 85%;"></div>
+</div>
+</div>
+<!-- Helpful Reassurance -->
+<div class="w-full bg-surface-container-low rounded-xl p-3.5 mb-8 flex items-center space-x-3">
+<span class="material-symbols-outlined text-secondary text-[22px]">verified</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+        Hệ thống đang đồng bộ dữ liệu thời tiết thực và lưu lượng du khách Cố Đô.
+      </p>
+</div>
+<!-- Action Button -->
+<div class="w-full space-y-3">
+<button class="w-full py-3.5 px-6 rounded-xl bg-surface-container-high text-on-surface-variant opacity-80 font-label-lg text-label-lg flex items-center justify-center space-x-2 cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
+<span>Chờ trong giây lát</span>
+</button>
+<button class="w-full py-2.5 px-6 rounded-xl text-on-surface-variant hover:text-on-surface font-label-md text-label-md text-center transition-colors" onclick="history.back()" type="button">
+        Hủy và trở về trang trước
+      </button>
+</div>
+</section>
+</div>
+<script>
+  let countdownSeconds = 28;
+  let timerInterval = null;
+
+  function switchState(state) {
+    const viewLoading = document.getElementById('view-loading');
+    const viewError = document.getElementById('view-error');
+    const viewLimit = document.getElementById('view-limit');
+
+    const btnLoading = document.getElementById('btn-state-loading');
+    const btnError = document.getElementById('btn-state-error');
+    const btnLimit = document.getElementById('btn-state-limit');
+
+    // Reset views
+    viewLoading.classList.add('hidden');
+    viewError.classList.add('hidden');
+    viewLimit.classList.add('hidden');
+
+    // Reset button styling
+    [btnLoading, btnError, btnLimit].forEach(btn => {
+      btn.className = 'flex-1 py-2 px-2 rounded-lg text-center font-label-sm text-label-sm transition-all duration-300 text-on-surface-variant hover:text-on-surface';
+    });
+
+    const activeClasses = 'flex-1 py-2 px-2 rounded-lg text-center font-label-sm text-label-sm transition-all duration-300 bg-surface-container-lowest text-primary font-semibold shadow-sm';
+
+    if (state === 'loading') {
+      viewLoading.classList.remove('hidden');
+      btnLoading.className = activeClasses;
+      clearInterval(timerInterval);
+    } else if (state === 'error') {
+      viewError.classList.remove('hidden');
+      btnError.className = activeClasses;
+      clearInterval(timerInterval);
+    } else if (state === 'limit') {
+      viewLimit.classList.remove('hidden');
+      btnLimit.className = activeClasses;
+      startCountdown();
+    }
+  }
+
+  function startCountdown() {
+    clearInterval(timerInterval);
+    countdownSeconds = 28;
+    const timerElem = document.getElementById('countdown-timer');
+    const barElem = document.getElementById('countdown-bar');
+
+    timerInterval = setInterval(() => {
+      if (countdownSeconds > 0) {
+        countdownSeconds--;
+        const formatted = '00:' + (countdownSeconds < 10 ? '0' : '') + countdownSeconds;
+        if (timerElem) timerElem.textContent = formatted;
+        if (barElem) barElem.style.width = ((countdownSeconds / 30) * 100) + '%';
+      } else {
+        clearInterval(timerInterval);
+        switchState('loading');
+      }
+    }, 1000);
+  }
+</script></main></body></html>

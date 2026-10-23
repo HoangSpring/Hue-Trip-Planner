@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-container":"#e8b358","background":"#fdf9f1","on-primary-fixed-variant":"#563587","surface-container-high":"#ece8e0","surface":"#fdf9f1","secondary-fixed-dim":"#93d3bf","primary-container":"#5b3a8c","surface-container-low":"#f7f3eb","on-tertiary-fixed-variant":"#604100","on-primary-fixed":"#280056","on-tertiary":"#ffffff","error-container":"#ffdad6","surface-dim":"#dddad2","primary-fixed-dim":"#d6baff","surface-container-lowest":"#ffffff","tertiary":"#483000","secondary":"#286958","outline-variant":"#ccc3d2","surface-container":"#f1ede6","on-surface-variant":"#4a4550","inverse-on-surface":"#f4f0e8","on-secondary":"#ffffff","secondary-container":"#aef0da","on-primary-container":"#ceadff","error":"#ba1a1a","on-error-container":"#93000a","primary":"#432173","outline":"#7b7481","secondary-fixed":"#aef0da","on-secondary-fixed":"#002019","inverse-primary":"#d6baff","on-secondary-container":"#2f6f5e","surface-bright":"#fdf9f1","surface-tint":"#6e4da0","on-error":"#ffffff","on-tertiary-fixed":"#281900","tertiary-fixed-dim":"#f4bd61","on-surface":"#1c1c17","inverse-surface":"#31302b","on-primary":"#ffffff","primary-fixed":"#ecdcff","surface-container-highest":"#e6e2da","tertiary-container":"#664500","surface-variant":"#e6e2da","tertiary-fixed":"#ffdead","on-background":"#1c1c17","on-secondary-fixed-variant":"#055141"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-desktop":"3rem","gutter":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","space-lg":"1.5rem","space-md":"1rem","margin-tablet":"2rem","space-xl":"2.5rem","margin":"1rem","gutter-desktop":"1.5rem"},"fontFamily":{"headline-sm":["\"Source Serif 4\""],"headline-lg":["\"Source Serif 4\""],"label-sm":["Be Vietnam Pro"],"display-lg-mobile":["\"Source Serif 4\""],"label-lg":["Be Vietnam Pro"],"label-md":["Be Vietnam Pro"],"body-lg":["Be Vietnam Pro"],"body-md":["Be Vietnam Pro"],"headline-md":["\"Source Serif 4\""],"body-sm":["Be Vietnam Pro"],"headline-lg-mobile":["\"Source Serif 4\""],"display-lg":["\"Source Serif 4\""]},"fontSize":{"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"headline-lg":["28px",{"lineHeight":"36px","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.03em","fontWeight":"500"}],"display-lg-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","fontWeight":"600"}],"display-lg":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="px-6 py-6 flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shadow-[0_2px_8px_rgba(31,26,36,0.06)]"><span class="material-symbols-outlined text-[24px]">temple_buddhist</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight">Cố Đô Admin</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Hue Trip Planner</span></div></div><div class="px-6 pt-2 pb-4"><div class="h-px w-full bg-outline-variant/30"></div></div><div class="px-6 pb-2"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Chức năng chính</span></div><nav class="flex flex-col gap-1 px-4" data-active-classes="bg-primary-container text-on-primary font-bold shadow-[0_2px_8px_rgba(31,26,36,0.06)]"><a class="flex items-center px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="s18-admin-quan-ly-dia-diem-desktop" href="#">Quản lý địa điểm</a><a class="flex items-center px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="s19-admin-form-dia-diem-desktop" href="#">Thêm mới &amp; Chỉnh sửa địa điểm</a><a class="flex items-center px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="import-csv" href="#">Import CSV</a><a class="flex items-center px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="thong-ke-lich-trinh" href="#">Thống kê &amp; Lịch trình</a><a class="flex items-center px-4 py-3 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="cai-dat-he-thong" href="#">Cài đặt hệ thống</a></nav></div><div class="p-4 flex flex-col gap-2"><div class="bg-surface-container-lowest p-3 rounded-xl shadow-[0_2px_8px_rgba(31,26,36,0.06)] flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[20px]">person</span></div><div class="flex-1 min-w-0"><p class="font-label-md text-label-md text-on-surface font-semibold truncate">Nguyễn Hoàng</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate">Quản trị viên Cố Đô</p></div><a class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg transition-colors" data-path="dang-xuat" href="#" title="Đăng xuất"><span class="material-symbols-outlined text-[20px]">logout</span></a></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-8"><div class="flex items-center gap-6 flex-1 max-w-2xl"><div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant shrink-0"><span class="hover:text-primary transition-colors cursor-pointer">Quản trị Cố Đô</span><span class="material-symbols-outlined text-[16px]">chevron_right</span><a class="hover:text-primary transition-colors cursor-pointer" data-path="s18-admin-quan-ly-dia-diem-desktop" href="#">Địa điểm</a><span class="material-symbols-outlined text-[16px]">chevron_right</span><span class="text-primary font-semibold">Thiết lập địa điểm</span></div><div class="relative w-full max-w-md hidden lg:block"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span><input class="w-full bg-surface-container-lowest rounded-xl pl-9 pr-4 py-2 font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-[0_1px_4px_rgba(0,0,0,0.03)]" placeholder="Tìm nhanh ID, tên địa điểm, danh mục..." type="text"/></div></div><div class="flex items-center gap-4 shrink-0"><div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>Hệ thống: Trực tuyến (48 địa điểm)</div><button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span></button><a class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold hover:bg-tertiary-fixed-dim transition-colors shadow-[0_1px_4px_rgba(0,0,0,0.04)]" href="#"><span>Xem trang người dùng</span><span class="material-symbols-outlined text-[16px]">north_east</span></a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="relative pt-16 bg-background min-h-screen p-8"><div class="flex flex-col w-full gap-8">
+<!-- Top Editorial Header & Workflow Breadcrumb -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2">
+<div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md mb-2">
+<span class="hover:text-primary transition-colors cursor-pointer">Quản trị Cố Đô</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary transition-colors cursor-pointer">Địa điểm</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Nhập dữ liệu CSV</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Nhập dữ liệu địa điểm Cố Đô</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Đồng bộ hóa danh lam thắng cảnh, ẩm thực và di tích lịch sử Huế thông qua tệp bảng tính UTF-8.</p>
+</div>
+<!-- Quick Tool Links -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-low text-secondary font-label-md text-label-md font-semibold hover:bg-secondary-container transition-all shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Tải tệp mẫu (.csv chuẩn)</span>
+</a>
+<button class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-low text-primary font-label-md text-label-md font-semibold hover:bg-primary-fixed transition-all shadow-sm" onclick="document.getElementById('docs-modal').classList.toggle('hidden')">
+<span class="material-symbols-outlined text-[18px]">menu_book</span>
+<span>Cấu trúc schema cột</span>
+</button>
+</div>
+</div>
+<!-- Stepper Progress Tracker -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+<!-- Step 1 (Completed) -->
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-secondary text-on-secondary flex items-center justify-center shrink-0 shadow-md">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Bước 1 • Đã tải lên</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Tải tệp lên</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">danh_sach_dia_diem_hue_v2.csv</span>
+</div>
+</div>
+<!-- Step 2 (Active) -->
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-md">
+<span class="font-label-lg text-label-lg font-bold">2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Bước 2 • Đang xử lý</span>
+<span class="font-headline-sm text-headline-sm text-primary">Xem trước &amp; Kiểm tra</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Xác thực 55 bản ghi địa danh</span>
+</div>
+</div>
+<!-- Step 3 (Pending) -->
+<div class="flex items-start gap-4 opacity-75">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0">
+<span class="font-label-lg text-label-lg font-bold">3</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Bước 3 • Hoàn tất</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Báo cáo &amp; Đồng bộ</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tạo mới, cập nhật &amp; xuất lỗi</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Step 1 Section: Dropzone & File Configuration -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span>1. Tệp dữ liệu CSV nguồn</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-secondary-container text-on-secondary-container">Đã sẵn sàng</span>
+</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Đảm bảo các trường tiêu đề khớp hoàn toàn với quy chuẩn Cố Đô Heritage Schema.</p>
+</div>
+<div class="hidden lg:flex items-center gap-4 text-body-sm font-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span> UTF-8 Encode</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span> Phân tách dấu phẩy (,)</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-secondary"></span> Giới hạn 15MB</span>
+</div>
+</div>
+<!-- Dropzone Box -->
+<div class="relative rounded-2xl bg-surface-container-low/70 hover:bg-surface-container-low transition-colors p-8 flex flex-col items-center justify-center text-center group cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-surface-container-lowest text-primary flex items-center justify-center shadow-md group-hover:scale-105 transition-transform mb-4">
+<span class="material-symbols-outlined text-[32px]">cloud_upload</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-on-surface">Kéo và thả tệp CSV vào đây, hoặc duyệt tệp từ máy tính</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 max-w-md">Hỗ trợ định dạng .csv chuẩn UTF-8 chứa thông tin tọa độ vĩ độ, kinh độ và tác quyền di sản văn hóa.</p>
+<!-- Active File Highlight Pill -->
+<div class="mt-6 flex flex-wrap items-center gap-3 bg-surface-container-lowest px-4 py-2.5 rounded-xl shadow-sm">
+<span class="w-8 h-8 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</span>
+<div class="text-left">
+<p class="font-label-md text-label-md text-on-surface font-semibold">danh_sach_dia_diem_hue_v2.csv</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">1.8 MB • Phân tích lúc 14:32 hôm nay</p>
+</div>
+<div class="h-6 w-px bg-outline-variant/40 mx-1"></div>
+<button class="font-label-sm text-label-sm text-primary font-semibold hover:underline flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+<span>Thay tệp khác</span>
+</button>
+</div>
+</div>
+<!-- Collapsible Field Reference (In-place drawer toggleable) -->
+<div class="bg-surface-container-low rounded-xl p-5 flex flex-col gap-3" id="docs-modal">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-primary font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+<span>Quy chuẩn 8 cột bắt buộc trong tệp CSV Cố Đô</span>
+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Khuyến nghị tải tệp mẫu trước khi xuất dữ liệu</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 font-body-sm text-body-sm text-on-surface">
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">name*</span>: Tên điểm đến</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">category*</span>: Danh mục phân loại</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">lat*</span>: Vĩ độ thập phân (16.xxx)</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">lng*</span>: Kinh độ thập phân (107.xxx)</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">opening_hours</span>: Khung giờ hoạt động</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">price</span>: Giá vé / Mức chi tiêu</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">image_url</span>: Đường dẫn ảnh chất lượng cao</div>
+<div class="bg-surface-container-lowest p-3 rounded-lg"><span class="font-semibold text-primary">image_credit*</span>: Bản quyền tác giả</div>
+</div>
+</div>
+</section>
+<!-- Step 2 Section: Preview & Validation Table -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span>2. Xem trước và kiểm tra tính hợp lệ</span>
+<span class="font-label-sm text-label-sm bg-surface-container text-on-surface-variant font-normal px-2.5 py-0.5 rounded-full">Tổng 55 dòng</span>
+</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Hệ thống phân tích cú pháp tự động nhận diện cấu trúc, phát hiện lỗi định dạng tọa độ và bản quyền hình ảnh.</p>
+</div>
+<!-- Metric Status Badges -->
+<div class="flex flex-wrap items-center gap-3">
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>48 dòng hợp lệ</span>
+</div>
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+<span>5 cảnh báo</span>
+</div>
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-error-container text-on-error-container font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">error</span>
+<span>2 lỗi nghiêm trọng</span>
+</div>
+</div>
+</div>
+<!-- Filter Pills Navigation -->
+<div class="flex items-center justify-between border-b border-surface-container-high pb-3">
+<div class="flex items-center gap-2">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-sm">Tất cả (55)</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Hợp lệ (48)</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Có cảnh báo (5)</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors">Có lỗi (2)</button>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Các dòng lỗi sẽ tự động được cách ly để xuất lại CSV</span>
+</div>
+</div>
+<!-- High-density Validation Table -->
+<div class="overflow-x-auto rounded-xl bg-surface-container-lowest">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface font-label-md text-label-md">
+<th class="py-3.5 px-4 font-semibold w-16">Dòng</th>
+<th class="py-3.5 px-4 font-semibold min-w-[200px]">Tên địa điểm</th>
+<th class="py-3.5 px-4 font-semibold">Phân loại</th>
+<th class="py-3.5 px-4 font-semibold">Tọa độ GPS</th>
+<th class="py-3.5 px-4 font-semibold">Giờ mở cửa &amp; Giá vé</th>
+<th class="py-3.5 px-4 font-semibold">Tác quyền ảnh</th>
+<th class="py-3.5 px-4 font-semibold min-w-[220px]">Trạng thái kiểm tra</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container font-body-sm text-body-sm text-on-surface">
+<!-- Row 1: Valid -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-on-surface-variant">01</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-primary block">Đại Nội Huế</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Hoàng thành triều Nguyễn</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary font-medium">Di sản &amp; Cung đình</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-body-sm">16.468, 107.578</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span>07:00 – 17:30</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">200.000 ₫/khách</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Wikimedia CC BY-SA</span>
+</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Hợp lệ</span>
+</span>
+</td>
+</tr>
+<!-- Row 2: Valid -->
+<tr class="hover:bg-surface-container-low/40 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-on-surface-variant">02</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-primary block">Chùa Thiên Mụ</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Đồi Hà Khê, Kim Long</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-secondary font-medium">Chùa chiền</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-body-sm">16.452, 107.545</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span>07:00 – 18:00</span>
+<span class="text-secondary font-label-sm text-label-sm font-semibold">Miễn phí tham quan</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Wikimedia CC BY 4.0</span>
+</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Hợp lệ</span>
+</span>
+</td>
+</tr>
+<!-- Row 3: Warning (Missing Credit) -->
+<tr class="bg-tertiary-fixed/15 hover:bg-tertiary-fixed/25 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-on-surface-variant">03</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-on-surface block">Cà phê Muối Cố Đô</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Số 10 Đặng Thái Thân</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-tertiary font-medium">Cà phê</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-body-sm">16.461, 107.592</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span>06:30 – 22:00</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">~30.000 ₫/món</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 text-error font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+<span>Thiếu image_credit</span>
+</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span>Cảnh báo: Thiếu tác quyền ảnh</span>
+</span>
+</td>
+</tr>
+<!-- Row 4: Warning (Missing Hours) -->
+<tr class="bg-tertiary-fixed/15 hover:bg-tertiary-fixed/25 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-on-surface-variant">04</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-on-surface block">Bánh bèo Nạ Tuyết</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Ngự Bình, P. An Cựu</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-tertiary font-medium">Ẩm thực</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-body-sm">16.459, 107.588</td>
+<td class="py-3.5 px-4">
+<span class="text-error font-label-sm text-label-sm font-medium">Chưa có giờ mở cửa</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="text-on-surface-variant font-label-sm text-label-sm">Thiếu ảnh bìa</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+<span>Cảnh báo: Thiếu giờ mở cửa</span>
+</span>
+</td>
+</tr>
+<!-- Row 5: Error (Invalid GPS) -->
+<tr class="bg-error-container/30 hover:bg-error-container/40 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-error">05</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-error block">Đồi Vọng Cảnh</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Nhìn toàn cảnh sông Hương</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-medium">Ngắm cảnh</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-mono text-error font-semibold bg-error-container px-2 py-0.5 rounded text-label-sm">N/A (Lỗi chuỗi)</span>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span>06:00 – 18:00</span>
+<span class="text-secondary font-label-sm text-label-sm">Miễn phí</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="text-secondary font-label-sm text-label-sm">Đầy đủ</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error text-on-error font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+<span>Lỗi: GPS không hợp lệ</span>
+</span>
+</td>
+</tr>
+<!-- Row 6: Error (Duplicate slug) -->
+<tr class="bg-error-container/30 hover:bg-error-container/40 transition-colors">
+<td class="py-3.5 px-4 font-mono font-medium text-error">06</td>
+<td class="py-3.5 px-4">
+<span class="font-headline-sm text-[16px] text-error block">Nhà lưu niệm Phan Bội Châu</span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">Dốc Bến Ngự</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-block px-2.5 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-medium">Di tích</span>
+</td>
+<td class="py-3.5 px-4 font-mono text-body-sm">16.456, 107.571</td>
+<td class="py-3.5 px-4">
+<span class="text-on-surface-variant italic">Trống</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="text-on-surface-variant italic">Trống</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error text-on-error font-label-sm text-label-sm font-semibold shadow-sm">
+<span class="material-symbols-outlined text-[16px]">cancel</span>
+<span>Lỗi: Trùng mã slug địa điểm</span>
+</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Action Bar Controls for Step 2 -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-4 border-t border-surface-container-high">
+<label class="flex items-center gap-3 cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded text-primary focus:ring-primary accent-primary cursor-pointer" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">
+          Tự động bỏ qua <strong>2 dòng lỗi</strong> và nhập <strong>53 địa điểm hợp lệ</strong> (bao gồm 5 dòng cảnh báo có thể bổ sung sau).
+        </span>
+</label>
+<div class="flex items-center gap-3 shrink-0">
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors" type="button">
+          Hủy bỏ
+        </button>
+<button class="px-6 py-2.5 rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold hover:bg-primary transition-all shadow-md flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Tiến hành nhập dữ liệu (53 địa điểm)</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Step 3 Preview Card: Simulated Result Scenario -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">task_alt</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">3. Kịch bản báo cáo kết quả hoàn tất</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Mô phỏng trạng thái sau khi hệ thống lưu dữ liệu vào cơ sở dữ liệu di sản.</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant bg-surface-container px-3 py-1 rounded-full font-semibold">Xem trước luồng kết thúc</span>
+</div>
+<!-- Summary Metrics Card -->
+<div class="rounded-2xl bg-surface-container-low p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-6">
+<div class="w-16 h-16 rounded-2xl bg-secondary text-on-secondary flex items-center justify-center shrink-0 shadow-lg">
+<span class="material-symbols-outlined text-[36px]">cloud_done</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-surface tracking-tight">Đã sẵn sàng tạo mới 40 địa điểm, cập nhật 8 địa điểm</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">2 dòng chứa lỗi cú pháp nghiêm trọng đã được lập danh sách cách ly để phục vụ việc xử lý lại.</p>
+</div>
+</div>
+<!-- Result Action CTAs -->
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-lowest text-error font-label-md text-label-md font-semibold hover:bg-error-container transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Tải 2 dòng lỗi (.csv)</span>
+</button>
+<a class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold hover:bg-primary-container transition-all shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">list_alt</span>
+<span>Xem danh sách địa điểm (S18)</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Editorial Cultural Footer Note -->
+<div class="p-6 rounded-2xl bg-surface-container-low/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-on-surface-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-[24px]">verified</span>
+<p class="font-body-sm text-body-sm">
+        Dữ liệu sau khi nhập sẽ được gắn cờ <strong class="text-on-surface">"Bản nháp kiểm duyệt"</strong> cho đến khi người quản trị kích hoạt công khai trên cổng du lịch Huế.
+      </p>
+</div>
+<div class="flex items-center gap-4 text-label-sm font-label-sm">
+<a class="hover:text-primary transition-colors" href="#">Trung tâm hỗ trợ di sản</a>
+<span>•</span>
+<a class="hover:text-primary transition-colors" href="#">Nhật ký nhập CSV</a>
+</div>
+</div>
+</div></main></div></body></html>

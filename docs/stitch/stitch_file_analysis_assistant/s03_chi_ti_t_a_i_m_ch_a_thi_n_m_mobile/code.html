@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container": "#93000a", "surface-dim": "#dddad2", "primary-fixed-dim": "#d6baff", "tertiary-fixed-dim": "#f4bd61", "primary-container": "#5b3a8c", "on-primary-fixed": "#280056", "on-secondary-fixed": "#002019", "secondary-fixed-dim": "#93d3bf", "surface-container-lowest": "#ffffff", "on-background": "#1c1c17", "surface": "#fdf9f1", "on-surface-variant": "#4a4550", "error": "#ba1a1a", "secondary-fixed": "#aef0da", "on-primary-container": "#ceadff", "surface-variant": "#e6e2da", "surface-container-low": "#f7f3eb", "primary-fixed": "#ecdcff", "secondary": "#286958", "on-error": "#ffffff", "outline-variant": "#ccc3d2", "surface-container-high": "#ece8e0", "inverse-primary": "#d6baff", "tertiary": "#483000", "outline": "#7b7481", "on-primary": "#ffffff", "on-tertiary": "#ffffff", "primary": "#432173", "tertiary-container": "#664500", "background": "#fdf9f1", "on-surface": "#1c1c17", "surface-container": "#f1ede6", "surface-container-highest": "#e6e2da", "on-tertiary-container": "#e8b358", "on-primary-fixed-variant": "#563587", "tertiary-fixed": "#ffdead", "surface-tint": "#6e4da0", "inverse-surface": "#31302b", "inverse-on-surface": "#f4f0e8", "on-tertiary-fixed": "#281900", "secondary-container": "#aef0da", "on-tertiary-fixed-variant": "#604100", "on-secondary-container": "#2f6f5e", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#055141", "on-secondary": "#ffffff", "surface-bright": "#fdf9f1" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-tablet": "2rem", "space-xl": "2.5rem", "margin-desktop": "3rem", "gutter-desktop": "1.5rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-md": "1rem", "margin": "1rem", "gutter": "1rem" }, "fontFamily": { "display-lg-mobile": ["\"Source Serif 4\""], "label-lg": ["Be Vietnam Pro"], "headline-md": ["\"Source Serif 4\""], "body-lg": ["Be Vietnam Pro"], "body-sm": ["Be Vietnam Pro"], "label-md": ["Be Vietnam Pro"], "headline-lg-mobile": ["\"Source Serif 4\""], "headline-lg": ["\"Source Serif 4\""], "display-lg": ["\"Source Serif 4\""], "headline-sm": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"], "label-sm": ["Be Vietnam Pro"] }, "fontSize": { "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col relative"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-4 flex items-center justify-between"><div class="flex items-center gap-3 min-w-0"><img alt="Hue Trip Planner Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1VW1raBw8HD4Ozh8ZlXJ1iBjw_-mLaSe_O_QEMQAn4gBFhFjdlJZ7LEI418yEJCGfve4HkwsBcJESaY5fdyyLXqQIkhVCL4bO_v-KjmG25lBAa2ckGW87ddvpDZLHs8zffa211jE8qDmHufbQ9B-26Vm5P8uiLkj3hDKRNy01Jn74nfP7C18AJHXJyDig_Ho3RXT-MriTXHNq6scxSLrIwhiKW1StG_Y50XtuV2W_XT5pi34V-Lg8N4oR3H"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-primary tracking-tight truncate">Hue Trip Planner</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wide uppercase truncate">Cẩm nang du lịch Huế</span></div></div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface"><div class="flex flex-col w-full pb-24">
+<!-- Top Hero Showcase Carousel -->
+<div class="relative w-full aspect-[4/3] max-h-[340px] overflow-hidden bg-surface-container">
+<div class="flex w-full h-full transition-transform duration-500 ease-out" id="hero-slider">
+<div class="w-full h-full flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Towering Phuoc Duyen pagoda of Thien Mu Pagoda in Hue Vietnam, beside the tranquil Perfume River at golden hour twilight. Soft golden reflections on calm water ripples, ancient terracotta architectural bricks, framed by weeping willow and tropical greenery. Evocative, serene editorial photography style, warm amber and royal violet sky tint." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT5hhKpL-ZAirONIUwtNQAWdkdKoKeUQ32L69sM7TuzJV85r5NrnNMIjmgFcknHrQ2m2TOAi7S1Yqh9MHd1lIHISyfst4wmsyeqVb6I-Pc0A0rCTc1slZQfK9IPRV_Sl37_9drnLcwgDnWRH71GQ015HHmRONFVYsZUD959otMgocEXOT-xrPwI9hDoH0rAKod84sFaRkVS6jIa9r8lIFbxSpWFvKW0_mLR76d8re9hsEbKZSc55anpw"/>
+</div>
+<div class="w-full h-full flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Close up architectural detail of ancient tiered octagonal tower at Thien Mu Pagoda, intricate mossy glazed ceramic roof tiles, carved dragon finials against a soft misty morning Hue sky, muted earth tones and rich heritage textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyTq_yBhm2_a5mpU15bziqqMZnzvr_ymGzhsbBsWs-atmZKSLtASHVm4hdU87JqiSBgSRNSxZi7p8rKaw1ibFKmNUMcyREskGdHZk0DbpS7lksDhvazLhb3accJFAGa61IPMGwg5zQGOPjGl1oiHaRqe2c4V4aEt7FxHStYxEa7xpZMUxhOVYD9_OToszcqrsLKwzyF3E3OtRR99YCucCvLqJxUAqDcvZP6qgLj2zsxoLAjM1wkgUxsw"/>
+</div>
+<div class="w-full h-full flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Tranquil courtyard inside Thien Mu Pagoda Hue, shaded by century-old frangipani trees with blooming white blossoms, antique bronze bell pavillion Dai Hong Chung, filtered warm afternoon sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdbGKRHKkzSz8Rb5tO2_UzMMy3_iMM1r-xFku-IDHvL1TKIZuM-dfFtKnLZVfGmNXujt4xuIVG-6aGQaAL-J_YWb9d7kN5cRwOURNPzdOuJon9NfM2z9pFJqcmyNGOEbgKIDlYszb5HCzS5mjbNZP8yHR2-ydkGU5A_APIeuIMu98MQuuDORFaT5LYoCVMdOM96rkAu4LyKkIJXeaJatzGvK7lrWWPqSFox51i3n8XnZK0qYewaD7AWQ"/>
+</div>
+</div>
+<!-- Gradient Overlay Scrim for readability & mood -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-black/35 pointer-events-none"></div>
+<!-- Top floating action bar (overlaid on hero) -->
+<div class="absolute top-3 inset-x-3 flex items-center justify-between z-10">
+<button aria-label="Quay lại" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md active:scale-95 transition-transform" onclick="window.history.back()" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<button aria-label="Lưu địa điểm" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md active:scale-95 transition-transform" id="hero-bookmark-btn" onclick="toggleBookmark()" type="button">
+<span class="material-symbols-outlined text-[20px]" id="hero-bookmark-icon">bookmark_border</span>
+</button>
+<button aria-label="Chia sẻ địa điểm" class="w-10 h-10 rounded-full bg-surface/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-md active:scale-95 transition-transform" onclick="sharePlace()" type="button">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</div>
+<!-- Carousel Indicator Dots & Photo Credit -->
+<div class="absolute bottom-3 inset-x-4 flex items-center justify-between z-10">
+<div class="flex items-center gap-1.5 bg-surface/75 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary transition-all duration-300 dot-indicator"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant transition-all duration-300 dot-indicator"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant transition-all duration-300 dot-indicator"></span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface/70 backdrop-blur-sm px-2 py-0.5 rounded-md shadow-sm">
+        Ảnh: Lưu Ly · Public domain
+      </span>
+</div>
+</div>
+<!-- Content Container -->
+<div class="px-4 pt-4 flex flex-col gap-6">
+<!-- Title & Location Header -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">temple_buddhist</span>
+          Chùa chiền &amp; tâm linh
+        </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+          Quốc tự Cố đô
+        </span>
+</div>
+<div class="flex flex-col">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">
+          Chùa Thiên Mụ
+        </h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase mt-0.5">
+          Thiên Mụ Pagoda · Linh Mụ Tự
+        </p>
+</div>
+<div class="flex items-start gap-1.5 text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">location_on</span>
+<span class="font-body-md text-body-md leading-snug">
+          Đồi Hà Khê, đường Nguyễn Phúc Nguyên, Phường Hương Long, TP. Huế
+        </span>
+</div>
+</div>
+<!-- Key Facts Row Grid (2x2 on mobile) -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Fact 1 -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px]">schedule</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Giờ mở cửa</span>
+<span class="font-label-lg text-label-lg text-on-surface truncate">07:00 - 17:30</span>
+</div>
+</div>
+<!-- Fact 2 -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]">confirmation_number</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Giá vé</span>
+<span class="font-label-lg text-label-lg text-secondary truncate">Miễn phí</span>
+</div>
+</div>
+<!-- Fact 3 -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">timer</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Thời gian xem</span>
+<span class="font-label-lg text-label-lg text-on-surface truncate">~60 phút</span>
+</div>
+</div>
+<!-- Fact 4 -->
+<div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="w-9 h-9 rounded-lg bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[20px]">wb_twilight</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Thời điểm vàng</span>
+<span class="font-label-lg text-label-lg text-on-surface truncate">Sáng &amp; Hoàng hôn</span>
+</div>
+</div>
+</div>
+<!-- Category / Experience Tags -->
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm">
+        #Chùa chiền &amp; tâm linh
+      </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm">
+        #Sông Hương
+      </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm">
+        #Kiến trúc cổ
+      </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm">
+        #Chụp ảnh &amp; ngắm cảnh
+      </span>
+<span class="px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface text-label-md font-label-md shadow-sm">
+        #Di sản
+      </span>
+</div>
+<!-- Editorial Description Section -->
+<div class="flex flex-col gap-2.5 p-4 rounded-xl bg-surface-container-lowest shadow-sm">
+<h2 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">auto_stories</span>
+        Về di tích
+      </h2>
+<div class="relative">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed line-clamp-3" id="desc-text">
+          Chùa Thiên Mụ (Linh Mụ tự) được khởi lập từ năm 1601 bởi chúa Tiên Nguyễn Hoàng, là ngôi quốc tự cổ kính bậc nhất xứ Đàng Trong tọa lạc trên đồi Hà Khê soi bóng xuống dòng sông Hương thơ mộng. Nổi bật với ngọn tháp Phước Duyên 7 tầng hình bát giác cao 21 mét, tiếng chuông chùa Thiên Mụ sớm chiều ngân vang đã trở thành linh hồn của Cố đô. Nơi đây lưu giữ nhiều hiện vật quý giá như chuông đồng Đại Hồng Chung đúc năm 1710, bia đá dựng trên lưng rùa đá cẩm thạch thời chúa Nguyễn Phúc Chu và chiếc xe Austin lịch sử của Bồ tát Thích Quảng Đức.
+        </p>
+</div>
+<button class="inline-flex items-center gap-1 text-primary font-label-md text-label-md self-start pt-1 focus:outline-none" id="toggle-desc-btn" onclick="toggleDescription()" type="button">
+<span>Xem thêm</span>
+<span class="material-symbols-outlined text-[18px]" id="toggle-desc-icon">keyboard_arrow_down</span>
+</button>
+</div>
+<!-- Notice Banner -->
+<div class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined text-tertiary-container text-[20px] shrink-0 mt-0.5">info</span>
+<div class="flex flex-col gap-0.5">
+<p class="font-body-sm text-body-sm text-on-surface leading-relaxed">
+          Thông tin có thể thay đổi tùy theo mùa lễ hội hoặc kế hoạch trùng tu di tích, quý khách vui lòng kiểm tra lại trước khi đến.
+        </p>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
+          Cập nhật: 10/2025
+        </span>
+</div>
+</div>
+<!-- Mini Map & Directions Card Section -->
+<div class="flex flex-col gap-3 p-4 rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">explore</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Vị trí &amp; Chỉ đường</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-secondary-container/50 px-2.5 py-0.5 rounded-full font-semibold">
+          Cách trung tâm ~4.2 km
+        </span>
+</div>
+<!-- Map Display Container -->
+<div class="relative w-full h-44 rounded-lg overflow-hidden shadow-inner">
+<div class="w-full h-full bg-cover bg-center" data-location="Chùa Thiên Mụ, Hương Long, Huế, Vietnam" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBcM6D7HawtfxiTfgxcVTGjtqAVSXrC3kzPZQ1sKWdJLhazlee1JrBNqfAb2FVModPSilMDJic_R6cCXAkmSSRk7WTvEBVrVCNbtswnhrUJQhTGbenynAIW5UaAaIbecH2VMky_LmDISMvpNQ8yuTXpR5zl8RzwE2USc60ukIOKY8pgYOMLyI2NfuCS434Vu5snQaHlV4IhHeDTBAPPSIIyJE8-GcGqM2gj0_6vLD8JDU2dJfwCi-HW1A')"></div>
+<!-- Interactive map overlay badge -->
+<div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between p-2 rounded-lg bg-surface/90 backdrop-blur-md shadow-sm">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0">pin_drop</span>
+<span class="font-label-sm text-label-sm text-on-surface truncate">Đồi Hà Khê ven bờ Bắc sông Hương</span>
+</div>
+<a class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm font-semibold shrink-0 active:scale-95 transition-transform" href="https://maps.google.com/?q=Chùa+Thiên+Mụ+Huế" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[16px]">directions</span>
+            Chỉ đường
+          </a>
+</div>
+</div>
+</div>
+<!-- Nearby Recommendations ("Gần đây") -->
+<div class="flex flex-col gap-3">
+<div class="flex flex-col">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-primary">Điểm tham quan kết hợp</h2>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Cùng tuyến đường</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Tiết kiệm thời gian di chuyển với các điểm kề cận trong bán kính 5km
+        </p>
+</div>
+<!-- Nearby Horizontal Cards Scroll -->
+<div class="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+<!-- Card 1: Bến thuyền Thiên Mụ -->
+<div class="min-w-[210px] max-w-[210px] flex flex-col rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm shrink-0">
+<div class="w-full h-28 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Traditional dragon dragon boat docked at Thien Mu pier on the gentle Perfume River in Hue, green tree canopy reflections in early morning sunlight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxdeRrVwORN_tvBqGHoKx6vPAbiy5Aleg8uEjlJU4oadjkPZ11xnLAGWGce3FMU7tfSMqUhJYI2su6smfjT0zzJ-3BcHuJoTsleAJ-DrqqsanTlew5-AzU6QOwoedVHN7WtNC6_B5C_H9dx4ZY6Pfpf1NYy89X1c2WupdrYR38KgTUTvtUmrHYo5XkNncXmig03r3t0QeCbyDUuWbfP-QvJZJW_U5-M9AjRpPfTBi5KxJ9FhdrC31sGQ"/>
+<span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-surface/85 backdrop-blur-sm text-on-surface font-label-sm text-label-sm font-semibold">
+              150m
+            </span>
+</div>
+<div class="p-3 flex flex-col justify-between flex-1 gap-1.5">
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface line-clamp-1">Bến thuyền Chùa Thiên Mụ</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Dạo sông Hương ngắm hoàng hôn</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">directions_boat</span> 2 phút đi bộ
+            </span>
+</div>
+</div>
+<!-- Card 2: Văn Thánh Huế -->
+<div class="min-w-[210px] max-w-[210px] flex flex-col rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm shrink-0">
+<div class="w-full h-28 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Van Thanh Hue temple of literature historic stone stele rows on turtle backs under centuries old banyan trees, quiet tranquil imperial scholar heritage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY4z5yRIyuhgIyhqjoweYrlnCjfKuXbbB0a-TRudon_TNyChQ88fVIwKB2GKmo1nAJKOKeU5Po57RHmqqFy_gdvSHyACmQb5C0SyMRhDllY9s7OdndsbAazFX9ADOFXK_-5A98bwWDU6bC3ucinWWSZOPXy6NfnhpY2ryEImPdGgN9BXBF6c7nL4Nu7u2pgBXobnrn5SDcaDzBGiWJmt6blRl9TuJyJhGUn2sbwBlFoRDHaBIN-S68Vw"/>
+<span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-surface/85 backdrop-blur-sm text-on-surface font-label-sm text-label-sm font-semibold">
+              900m
+            </span>
+</div>
+<div class="p-3 flex flex-col justify-between flex-1 gap-1.5">
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface line-clamp-1">Văn Thánh Huế</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Di tích Nho giáo &amp; văn bia cổ</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span> 10 phút đi bộ
+            </span>
+</div>
+</div>
+<!-- Card 3: Nhà vườn An Hiên -->
+<div class="min-w-[210px] max-w-[210px] flex flex-col rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm shrink-0">
+<div class="w-full h-28 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="An Hien traditional Hue garden house with lush green fruit trees, apricot flower pathway, antique carved wooden beam architecture and serene lotus pond." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCY3mqMdgXhQJWxfIang6JELRdB6JLnk1Axv7LZvxLWKPDgYYxahi7_p4eenMftxnI_plIKimk-7gJFceD_7V5Kkidvo6ADuguU2dA5pmaR5jG1kaTNEF8-KH0ZAKwSTQksPoaWF1F159s7Iu_fe5dAfDjRV7NqMGgSI7oR4YkRbHT4AhRlpLABTqvgiJ02W7JZ0iTIA-E-ehjURDLeQFNt2RnurlJUVJwdLU5pqD8ZU9fHyGfp7e-WnA"/>
+<span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-surface/85 backdrop-blur-sm text-on-surface font-label-sm text-label-sm font-semibold">
+              1.2km
+            </span>
+</div>
+<div class="p-3 flex flex-col justify-between flex-1 gap-1.5">
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface line-clamp-1">Nhà vườn An Hiên</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Nhà rường truyền thống xứ Huế</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">directions_car</span> 3 phút xe máy
+            </span>
+</div>
+</div>
+<!-- Card 4: Chùa Huyền Không Sơn Thượng -->
+<div class="min-w-[210px] max-w-[210px] flex flex-col rounded-xl bg-surface-container-lowest overflow-hidden shadow-sm shrink-0">
+<div class="w-full h-28 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Huyen Khong Son Thuong Zen Monastery nestled in deep pine forests of Hue, wooden bridges over misty green lotus lakes, peaceful Buddhist retreat atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAZF9M_fE6KZHXaujz3D0bljcKpSD3vltcAlxq3c6uXTAY-udm8_zEviyzhsneJ1YQ21_tPrAVRM5sqGTpPZZqypqbsegl6JOjD11M4eIM-vP39yPPewQU3YSLbtrdKoPeR7r1t1NmIWBlwjk2-XsWQ0cFzp2Af3BoksIpWdYIZC_1nl1PuYq28JUzsuetA_F0b5jUhiVnoAzrCwi3b2dxFMY-wm-3JQOzE6SCQYv6ljykJBvV8dezqw"/>
+<span class="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-surface/85 backdrop-blur-sm text-on-surface font-label-sm text-label-sm font-semibold">
+              4.5km
+            </span>
+</div>
+<div class="p-3 flex flex-col justify-between flex-1 gap-1.5">
+<div>
+<h3 class="font-label-lg text-label-lg text-on-surface line-clamp-1">Huyền Không Sơn Thượng</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Thiền viện thanh tịnh giữa rừng thông</p>
+</div>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">two_wheeler</span> 12 phút xe máy
+            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action Bar (Fixed on mobile above tab bar clearance) -->
+<div class="fixed bottom-20 inset-x-0 z-40 bg-surface/90 backdrop-blur-xl p-3 shadow-lg max-w-md mx-auto">
+<div class="flex items-center gap-3">
+<!-- Heart Bookmark Secondary Button -->
+<button class="h-12 px-4 rounded-xl bg-surface-container-lowest text-primary flex items-center justify-center gap-1.5 shadow-sm active:scale-95 transition-all font-label-md text-label-md shrink-0" id="bottom-save-btn" onclick="toggleBookmark()" type="button">
+<span class="material-symbols-outlined text-[22px]" id="bottom-save-icon">favorite_border</span>
+<span id="bottom-save-label">Lưu</span>
+</button>
+<!-- Primary CTA: Add to itinerary -->
+<button class="flex-1 h-12 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md hover:bg-primary-container active:scale-[0.98] transition-all" onclick="addToItinerary()" type="button">
+<span class="material-symbols-outlined text-[20px]">add_circle</span>
+<span>Thêm vào chuyến đi</span>
+</button>
+</div>
+</div>
+<!-- Toast Notification Container -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300 opacity-0 transform -translate-y-2" id="toast">
+<div class="px-4 py-2.5 rounded-full bg-inverse-surface text-inverse-on-surface shadow-xl flex items-center gap-2 text-label-md font-label-md">
+<span class="material-symbols-outlined text-secondary-fixed text-[18px]" id="toast-icon">check_circle</span>
+<span id="toast-message">Đã thêm vào lịch trình</span>
+</div>
+</div>
+</div>
+<script>
+  // Simple client-side micro-interactions
+  let isSaved = false;
+
+  function toggleBookmark() {
+    isSaved = !isSaved;
+    const heroIcon = document.getElementById('hero-bookmark-icon');
+    const bottomIcon = document.getElementById('bottom-save-icon');
+    const bottomLabel = document.getElementById('bottom-save-label');
+    
+    if (isSaved) {
+      if (heroIcon) {
+        heroIcon.innerText = 'bookmark';
+        heroIcon.style.fontVariationSettings = "'FILL' 1";
+        heroIcon.classList.add('text-primary');
+      }
+      if (bottomIcon) {
+        bottomIcon.innerText = 'favorite';
+        bottomIcon.style.fontVariationSettings = "'FILL' 1";
+        bottomIcon.classList.add('text-error');
+      }
+      if (bottomLabel) bottomLabel.innerText = 'Đã lưu';
+      showToast('Đã lưu vào danh sách yêu thích', 'favorite');
+    } else {
+      if (heroIcon) {
+        heroIcon.innerText = 'bookmark_border';
+        heroIcon.style.fontVariationSettings = "'FILL' 0";
+        heroIcon.classList.remove('text-primary');
+      }
+      if (bottomIcon) {
+        bottomIcon.innerText = 'favorite_border';
+        bottomIcon.style.fontVariationSettings = "'FILL' 0";
+        bottomIcon.classList.remove('text-error');
+      }
+      if (bottomLabel) bottomLabel.innerText = 'Lưu';
+      showToast('Đã xóa khỏi danh sách yêu thích', 'bookmark_remove');
+    }
+  }
+
+  function sharePlace() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Chùa Thiên Mụ - Cố đô Huế',
+        text: 'Khám phá Chùa Thiên Mụ - Đệ nhất cổ tự xứ Huế',
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard?.writeText(window.location.href);
+      showToast('Đã sao chép liên kết chia sẻ', 'link');
+    }
+  }
+
+  function addToItinerary() {
+    showToast('Đã thêm Chùa Thiên Mụ vào lịch trình của bạn!', 'add_task');
+  }
+
+  function showToast(msg, icon = 'check_circle') {
+    const toast = document.getElementById('toast');
+    const msgEl = document.getElementById('toast-message');
+    const iconEl = document.getElementById('toast-icon');
+    if (!toast || !msgEl) return;
+    
+    msgEl.innerText = msg;
+    if (iconEl) iconEl.innerText = icon;
+    
+    toast.classList.remove('opacity-0', '-translate-y-2');
+    toast.classList.add('opacity-100', 'translate-y-0');
+    
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', '-translate-y-2');
+    }, 2400);
+  }
+
+  function toggleDescription() {
+    const desc = document.getElementById('desc-text');
+    const btn = document.getElementById('toggle-desc-btn');
+    const icon = document.getElementById('toggle-desc-icon');
+    if (!desc || !btn || !icon) return;
+
+    if (desc.classList.contains('line-clamp-3')) {
+      desc.classList.remove('line-clamp-3');
+      btn.querySelector('span:first-child').innerText = 'Thu gọn';
+      icon.innerText = 'keyboard_arrow_up';
+    } else {
+      desc.classList.add('line-clamp-3');
+      btn.querySelector('span:first-child').innerText = 'Xem thêm';
+      icon.innerText = 'keyboard_arrow_down';
+    }
+  }
+
+  // Simple carousel auto-loop simulation
+  (function initCarousel() {
+    const slider = document.getElementById('hero-slider');
+    const dots = document.querySelectorAll('.dot-indicator');
+    if (!slider || !dots.length) return;
+    
+    let currentSlide = 0;
+    const totalSlides = dots.length;
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.classList.add('w-2', 'h-2', 'bg-primary');
+          dot.classList.remove('w-1.5', 'h-1.5', 'bg-outline-variant');
+        } else {
+          dot.classList.remove('w-2', 'h-2', 'bg-primary');
+          dot.classList.add('w-1.5', 'h-1.5', 'bg-outline-variant');
+        }
+      });
+    }, 4500);
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(31,26,36,0.06)]" data-active-classes="text-primary-container font-semibold"><div class="relative flex justify-around items-end h-20 px-2"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="trang-chu" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Trang chủ</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="kham-pha" href="#"><span class="material-symbols-outlined text-[24px]">explore</span><span class="font-label-sm text-label-sm mt-0.5">Khám phá</span></a><div class="relative flex flex-col items-center -top-3"><a class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_4px_16px_rgba(91,58,140,0.35)] ring-4 ring-surface transition-transform active:scale-95 hover:bg-primary" data-path="tao-lich-trinh" href="#"><span class="material-symbols-outlined text-[28px]">add_circle</span></a><span class="font-label-sm text-label-sm text-primary-container font-semibold mt-1 tracking-tight">Tạo lịch trình</span></div><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="ban-do" href="#"><span class="material-symbols-outlined text-[24px]">map</span><span class="font-label-sm text-label-sm mt-0.5">Bản đồ</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="toi" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm mt-0.5">Tôi</span></a></div></nav></body></html>

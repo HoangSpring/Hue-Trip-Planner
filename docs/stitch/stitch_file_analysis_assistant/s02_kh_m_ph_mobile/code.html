@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container": "#93000a", "surface-dim": "#dddad2", "primary-fixed-dim": "#d6baff", "tertiary-fixed-dim": "#f4bd61", "primary-container": "#5b3a8c", "on-primary-fixed": "#280056", "on-secondary-fixed": "#002019", "secondary-fixed-dim": "#93d3bf", "surface-container-lowest": "#ffffff", "on-background": "#1c1c17", "surface": "#fdf9f1", "on-surface-variant": "#4a4550", "error": "#ba1a1a", "secondary-fixed": "#aef0da", "on-primary-container": "#ceadff", "surface-variant": "#e6e2da", "surface-container-low": "#f7f3eb", "primary-fixed": "#ecdcff", "secondary": "#286958", "on-error": "#ffffff", "outline-variant": "#ccc3d2", "surface-container-high": "#ece8e0", "inverse-primary": "#d6baff", "tertiary": "#483000", "outline": "#7b7481", "on-primary": "#ffffff", "on-tertiary": "#ffffff", "primary": "#432173", "tertiary-container": "#664500", "background": "#fdf9f1", "on-surface": "#1c1c17", "surface-container": "#f1ede6", "surface-container-highest": "#e6e2da", "on-tertiary-container": "#e8b358", "on-primary-fixed-variant": "#563587", "tertiary-fixed": "#ffdead", "surface-tint": "#6e4da0", "inverse-surface": "#31302b", "inverse-on-surface": "#f4f0e8", "on-tertiary-fixed": "#281900", "secondary-container": "#aef0da", "on-tertiary-fixed-variant": "#604100", "on-secondary-container": "#2f6f5e", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#055141", "on-secondary": "#ffffff", "surface-bright": "#fdf9f1" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-tablet": "2rem", "space-xl": "2.5rem", "margin-desktop": "3rem", "gutter-desktop": "1.5rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-md": "1rem", "margin": "1rem", "gutter": "1rem" }, "fontFamily": { "display-lg-mobile": ["\"Source Serif 4\""], "label-lg": ["Be Vietnam Pro"], "headline-md": ["\"Source Serif 4\""], "body-lg": ["Be Vietnam Pro"], "body-sm": ["Be Vietnam Pro"], "label-md": ["Be Vietnam Pro"], "headline-lg-mobile": ["\"Source Serif 4\""], "headline-lg": ["\"Source Serif 4\""], "display-lg": ["\"Source Serif 4\""], "headline-sm": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"], "label-sm": ["Be Vietnam Pro"] }, "fontSize": { "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } }</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col relative"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-4 flex items-center justify-between"><div class="flex items-center gap-3 min-w-0"><img alt="Hue Trip Planner Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1VW1raBw8HD4Ozh8ZlXJ1iBjw_-mLaSe_O_QEMQAn4gBFhFjdlJZ7LEI418yEJCGfve4HkwsBcJESaY5fdyyLXqQIkhVCL4bO_v-KjmG25lBAa2ckGW87ddvpDZLHs8zffa211jE8qDmHufbQ9B-26Vm5P8uiLkj3hDKRNy01Jn74nfP7C18AJHXJyDig_Ho3RXT-MriTXHNq6scxSLrIwhiKW1StG_Y50XtuV2W_XT5pi34V-Lg8N4oR3H"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-primary tracking-tight truncate">Hue Trip Planner</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wide uppercase truncate">Cẩm nang du lịch Huế</span></div></div><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface"><div class="flex flex-col w-full px-4 pt-2 pb-8">
+<!-- Search & Editorial Framing Header -->
+<header class="flex flex-col gap-3 mb-4">
+<div class="flex items-baseline justify-between">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight">Khám phá Huế</h1>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest flex items-center gap-1 font-semibold">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-secondary"></span> Cố đô xưa
+      </span>
+</div>
+<!-- Search Input Bar -->
+<div class="relative flex items-center w-full">
+<div class="absolute inset-y-0 left-3.5 flex items-center pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="w-full h-12 pl-10 pr-20 bg-surface-container-lowest rounded-xl text-on-surface font-body-md text-body-md placeholder:text-on-surface-variant/60 shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary-container/20" id="search-input" placeholder="Tìm địa điểm, món ăn, lăng tẩm..." type="search"/>
+<div class="absolute inset-y-0 right-2 flex items-center gap-1">
+<button aria-label="Tìm kiếm bằng giọng nói" class="w-8 h-8 flex items-center justify-center rounded-lg text-on-surface-variant active:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</button>
+<button aria-label="Mở bộ lọc" class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container text-primary active:bg-primary-container active:text-on-primary transition-colors" id="open-filter-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Horizontal Scrollable Category Chips -->
+<nav aria-label="Danh mục khám phá" class="-mx-4 px-4 overflow-x-auto no-scrollbar flex items-center gap-2 pb-2 mb-3">
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-primary-container text-on-primary font-label-md text-label-md flex-shrink-0 shadow-sm transition-transform active:scale-95">
+<span>Tất cả</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex-shrink-0 shadow-sm active:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">temple_buddhist</span>
+<span>Di sản</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex-shrink-0 shadow-sm active:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-secondary">ramen_dining</span>
+<span>Ẩm thực</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex-shrink-0 shadow-sm active:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-primary">local_cafe</span>
+<span>Cà phê</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex-shrink-0 shadow-sm active:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">kayaking</span>
+<span>Dạo &amp; ngắm cảnh</span>
+</button>
+<button class="flex items-center gap-1.5 px-4 h-9 rounded-full bg-surface-container-lowest text-on-surface font-label-md text-label-md flex-shrink-0 shadow-sm active:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">shopping_bag</span>
+<span>Quà &amp; lưu niệm</span>
+</button>
+</nav>
+<!-- Filter Status & Stats Indicator -->
+<section class="flex flex-col gap-2 mb-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="font-semibold text-on-surface">48 địa điểm</span>
+<span>phù hợp ở Huế</span>
+</div>
+<button class="flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold py-1 px-2 rounded-lg bg-surface-container-low active:bg-surface-container-high transition-colors" type="button">
+<span>Nổi bật nhất</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<!-- Active Filter Tags Ribbon -->
+<div class="flex items-center gap-1.5 flex-wrap">
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span class="text-tertiary-container font-semibold">Di sản</span>
+<button aria-label="Bỏ lọc Di sản" class="hover:text-error flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">
+<span>Miễn phí vé</span>
+<button aria-label="Bỏ lọc Miễn phí vé" class="hover:text-error flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+</div>
+<button class="font-label-sm text-label-sm text-on-surface-variant underline underline-offset-2 ml-1">Xóa tất cả</button>
+</div>
+</section>
+<!-- Place Cards Editorial Feed -->
+<main class="flex flex-col gap-5">
+<!-- Card 1: Đại Nội Huế -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Editorial atmospheric photograph of the majestic Ngo Mon Gate at the Hue Imperial Citadel, weathered vermilion timber rafters, ancient lotus pond reflection under golden morning sun, classical Vietnamese imperial heritage ambiance, warm ivory highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLNG_npJH3HXXKQShPASZHJLtxjL9HjCeufmvunK0Dxza3UH4gR_wF5o9tuDf9PRbWQUmTCLDG-4_Pgoq-Y5Dq_qYAC8OghVN_S1y7leGWo3XnWPDtHbrUutY3iXxWnpTHfDUbdUJE9DZH1YTdys2xuCdsTM_Vw7gIOJcLiz52VS9bacj2c8ub-4J4GiWDiktyDzoj6Rc2oA-_P8FNT89qwpskWxIFJ1u2721hLGz4ItMzYuaPafSlig"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-primary-container/90 backdrop-blur-md text-on-primary font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Di sản hoàng cung
+          </span>
+</div>
+<button aria-label="Lưu Đại Nội Huế" class="bookmark-toggle absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1.8k)
+          </span>
+<span class="font-label-sm text-label-sm bg-inverse-surface/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-inverse-on-surface font-medium">
+            200.000 ₫
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Đại Nội Huế (Hoàng Thành)
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Quần thể cung điện hoàng gia triều Nguyễn rực rỡ bên bờ bắc sông Hương, biểu tượng tối thượng của lịch sử đế đô.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Thuận Thành</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">schedule</span>
+<span>07:00 - 17:30</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Chùa Thiên Mụ -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Octagonal seven-tier Phuoc Duyen tower of Thien Mu Pagoda standing high on Ha Khe hill overlooking the serene Perfume River in Hue, surrounded by pine trees, soft misty purple twilight, contemplative Buddhist spiritual stillness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-gNPatCZTNgfENZSzrZS-yJl8Lxu3cfFV7MYf4E5UgnJSmdy6ut8tcJepDdXYwgCdhoqiVvJlVNibvwUyhDkxv4Qn7wbQUDzHUcTDV3iOSKoBI3zYuMmkd9gSY6k2jPpLtGTJl4CqvG925_3iqjEVYUTd43l8ULmoQEVBxpHx6KsOCq5ANAetpasWHyfZ7rytOB-_iJvH1_3ywOtp7onlme6hcIg2yC2zPziOuvDyW6Apd2BGaM-EjA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Chùa chiền &amp; tâm linh
+          </span>
+</div>
+<button aria-label="Lưu Chùa Thiên Mụ" class="bookmark-toggle active absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-primary-container flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (940)
+          </span>
+<span class="font-label-sm text-label-sm bg-secondary/80 backdrop-blur-sm px-2 py-0.5 rounded-full text-on-secondary font-semibold">
+            Miễn phí vé
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Chùa Thiên Mụ
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Ngôi quốc tự cổ kính hơn 400 năm soi bóng trên đồi Hà Khê, nơi tiếng chuông chiều ngân vang thinh lặng vào lòng sông.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Hương Long</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">hourglass_empty</span>
+<span>Khuyên dành ~60 phút</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Bún bò Huế Mụ Rơi -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Artisanal food photograph of authentic Hue beef noodle soup Bun Bo Hue in an earthy ceramic bowl, lemongrass and chili aromatic red broth, thin beef shanks, crab meatballs, fresh herbs on woven bamboo mat, warm morning market light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFka9g0V7gM6gP6LNA9QhmlC_tE9DWZMuieMfLPmb0ZW2yNJkanEKqPx_GnWNf3SRz5DJXFp2m0gR5bf1Ee4eyIij7UlD5C0IvvYTjD75wPkP2xvHVGzjpbOzBNxaCltXPgMH5fhHo9D7UprfhcO50J_SHfr11lcDf_ih2_lZnktx4IghCfbabiwQgjUZTrFlX_Cqs4kNKVyyx-Hukd3BNKUNPKxt-1VvEF3Qxg6N9uXkqdfZNoVFEtw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Ẩm thực địa phương
+          </span>
+</div>
+<button aria-label="Lưu quán Bún bò Mụ Rơi" class="bookmark-toggle absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.7 (620)
+          </span>
+<span class="font-label-sm text-label-sm bg-inverse-surface/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-inverse-on-surface font-medium">
+            35.000 - 55.000 ₫
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Bún bò Huế Mụ Rơi
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Hương vị nước dùng đậm đà hương sả ruốc gia truyền, chả cua quết tay dẻo ngọt đặc trưng xứ kinh kỳ.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Nguyễn Chí Diểu</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">wb_sunny</span>
+<span>Sáng &amp; Trưa (06:30 - 13:00)</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 4: Lăng Khải Định -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Spectacular stone facade and ceremonial dragon staircase of Khai Dinh Mausoleum on Chau Chu mountain slope, fusion of gothic European and Vietnamese imperial architecture, dark blackened concrete adorned with intricate porcelain mosaics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3wBvbLkT8faaPhslF1EaKf9mNU9jFHj8VGGeFVMeHPR_X_Xxn3lBL2iEDQCJJ8jJRYacmbJjvjQ5-NfBLOrNgR5z-cOJvPK1FvU6YUGMzgIMiuguJcy6MieDoVCODgWgZVrcOaagR70Pmew4KJM3DTDgH9noShqo2gLjjSeTbqbzNGMj98nvxIS9Tz0qDxscZUvssspBrVoSy3xz-W5Cpo21XeRCzCi8f4iCkZFWkexadfGWRXJ31Ww"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-primary-container/90 backdrop-blur-md text-on-primary font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Lăng tẩm triều Nguyễn
+          </span>
+</div>
+<button aria-label="Lưu Lăng Khải Định" class="bookmark-toggle absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (1.2k)
+          </span>
+<span class="font-label-sm text-label-sm bg-inverse-surface/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-inverse-on-surface font-medium">
+            150.000 ₫
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Lăng Khải Định (Ứng Lăng)
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Đỉnh cao nghệ thuật khảm sành sứ và pha lê độc bản, kết hợp tinh tế mỹ cảm cung đình Á - Âu trên sườn núi Châu Chữ.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Thủy Bằng</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">schedule</span>
+<span>07:00 - 17:30</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 5: Cà phê Muối Đặng Thái Thân -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Clear glass cup of authentic Hue salted cream coffee resting on dark wooden table in shaded imperial courtyard garden, silky white foam topping dark roasted Vietnamese drip coffee, delicate frangipani flower beside it." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY96Hntro5CYMmfKSpo42E0Kx9w5GQEP9bz01B0ElJ5WILT_zAkig1FVVJYCFhgoUk0nDk9oo8sKj0_ImFiBVJik6mO2UsEO9k9X9dhaK4HUSaX9_CLidEhxXWhl4Gd3M2nKibwkwEQuU6mUkeItoTWODqiP51GFqqCr2QRqKCTMwYWAnTauMhA-WJbzutNLGaiGubsOnKcGvaVohc6oK10Ns0WXOEAW2RpumVtVPQOzqp-44uW_tgBg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Cà phê &amp; thư giãn
+          </span>
+</div>
+<button aria-label="Lưu Cà phê Muối" class="bookmark-toggle absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.6 (410)
+          </span>
+<span class="font-label-sm text-label-sm bg-inverse-surface/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-inverse-on-surface font-medium">
+            25.000 ₫
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Cà phê Muối Đặng Thái Thân
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Quán khởi nguồn cho món cà phê kem muối nức tiếng đất Cố đô, ẩn mình dưới vòm cây xanh yên ả nội thành.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Thuận Hòa</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">yard</span>
+<span>Không gian sân vườn</span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 6: Dạo thuyền rồng trên sông Hương -->
+<article class="flex flex-col bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Traditional ornate dragon boats cruising softly along the wide shimmering Perfume River at dusk, warm lanterns glowing softly, silhouettes of Truong Tien Bridge glowing in the distance, tranquil poetic Hue waterway." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGNg1eVYXnLmrc1fmoNd-JWX1UXD0i2Fx7MW7_fJAGiW3cPP9lQO22lYMzxrH2Yae1L_DstocXHsUHBCW1Eu5P3lg3ycYjxiQdGTxLVcoabvn2b1nmIu-nAzAJsRRBqTaXwOPDTguFgQNQY_dfY2hpXc8L13pzWNbIbNYJ5WamLq9yiSBU2yC2Hm43jL0ZL7e2Re8bLeBybK6oo_JzpbPgNqTIOv93lSWmSnFbp-dN9yAAnLQSZB9A9Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute top-3 left-3">
+<span class="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold tracking-wide shadow-sm">
+            Dạo &amp; ngắm cảnh
+          </span>
+</div>
+<button aria-label="Lưu trải nghiệm thuyền rồng" class="bookmark-toggle absolute top-3 right-3 w-9 h-9 rounded-full bg-surface-container-lowest/80 backdrop-blur-md text-on-surface flex items-center justify-center shadow-sm transition-transform active:scale-90" type="button">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-inverse-on-surface">
+<span class="font-label-sm text-label-sm flex items-center gap-1 backdrop-blur-sm bg-inverse-surface/40 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">star</span> 4.7 (512)
+          </span>
+<span class="font-label-sm text-label-sm bg-inverse-surface/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-inverse-on-surface font-medium">
+            100.000 ₫
+          </span>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-1.5">
+<div class="flex items-start justify-between gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">
+            Dạo thuyền rồng trên sông Hương
+          </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+          Thả trôi theo làn nước Hương Giang trong tiếng đàn nhã nhạc êm đềm, ngắm hoàng hôn buông nhuộm tím cầu Tràng Tiền.
+        </p>
+<div class="pt-2 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+<span>Bến Tòa Khâm</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">nights_stay</span>
+<span>Hoàng hôn &amp; Đêm</span>
+</div>
+</div>
+</div>
+</article>
+</main>
+<!-- Load More Action -->
+<section class="mt-6 flex flex-col items-center gap-2">
+<button class="w-full h-12 rounded-xl bg-surface-container-lowest text-primary font-label-lg text-label-lg font-semibold shadow-sm active:bg-surface-container-high transition-all flex items-center justify-center gap-2" type="button">
+<span>Xem thêm 42 địa điểm khác</span>
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</button>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center">
+      Cập nhật hàng tuần bởi hướng dẫn viên bản địa Huế
+    </p>
+</section>
+<!-- Bottom Sheet Backdrop & Modal: Advanced Filters -->
+<div class="fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300" id="filter-backdrop">
+<div class="absolute inset-x-0 bottom-0 bg-surface rounded-t-3xl max-h-[85vh] overflow-y-auto p-5 transform translate-y-full transition-transform duration-300 ease-out shadow-2xl flex flex-col gap-5" id="filter-sheet">
+<!-- Sheet Handle & Title -->
+<div class="flex flex-col items-center gap-3">
+<div class="w-10 h-1.5 bg-outline-variant/60 rounded-full"></div>
+<div class="flex items-center justify-between w-full">
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Bộ lọc nâng cao</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tìm kiếm trải nghiệm phù hợp với nhịp đi của bạn</span>
+</div>
+<button aria-label="Đóng bộ lọc" class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center" id="close-filter-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- Filter Section: Khu vực -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wide">Khu vực địa lý</span>
+<div class="grid grid-cols-3 gap-2">
+<button class="filter-chip py-2 px-3 rounded-xl bg-primary-container text-on-primary font-label-sm text-label-sm font-medium text-center" type="button">
+            Bờ Bắc (Kinh thành)
+          </button>
+<button class="filter-chip py-2 px-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Bờ Nam (Phố mới)
+          </button>
+<button class="filter-chip py-2 px-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Ngoại ô &amp; Lăng tẩm
+          </button>
+</div>
+</div>
+<!-- Filter Section: Khoảng giá -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wide">Khoảng chi phí</span>
+<div class="grid grid-cols-2 gap-2">
+<button class="filter-chip py-2 px-3 rounded-xl bg-primary-container text-on-primary font-label-sm text-label-sm font-medium text-center" type="button">
+            Miễn phí vé vào
+          </button>
+<button class="filter-chip py-2 px-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Dưới 50.000 ₫
+          </button>
+<button class="filter-chip py-2 px-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            50.000 ₫ - 200.000 ₫
+          </button>
+<button class="filter-chip py-2 px-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Trên 200.000 ₫
+          </button>
+</div>
+</div>
+<!-- Filter Section: Thời điểm lý tưởng -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wide">Thời điểm lý tưởng</span>
+<div class="grid grid-cols-4 gap-2">
+<button class="filter-chip py-2 px-2 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Sáng sớm
+          </button>
+<button class="filter-chip py-2 px-2 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Buổi trưa
+          </button>
+<button class="filter-chip py-2 px-2 rounded-xl bg-surface-container-lowest text-on-surface font-label-sm text-label-sm text-center" type="button">
+            Chiều tà
+          </button>
+<button class="filter-chip py-2 px-2 rounded-xl bg-primary-container text-on-primary font-label-sm text-label-sm font-medium text-center" type="button">
+            Hoàng hôn/Tối
+          </button>
+</div>
+</div>
+<!-- Bottom Actions -->
+<div class="pt-3 pb-safe flex items-center gap-3">
+<button class="flex-1 h-12 rounded-xl bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold active:bg-surface-container-highest transition-colors" id="reset-filter-btn" type="button">
+          Xóa bộ lọc
+        </button>
+<button class="flex-[2] h-12 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold shadow-md active:opacity-90 transition-opacity" id="apply-filter-btn" type="button">
+          Áp dụng (48 kết quả)
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Filter Bottom Sheet Interactivity
+  const openFilterBtn = document.getElementById('open-filter-btn');
+  const closeFilterBtn = document.getElementById('close-filter-btn');
+  const applyFilterBtn = document.getElementById('apply-filter-btn');
+  const resetFilterBtn = document.getElementById('reset-filter-btn');
+  const filterBackdrop = document.getElementById('filter-backdrop');
+  const filterSheet = document.getElementById('filter-sheet');
+
+  function openFilters() {
+    filterBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+    filterBackdrop.classList.add('opacity-100');
+    filterSheet.classList.remove('translate-y-full');
+  }
+
+  function closeFilters() {
+    filterSheet.classList.add('translate-y-full');
+    filterBackdrop.classList.remove('opacity-100');
+    filterBackdrop.classList.add('opacity-0', 'pointer-events-none');
+  }
+
+  if (openFilterBtn) openFilterBtn.addEventListener('click', openFilters);
+  if (closeFilterBtn) closeFilterBtn.addEventListener('click', closeFilters);
+  if (applyFilterBtn) applyFilterBtn.addEventListener('click', closeFilters);
+  if (resetFilterBtn) {
+    resetFilterBtn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.remove('bg-primary-container', 'text-on-primary', 'font-medium');
+        btn.classList.add('bg-surface-container-lowest', 'text-on-surface');
+      });
+    });
+  }
+
+  if (filterBackdrop) {
+    filterBackdrop.addEventListener('click', (e) => {
+      if (e.target === filterBackdrop) closeFilters();
+    });
+  }
+
+  // Multi-toggle for Filter Buttons
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const isSelected = chip.classList.contains('bg-primary-container');
+      if (isSelected) {
+        chip.classList.remove('bg-primary-container', 'text-on-primary', 'font-medium');
+        chip.classList.add('bg-surface-container-lowest', 'text-on-surface');
+      } else {
+        chip.classList.add('bg-primary-container', 'text-on-primary', 'font-medium');
+        chip.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+      }
+    });
+  });
+
+  // Bookmark Heart/Save Action Micro-interaction
+  document.querySelectorAll('.bookmark-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const isSaved = btn.classList.toggle('text-primary-container');
+      if (isSaved) {
+        icon.style.fontVariationSettings = "'FILL' 1";
+      } else {
+        icon.style.fontVariationSettings = "'FILL' 0";
+      }
+    });
+  });
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(31,26,36,0.06)]" data-active-classes="text-primary-container font-semibold"><div class="relative flex justify-around items-end h-20 px-2"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="trang-chu" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Trang chủ</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="kham-pha" href="#"><span class="material-symbols-outlined text-[24px]">explore</span><span class="font-label-sm text-label-sm mt-0.5">Khám phá</span></a><div class="relative flex flex-col items-center -top-3"><a class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_4px_16px_rgba(91,58,140,0.35)] ring-4 ring-surface transition-transform active:scale-95 hover:bg-primary" data-path="tao-lich-trinh" href="#"><span class="material-symbols-outlined text-[28px]">add_circle</span></a><span class="font-label-sm text-label-sm text-primary-container font-semibold mt-1 tracking-tight">Tạo lịch trình</span></div><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="ban-do" href="#"><span class="material-symbols-outlined text-[24px]">map</span><span class="font-label-sm text-label-sm mt-0.5">Bản đồ</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 text-on-surface-variant transition-colors hover:text-primary" data-path="toi" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm mt-0.5">Tôi</span></a></div></nav></body></html>
