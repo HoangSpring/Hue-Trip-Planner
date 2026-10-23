@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Cố Đô — Hue Trip Planner</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#6e4da0", "outline-variant": "#ccc3d2", "on-error": "#ffffff", "secondary-fixed-dim": "#93d3bf", "on-secondary-container": "#2f6f5e", "tertiary-fixed-dim": "#f4bd61", "surface": "#fdf9f1", "secondary-container": "#aef0da", "error-container": "#ffdad6", "on-primary-container": "#ceadff", "primary": "#432173", "on-primary": "#ffffff", "surface-dim": "#dddad2", "surface-container-highest": "#e6e2da", "background": "#fdf9f1", "on-tertiary-container": "#e8b358", "on-tertiary-fixed": "#281900", "tertiary": "#483000", "surface-container-low": "#f7f3eb", "primary-fixed": "#ecdcff", "on-tertiary": "#ffffff", "outline": "#7b7481", "inverse-on-surface": "#f4f0e8", "on-primary-fixed": "#280056", "surface-variant": "#e6e2da", "error": "#ba1a1a", "on-secondary-fixed-variant": "#055141", "secondary-fixed": "#aef0da", "on-tertiary-fixed-variant": "#604100", "surface-container-lowest": "#ffffff", "inverse-primary": "#d6baff", "surface-container": "#f1ede6", "inverse-surface": "#31302b", "tertiary-fixed": "#ffdead", "on-primary-fixed-variant": "#563587", "on-surface": "#1c1c17", "surface-container-high": "#ece8e0", "on-background": "#1c1c17", "on-error-container": "#93000a", "secondary": "#286958", "tertiary-container": "#664500", "on-secondary-fixed": "#002019", "on-surface-variant": "#4a4550", "surface-bright": "#fdf9f1", "on-secondary": "#ffffff", "primary-container": "#5b3a8c", "primary-fixed-dim": "#d6baff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "margin-tablet": "2rem", "margin": "1rem", "gutter-desktop": "1.5rem", "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-desktop": "3rem", "space-xs": "0.25rem", "gutter": "1rem" }, "fontFamily": { "headline-lg": ["\"Source Serif 4\""], "body-sm": ["Be Vietnam Pro"], "body-lg": ["Be Vietnam Pro"], "display-lg-mobile": ["\"Source Serif 4\""], "display-lg": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"], "label-lg": ["Be Vietnam Pro"], "label-md": ["Be Vietnam Pro"], "headline-md": ["\"Source Serif 4\""], "headline-sm": ["\"Source Serif 4\""], "headline-lg-mobile": ["\"Source Serif 4\""], "label-sm": ["Be Vietnam Pro"] }, "fontSize": { "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } };</script></head><body class="min-h-full bg-background font-body-md text-body-md text-on-surface flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group text-left" data-path="trang-chu" href="#"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shadow-[0_2px_8px_rgba(31,26,36,0.06)] group-hover:bg-primary transition-colors"><span class="material-symbols-outlined text-on-primary text-[22px]">temple_buddhist</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md leading-none text-primary-container tracking-tight">Cố Đô</span><span class="font-label-sm text-label-sm tracking-widest uppercase text-tertiary-container mt-space-xs font-semibold">Hue Trip Planner</span></div></a></div><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="trang-chu" href="#">Trang chủ</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="kham-pha" href="#">Khám phá</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="ban-do" href="#">Bản đồ</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="chuyen-di-cua-toi" href="#">Chuyến đi của tôi</a></nav><div class="flex items-center gap-space-md"><a class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_2px_8px_rgba(31,26,36,0.06)] hover:bg-primary hover:text-on-primary transition-all" data-path="tao-lich-trinh" href="#"><span class="material-symbols-outlined text-[18px]">add</span><span>Tạo lịch trình</span></a><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<div class="relative w-full py-space-xl px-margin md:px-margin-tablet lg:px-margin-desktop bg-background">
+<!-- Atmospheric Ambient Tint -->
+<div class="absolute top-12 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-primary-container/5 rounded-full blur-3xl pointer-events-none -z-0"></div>
+<!-- Centered Editorial Wizard Container -->
+<div class="relative z-10 max-w-5xl mx-auto bg-surface-container-lowest rounded-2xl shadow-[0_8px_30px_rgba(31,26,36,0.06)] p-6 md:p-10 flex flex-col gap-space-lg">
+<!-- Top Meta Navigation & Step Progress -->
+<header class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<a class="inline-flex items-center gap-space-xs text-on-surface-variant hover:text-primary transition-colors group" data-path="wizard-step-2" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Quay lại</span>
+</a>
+<!-- Step Progression Counter & Label -->
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-container font-semibold">Tiến trình</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold bg-surface-container px-space-sm py-0.5 rounded-full">Bước 3 / 6</span>
+</div>
+<a class="inline-flex items-center gap-space-xs text-on-surface-variant hover:text-error transition-colors" data-path="kham-pha" href="#">
+<span class="font-label-md text-label-md">Thoát</span>
+<span class="material-symbols-outlined text-[18px]">close</span>
+</a>
+</div>
+<!-- Linear Progress Indicator (50% for Step 3 of 6) -->
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-1/2 transition-all duration-500 ease-out"></div>
+</div>
+</header>
+<!-- Headline, Helper Description & Realtime Counter Badge -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-space-md pt-space-xs">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-tertiary-container font-semibold">Tùy biến sở thích</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Bạn thích điều gì khi đến Huế?
+          </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Chọn từ 2 đến 6 mục để chúng tôi tối ưu nhịp điệu và tuyến đường di sản theo đúng phong vị của bạn.
+          </p>
+</div>
+<!-- Selected Counter Pill -->
+<div class="inline-flex items-center gap-space-xs self-start md:self-end px-space-md py-space-xs rounded-full bg-primary-fixed text-on-primary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+<span class="font-label-md text-label-md font-semibold" id="selected-badge">Đã chọn 3 / 6 mục</span>
+</div>
+</section>
+<!-- Grid of 10 Interest Cards (Desktop 3/4 layout, high-contrast states) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-md pt-space-xs" id="interests-grid">
+<!-- 1. Di sản & cung đình (Selected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 ring-2 ring-primary-container bg-surface-container" data-card-id="1" data-selected="true">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Ngo Mon gate of Hue Imperial Citadel Vietnam under soft warm morning sun, ancient red lacquered doors, weathered stone walls, royal lotus ponds and majestic tiled roofs in serene editorial light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC7VMec7QeukKxMAblH35piTCEBOWAnOgrEbX4bnu2wn0Yzt1jwMMMxxz5I4NQwH0aHt9Aq35w4GUmo2Fb1JrfSAIdRO02Kox50QNcuKOJ_HQfxihxWN3Mt17KH0BnA9ijemDttQmEqAngqIp5vLCRxcdDRkgl_IwGyHvnEtBHHTr8SfJ4VaCg31b3yOxXdkSjUXK5aZJHkBIMYScYG8bSBmIDP7ExqDBTQgkhJTCjBt0_vPub7ileq4Q')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/20"></div>
+<!-- Top State Pill -->
+<div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<!-- Bottom Card Content -->
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-on-primary">
+<div class="w-8 h-8 rounded-lg bg-primary-fixed/30 backdrop-blur-md flex items-center justify-center mb-space-xs text-on-primary">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-on-primary">Di sản &amp; cung đình</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim line-clamp-1 mt-0.5">Đại Nội, Cấm Thành, Ngọ Môn</p>
+</div>
+</div>
+<!-- 2. Lịch sử & lăng tẩm (Selected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 ring-2 ring-primary-container bg-surface-container" data-card-id="2" data-selected="true">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Khai Dinh Royal Tomb in Hue Vietnam, dramatic dark stone architecture on Chau Chu mountain, ornate porcelain mosaic dragons, atmospheric mist and dignified imperial heritage photography." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlbw-T6NcZIz-5vsN_KGep5D_IDGOKXOT20N-vZw1XEYGRW1o7p_35wM9AsGB3SwYcTPMubc3OZxHlafV4plhi9ggpM8cH0G8M0gf1Jjwr-QBjDORNHIjJI2XnMtlo_TOlWFMIjNauRUrdxgVUbgGleauVh3pK3Er98OQfE4-vvynT4NpCF_FFX-QUx3YEK2KbVNiZPMduM6wlNie3qHOhbkVU6Kma5JhzsFmXHJAModRLoOIxTMC5Zw')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/20"></div>
+<div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-on-primary">
+<div class="w-8 h-8 rounded-lg bg-primary-fixed/30 backdrop-blur-md flex items-center justify-center mb-space-xs text-on-primary">
+<span class="material-symbols-outlined text-[18px]">history_edu</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-on-primary">Lịch sử &amp; lăng tẩm</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim line-clamp-1 mt-0.5">Lăng Tự Đức, Khải Định, Minh Mạng</p>
+</div>
+</div>
+<!-- 3. Chùa chiền & tâm linh (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="3" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Thien Mu Pagoda in Hue Vietnam standing tall beside the calm Perfume River at twilight, octagonal Phuoc Duyen tower framed by pine trees and golden ambient light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzj_tmpf4ibz0Vb_25V4Rmyx2pAmuhFCGMe6Ydfqlwd1BkKsSIRn7mMQmURMMMS1kmjsl_qk4u3lGwIibXpCisjJ6_HNOaDrTaTa2X8BSiNqmrm5yIJ2EVAA1UVGUh5Kr0r1FJG-uYll-kIMVz1fs7s77n4th-ymrix3QzKaSxxE4Pt5xIFEhXoplom-3Koerdjf7n3AOeh7UptKh3sSbosa951bq9iufPpe5MucJApe7mtEPMdgj3uw')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">temple_buddhist</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Chùa chiền &amp; tâm linh</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Chùa Thiên Mụ, Từ Hiếu, Thiền viện</p>
+</div>
+</div>
+<!-- 4. Sông Hương & ngắm cảnh (Selected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 ring-2 ring-primary-container bg-surface-container" data-card-id="4" data-selected="true">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Perfume River in Hue Vietnam at golden hour sunset, a traditional dragon boat cruising gently on peaceful rippling waters with Truong Tien bridge in the soft purple distance." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCZrsOp5Xi3rePQXokaQHoxzSbDJ4QtBcLwIIz0-dWc4vX4vBm0mAquLrY1LGc_944mUZkHQ6GfoitAfNpqOWQGNPdLeHZAXlpYRWnWX3zOCGmXvoaidDsecwgUGLnpn4mxkzaUElmPIF9_JMi2Qgf6Z0JC9HZjKrSq9s9AP23fln_HbzCyA7eMnpDsPIUfedkrCHgRFcumsfZMzZTCNwYcdGyofVys6ywwQ8TWp2G63O3PXR9K5X03tA')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/20"></div>
+<div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-on-primary">
+<div class="w-8 h-8 rounded-lg bg-primary-fixed/30 backdrop-blur-md flex items-center justify-center mb-space-xs text-on-primary">
+<span class="material-symbols-outlined text-[18px]">kayaking</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-on-primary">Sông Hương &amp; ngắm cảnh</h3>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim line-clamp-1 mt-0.5">Du thuyền rồng, hoàng hôn bến Vân Lâu</p>
+</div>
+</div>
+<!-- 5. Ẩm thực Huế (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="5" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="An artisanal ceramic bowl of authentic Bun Bo Hue with steaming aromatic lemongrass broth, tender beef slices, crab patties, fresh herbs and lime wedges on vintage rustic wooden table." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAAcPXXgCJV0QBIPMsCQ79WIifPGyQbYjkZAuH4D3am2PzeF1L5uTbeNgt5up4rcdMn5LUGE8_HuUwdh9sO_HHAWDZVg295dPZYsJdH0IlftRc1oUvzjyKMX0pkgNcb0H7IVeE7n6AXjS5ba4lSzFb87L2ZJbpkB4kQe-kBklQwrvzufAmJHgbhBvak-TpTLQOTTUUIOqQRoPHXvw2xYKvHpZW4kjq2ZKMPY-3wNdIvfmDfz3Ah65asbQ')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Ẩm thực Huế</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Bún bò, bánh bèo, nậm, lọc, cơm hến</p>
+</div>
+</div>
+<!-- 6. Cà phê & thư giãn (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="6" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Traditional Hue salted cream coffee served in an elegant clear glass cup on a quiet garden cafe terrace shaded by starfruit trees and classic mossy brick walls." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDAXy01tw6poObT1BnWG1O_0_ECQU4ibPimf-y-z1R3EmmHIp-k5P_P0PyIUEpaggwzkwHW7ASXvTKHmlTzeTFLMi0dfqwn2aplRXJDdY56sVzRamVF8yrG9UVoQhdmpGCA5lvzC5aCEEI6_1mjz9dY3tM_kRyRXMKk29KlyWvPBYiJsAA3yLWWGly7ZxsBaFWFLyx_-OUU_Bc-N5tRnUlgxW8kjxGp0Nt3TYs-3ldUbA0eB7KrkvH2YQ')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">local_cafe</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Cà phê &amp; thư giãn</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Cà phê muối, nhà rường tĩnh tại</p>
+</div>
+</div>
+<!-- 7. Chụp ảnh & check-in (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="7" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Graceful Vietnamese woman in purple traditional Ao Dai holding a conical palm hat standing on historic Truong Tien Bridge over the Perfume River in soft dusk light." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqxqBDaTkQPNmMS4EtoylChWKaaUU9ulvN4CDEjJcBfoNteFmzhvMyi7YkMmjzjxqmRO7DGCBIo-imEON6L8fhymxxNY-7V2UfA68RNX8sAmnoUHttCeiIaHl0qrfr0AoP3I0jedUURPGENSnOx8PeKTaPL6fPJYFYrObDjoW6z8j1umjIIZQRoUNwfd2j0IPwyayP6MvatMEXIHQKsw-DHbmZmNjZ0bJGXs5TI46ORY19XvYaDNDH2w')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Chụp ảnh &amp; check-in</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Cầu Trường Tiền, Làng hương Thủy Xuân</p>
+</div>
+</div>
+<!-- 8. Thiên nhiên & ngoại ô (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="8" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Scenic Vong Canh Hill in Hue overlooking pine covered forests and the wide curving Perfume River under ethereal morning haze and fresh verdant scenery." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD3nEOeq7edlVX9caQ5B6x9x8Yg_uAMw9wHFYu_LULccl2xrvJokoCpl5H_aZjcDvnz1lMujC1LCoSwCZ2xh7pN7x9LQeVT0XsmmmY1MTT2tO7LJ7nBgVvqt6oK070xF-7y4XBD6g-HqeG_Fq1JDc6EmXNWkxfYN5cKl3Y_Mtm0HWuCpaQkPH8VO_rCyEP6y4cjoK-dvcH7b3HatczFpjLdt_rqvDNR-RP-niyqRmwof6AS-fcVclL_kw')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">forest</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Thiên nhiên &amp; ngoại ô</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Đồi Vọng Cảnh, Đầm Chuồn, rừng Rú Chá</p>
+</div>
+</div>
+<!-- 9. Đời sống địa phương (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="9" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Bustling authentic Dong Ba market in Hue with local vendors selling lotus seeds, fresh tropical fruits and incense under warm woven canopy awnings." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCDVE0V_GPJdAU0qmaVM78cos0oFTok3QQnLmHgHOy08ZBnLuI9gELvFgOz7VR-WtINjfpzze-ljQnAyHyClZZHTa157TAdV9s27A8I1GbZ7JRYeMRPP1KOASP0ZNlU5E6aYRBPaWAN5dLNQBc_vNCEl6UTXWq2pg3PksbidwE25pNlb7rial02qJ8Q6QqI0eJfw6zT5JEionmD4t_VJXwRohPV3vw5PyHQPwlLzv1_t9hAryyhObcc6Q')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">storefront</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Đời sống địa phương</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Chợ Đông Ba, phố cổ Gia Hội, làng nghề</p>
+</div>
+</div>
+<!-- 10. Quà & mua sắm (Unselected) -->
+<div class="interest-card group relative h-48 rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-md transition-all duration-300 bg-surface-container" data-card-id="10" data-selected="false">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Traditional Hue specialty gifts in wooden boxes including lotus seed tea, royal ginger candies, and delicate conical poem hats handcrafted with finesse." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAFGfAbgl53egWRFTOUEUy4Tn5-UKur6WeU1VOCaTT-iP9p_I9kwjDIXrXlX9Qv7lmgLrB-9TixhgRfPQbuJ4Xi5vg5lJuMPro_3X1axFC5QIiBPope-8_sAMKT5kOdrkS-Q6sQk01mMFvWz0WeijRWc4BDiwHbOxdN9H0c1HYEKUmOd5b6T7giyLMrrBxTlaft-tyEoTyuM3cdxoqc2yuqBfOFlC75jd2X3BOd2fcSJa0iaWn0ixrVbA')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent"></div>
+<div class="card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 p-space-md flex flex-col justify-end text-surface-bright">
+<div class="w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright">
+<span class="material-symbols-outlined text-[18px]">card_giftcard</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm leading-tight text-surface-bright">Quà &amp; mua sắm</h3>
+<p class="font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5">Trà cung đình, nón bài thơ, mè xửng</p>
+</div>
+</div>
+</div>
+<!-- Card Selection Feedback / Warning Notice -->
+<div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-space-sm rounded-xl" id="selection-hint">
+<span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Số lượng lựa chọn phù hợp nhất là <strong class="text-on-surface">3 đến 5 danh mục</strong> để hành trình vừa đủ sâu sắc, tránh dàn trải mệt mỏi.
+        </p>
+</div>
+<!-- Wizard Sticky / Bottom Action Bar -->
+<footer class="pt-space-md flex items-center justify-between border-t border-transparent">
+<a class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="wizard-step-2" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="font-label-lg text-label-lg">Quay lại</span>
+</a>
+<div class="flex items-center gap-space-md">
+<span class="hidden sm:inline-block font-label-sm text-label-sm text-on-surface-variant">
+            Bước tiếp theo: Thời gian &amp; Lưu trú
+          </span>
+<a class="inline-flex items-center justify-center gap-space-xs h-12 px-8 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:shadow-md transition-all" data-path="wizard-step-4" href="#" id="btn-submit-step">
+<span>Tiếp tục (Bước 4)</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</footer>
+</div>
+<!-- Cultural Quote Accent -->
+<div class="max-w-2xl mx-auto text-center mt-space-lg mb-space-xs">
+<p class="font-headline-sm text-headline-sm text-tertiary-container italic opacity-80">
+        “Huế không vội vã, cái đẹp của xứ sở trầm tư cần được thưởng ngoạn bằng một tâm thế thong dong.”
+      </p>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const cards = document.querySelectorAll('.interest-card');
+    const badge = document.getElementById('selected-badge');
+    const submitBtn = document.getElementById('btn-submit-step');
+    let selectedCount = 3; // initialized with cards 1, 2, 4 selected
+
+    function updateCardVisuals(card, isSelected) {
+      const gradient = card.querySelector('.absolute.inset-0:nth-child(2)');
+      const indicator = card.querySelector('.card-indicator, .w-7.h-7');
+      const textContainer = card.querySelector('.absolute.inset-x-0.bottom-0');
+      const iconBox = textContainer ? textContainer.querySelector('.w-8.h-8') : null;
+      const title = textContainer ? textContainer.querySelector('h3') : null;
+      const subtitle = textContainer ? textContainer.querySelector('p') : null;
+
+      if (isSelected) {
+        card.classList.add('ring-2', 'ring-primary-container');
+        if (gradient) gradient.className = 'absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-primary/20';
+        if (indicator) {
+          indicator.className = 'absolute top-3 right-3 w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-md';
+          indicator.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span>';
+        }
+        if (iconBox) iconBox.className = 'w-8 h-8 rounded-lg bg-primary-fixed/30 backdrop-blur-md flex items-center justify-center mb-space-xs text-on-primary';
+        if (title) title.className = 'font-headline-sm text-headline-sm leading-tight text-on-primary';
+        if (subtitle) subtitle.className = 'font-body-sm text-body-sm text-primary-fixed-dim line-clamp-1 mt-0.5';
+      } else {
+        card.classList.remove('ring-2', 'ring-primary-container');
+        if (gradient) gradient.className = 'absolute inset-0 bg-gradient-to-t from-on-surface/90 via-on-surface/40 to-transparent';
+        if (indicator) {
+          indicator.className = 'card-indicator absolute top-3 right-3 w-7 h-7 rounded-full bg-surface/70 backdrop-blur-sm text-on-surface-variant flex items-center justify-center';
+          indicator.innerHTML = '<span class="material-symbols-outlined text-[16px]">add</span>';
+        }
+        if (iconBox) iconBox.className = 'w-8 h-8 rounded-lg bg-surface/20 backdrop-blur-md flex items-center justify-center mb-space-xs text-surface-bright';
+        if (title) title.className = 'font-headline-sm text-headline-sm leading-tight text-surface-bright';
+        if (subtitle) subtitle.className = 'font-body-sm text-body-sm text-surface-dim line-clamp-1 mt-0.5';
+      }
+    }
+
+    function checkConstraints() {
+      if (badge) {
+        badge.textContent = 'Đã chọn ' + selectedCount + ' / 6 mục';
+      }
+      if (submitBtn) {
+        if (selectedCount >= 2 && selectedCount <= 6) {
+          submitBtn.classList.remove('opacity-40', 'pointer-events-none', 'bg-surface-container');
+          submitBtn.classList.add('bg-primary-container', 'text-on-primary', 'hover:bg-primary');
+        } else {
+          submitBtn.classList.add('opacity-40', 'pointer-events-none', 'bg-surface-container');
+          submitBtn.classList.remove('bg-primary-container', 'text-on-primary', 'hover:bg-primary');
+        }
+      }
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        const currentlySelected = card.getAttribute('data-selected') === 'true';
+
+        if (!currentlySelected) {
+          if (selectedCount >= 6) return;
+          card.setAttribute('data-selected', 'true');
+          selectedCount++;
+          updateCardVisuals(card, true);
+        } else {
+          card.setAttribute('data-selected', 'false');
+          selectedCount--;
+          updateCardVisuals(card, false);
+        }
+        checkConstraints();
+      });
+    });
+
+    checkConstraints();
+  })();
+</script></main><footer class="w-full bg-surface-container-low shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="w-full px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl"><div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg mb-space-xl"><div class="md:col-span-5 flex flex-col gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">temple_buddhist</span></div><span class="font-headline-sm text-headline-sm text-primary-container">Cố Đô — Hue Trip Planner</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Nền tảng kiến tạo hải trình di sản và trải nghiệm văn hóa cố đô Huế tinh tế, chậm rãi dành cho lữ khách trân quý hồn cốt ngàn xưa.</p></div><div class="md:col-span-7 flex flex-wrap gap-space-xl justify-start md:justify-end"><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md uppercase tracking-wider text-tertiary-container font-semibold">Khám phá</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="gioi-thieu" href="#">Giới thiệu</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="kham-pha-co-do" href="#">Khám phá Cố Đô</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="lich-trinh-mau" href="#">Lịch trình mẫu</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md uppercase tracking-wider text-tertiary-container font-semibold">Pháp lý &amp; Quy chuẩn</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="chinh-sach-bao-mat" href="#">Chính sách bảo mật</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="dieu-khoan-su-dung" href="#">Điều khoản sử dụng</a></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">Ảnh: Wikimedia Commons, Pexels · Bản đồ © OpenStreetMap contributors · © 2025 Cố Đô — Hue Trip Planner</p><p class="font-label-sm text-label-sm text-tertiary">Di sản Hoàng triều Nguyễn · Thừa Thiên Huế</p></div></div></footer></body></html>

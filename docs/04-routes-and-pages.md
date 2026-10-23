@@ -143,7 +143,7 @@
 | Chia sẻ | Mời đăng nhập | Bật/tắt chia sẻ |
 
 - **Query string:** `day=1..N` (ngày đang xem), `item=<id>` (mục đang chọn/mở ngăn xem nhanh).
-- **Bố cục:** mobile = danh sách + bản đồ thu gọn (có nút "Xem bản đồ" mở toàn màn hình); desktop = hai cột (danh sách trái, bản đồ phải).
+- **Bố cục:** desktop = hai cột (danh sách 380px bên trái, bản đồ chiếm phần còn lại); mobile = danh sách + bản đồ thu gọn (có nút "Xem bản đồ" mở toàn màn hình).
 - **Trạng thái đặc biệt:** `/trip/:id` không thuộc về user hoặc không tồn tại → 404 (không tiết lộ tồn tại hay không); chưa đăng nhập → `/login?next=...`.
 
 ### `/s/:shareToken` — SharedTripPage
@@ -180,7 +180,7 @@
 
 | Layout | Dùng cho | Thành phần |
 |---|---|---|
-| `PublicLayout` | `/`, `/explore`, `/place/*`, `/map`, `/about`, `/privacy` | Header, nội dung, Footer; mobile có thanh tab dưới |
+| `PublicLayout` | `/`, `/explore`, `/place/*`, `/map`, `/about`, `/privacy` | Header, nội dung, Footer; mobile (< 768px) có thanh tab dưới |
 | `FlowLayout` | `/plan/*` | Header rút gọn (logo + nút đóng/thoát), không footer, thanh tiến trình |
 | `TripLayout` | `/trip/*`, `/s/*` | Header rút gọn, vùng làm việc toàn chiều cao |
 | `AuthLayout` | `/login`, `/register`, ... | Khung giữa trang, logo |
@@ -189,8 +189,8 @@
 
 ### Menu chính
 
-- **Desktop (header):** Logo · Khám phá · Bản đồ · **[Tạo lịch trình]** (nút nổi bật) · Chuyến đi của tôi · Đăng nhập / Avatar.
-- **Mobile (thanh tab dưới, 4–5 mục):** Trang chủ · Khám phá · **Tạo lịch trình** (nút giữa nổi bật) · Bản đồ · Tôi.
+- **Desktop (header, bố cục chính):** Logo · Khám phá · Bản đồ · **[Tạo lịch trình]** (nút nổi bật) · Chuyến đi của tôi · Đăng nhập / Avatar.
+- **Mobile (< 768px, thanh tab dưới, 4–5 mục):** Trang chủ · Khám phá · **Tạo lịch trình** (nút giữa nổi bật) · Bản đồ · Tôi.
   - "Tôi" → `/account/trips` nếu đã đăng nhập, ngược lại `/login`.
 - Ẩn thanh tab dưới ở `FlowLayout`, `TripLayout` và `AdminLayout` để dành chỗ cho nội dung.
 - Avatar menu: Chuyến đi của tôi · Đã lưu · Cài đặt · (Quản trị nếu là admin) · Đăng xuất.

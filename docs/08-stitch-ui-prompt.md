@@ -12,7 +12,7 @@
 
 ### Cách làm việc đề xuất
 
-1. Tạo một dự án Stitch mới. Chọn chế độ **Mobile** trước (vì thiết kế mobile-first), sau đó tạo bản **Desktop** cho các màn hình quan trọng.
+1. Tạo một dự án Stitch mới. Thiết kế **desktop-first**: các màn chính cần bản **Desktop** (1440×900). Stitch đã sinh bản mobile cho S01–S17; dùng prompt ở mục D5 để tạo bản desktop từ các màn đó.
 2. Dán **Master Prompt (mục B)** vào lần đầu hoặc vào ô mô tả/ngữ cảnh chung của dự án để Stitch hiểu phong cách xuyên suốt.
 3. Với **mỗi màn hình**, dán một prompt ở **mục C**. Mỗi lần chỉ một màn hình; không gộp nhiều màn hình vào một prompt.
 4. Làm theo thứ tự ưu tiên: **S01 → S02 → S03 → S05–S10 (wizard) → S12 (trình chỉnh lịch trình) → S04 (bản đồ)**, rồi các màn còn lại.
@@ -28,7 +28,7 @@
 
 ### Khi bàn giao thiết kế cho agent
 
-- Xuất thiết kế theo cách bạn thấy thuận tiện (mã HTML/CSS hoặc sang công cụ thiết kế) và đặt vào `design/` trong repo (ví dụ `design/screens/S01-landing/`), kèm ảnh chụp màn hình.
+- Xuất thiết kế theo cách bạn thấy thuận tiện (mã HTML/CSS hoặc sang công cụ thiết kế) và đặt vào `docs/stitch/` trong repo, mỗi màn một thư mục gồm `screen.png` và `code.html`.
 - Thiết kế là **tài liệu tham chiếu**. Agent phải **dựng lại thành component React + Tailwind** theo tokens ở mục D, không dán nguyên mã xuất ra, và dùng dữ liệu thật thay cho nội dung mẫu.
 - Ghi chú trong tên thư mục mã màn hình (`S01`, `S12`...) để khớp với mục C và `docs/04-routes-and-pages.md`.
 
@@ -37,7 +37,7 @@
 ## PHẦN B — MASTER PROMPT (dán vào Stitch trước tiên)
 
 ```text
-Design a mobile-first responsive web app called "Hue Trip Planner" (working name),
+Design a desktop-first responsive web app (primary 1440x900, must also work on mobile) called "Hue Trip Planner" (working name),
 a personalized trip-itinerary planner for tourists visiting Hue, Vietnam.
 Users answer a short wizard about their trip and interests, then receive a
 day-by-day itinerary of real places (heritage sites, local food, cafes, river
@@ -282,7 +282,7 @@ buttons "Thử lại" and "Quay lại chỉnh thông tin"; and the RATE-LIMIT va
 ### S12 — Lịch trình `/trip/draft` & `/trip/:id` (màn quan trọng nhất)
 
 ```text
-Design the Trip Editor, the most important screen. Mobile first, then desktop.
+Design the Trip Editor, the most important screen. Desktop first (split view: timeline + map), then mobile.
 
 HEADER: back arrow, editable title "Huế 2 ngày cho cặp đôi", save status text
 "Đã lưu" (and a guest variant banner: "Đăng nhập để lưu lịch trình và chia sẻ" with button "Đăng nhập"),
@@ -433,7 +433,7 @@ readable column (max width 720px), serif H1, section headings, table of contents
 // tailwind.config.ts (phần theme.extend)
 colors: {
   primary:   { DEFAULT: '#5B3A8C', hover: '#4A2E75', tint: '#EFE9F7' },
-  accent:    { DEFAULT: '#C8963E', tint: '#F8EEDB' },
+  accent:    { DEFAULT: '#C8963E', tint: '#F8EEDB' },   // "Imperial Gold" (tertiary trong DESIGN.md)
   secondary: { DEFAULT: '#2F6F5E', tint: '#E3F1EC' },
   bg:        '#FAF6EE',
   surface:   '#FFFFFF',
@@ -444,13 +444,14 @@ colors: {
   danger:    '#B3261E',
 },
 fontFamily: {
-  serif: ['Lora', 'ui-serif', 'Georgia', 'serif'],
+  serif: ['"Source Serif 4"', 'ui-serif', 'Georgia', 'serif'],
   sans:  ['"Be Vietnam Pro"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
 },
 borderRadius: { card: '16px', control: '12px' },
 boxShadow:    { card: '0 2px 8px rgba(31,26,36,0.08)' },
 ```
 
+- Nguồn chuẩn: `docs/stitch/stitch_file_analysis_assistant/hue_imperial_editorial/DESIGN.md` (đã duyệt). Phông tiêu đề là **Source Serif 4** (thay cho Lora trong bản prompt đầu). Thang chữ: display 40/48, headline 28/36 · 22/28 · 18/24 (mobile nhỏ hơn: 32/40, 24/32), body 16/26 · 14/22 · 12/18, label 14 · 12 · 11. Khoảng cách: gutter 16px (desktop 24px), margin 16/32/48px theo mobile/tablet/desktop. Đổ bóng thẻ `0 2px 8px rgba(31,26,36,0.06)` + viền `1px #E7E0D3`; hover/kéo `0 8px 24px rgba(31,26,36,0.10)`; lớp phủ modal `rgba(31,26,36,0.45)`. Bo góc: thẻ/modal 16px, nút 12px, chip/badge tròn hẳn.
 - Tải font với tập ký tự **vietnamese** (Google Fonts: `subset=vietnamese,latin`), dùng `font-display: swap`.
 - Mọi màu dùng qua token, **không** viết mã hex trực tiếp trong component.
 
@@ -472,15 +473,42 @@ boxShadow:    { card: '0 2px 8px rgba(31,26,36,0.08)' },
 
 ### D3. Quy tắc
 
-- **Mobile first:** viết kiểu cho 360–430px trước, mở rộng bằng breakpoint `md` (768px) và `lg` (1024px).
+- **Desktop-first, responsive:** thiết kế chuẩn 1440×900, nội dung tối đa 1200px, lưới 12 cột; thu gọn bằng breakpoint `lg` (< 1024px: tablet, lưới 8 cột) và `md` (< 768px: mobile, lưới 4 cột, thanh tab dưới). Phải dùng được từ 360px.
 - **Vùng chạm** tối thiểu 44×44px; nút chính cao 48px.
-- Nút hành động chính trên mobile đặt trong **thanh dưới cố định**; chừa `padding-bottom` + `env(safe-area-inset-bottom)` để không bị che.
+- Nút hành động chính trên mobile (< 768px) đặt trong **thanh dưới cố định**; chừa `padding-bottom` + `env(safe-area-inset-bottom)` để không bị che.
 - **Truy cập (a11y):** nút biểu tượng phải có `aria-label` tiếng Việt; focus nhìn thấy rõ; hộp thoại/sheet bẫy focus và đóng bằng `Esc`; không dùng màu làm tín hiệu duy nhất (kèm biểu tượng/chữ).
 - **Ảnh:** luôn có `alt`, kích thước cố định (tránh nhảy bố cục), `loading="lazy"` trừ ảnh đầu trang; hiển thị ghi công khi có `image_credit`.
 - **Chuyển động:** ngắn (150–250ms), tôn trọng `prefers-reduced-motion`.
 - **Giọng văn tiếng Việt:** thân thiện, xưng "bạn", câu ngắn, động từ rõ ràng; thông báo lỗi nói **nguyên nhân + cách xử lý**, không dùng thuật ngữ kỹ thuật.
 - **Chuỗi giao diện:** gom vào `src/lib/strings/vi.ts` (không viết cứng rải rác) để dễ dịch giai đoạn 2.
 - **Định dạng:** ngày `dd/MM/yyyy`; giờ 24h `HH:mm`; tiền `200.000 ₫`; khoảng cách `3,2 km` (dấu phẩy thập phân), thời gian `12 phút`.
+
+### D5. Bố cục desktop (1440×900) cho các màn chính
+
+| Màn | Bố cục desktop |
+|---|---|
+| S01 Landing | Hero 2 cột (chữ trái, ảnh lớn phải); "Cách hoạt động" 3 cột; địa điểm nổi bật 4 cột |
+| S02 Khám phá | Thanh lọc cố định bên trái; lưới thẻ 3–4 cột |
+| S03 Chi tiết địa điểm | Cột trái: thư viện ảnh + nội dung; cột phải: thẻ hành động cố định kèm bản đồ nhỏ |
+| S04 Bản đồ | Danh sách 380px bên trái, bản đồ chiếm phần còn lại |
+| S07 Wizard (đại diện S05–S10) | Khung giữa rộng ~720px, thanh tiến trình ngang, lưới sở thích 5 cột |
+| S12 Trình chỉnh lịch trình | Timeline 55% bên trái, bản đồ cố định 45% bên phải; S13 là ngăn bên (`SidePanel`) |
+| S15 Chuyến đi của tôi | Lưới thẻ 3 cột |
+| S17 Lịch trình chia sẻ | Như S12 nhưng chỉ đọc, nút "Tạo bản sao" ở thanh trên |
+
+Các màn còn lại (S05, S06, S08–S11, S14, S16, S21) dùng chung khung wizard hoặc trang tài khoản; agent suy ra từ bản mobile và tokens. Điều hướng desktop là header (Logo · Khám phá · Bản đồ · **Tạo lịch trình** · Chuyến đi của tôi · Đăng nhập), không dùng thanh tab dưới.
+
+Prompt mẫu cho Stitch (một màn mỗi lần, dán thêm dòng bố cục ở bảng trên):
+
+```text
+Create the DESKTOP version (1440x900) of this existing screen. Keep the same design system
+(Hue Imperial Editorial: colors, Source Serif 4 + Be Vietnam Pro, radius, shadows), the same
+Vietnamese copy and the same components. Do not add new features or sections.
+Adapt the layout for a wide screen: top header navigation (logo, "Khám phá", "Bản đồ",
+highlighted "Tạo lịch trình", "Chuyến đi của tôi", "Đăng nhập") instead of the bottom tab bar;
+max content width 1200px; use multi-column grids; side panels instead of bottom sheets.
+Layout for this screen: <dòng bố cục tương ứng>.
+```
 
 ### D4. Bảng map: màn hình ↔ route ↔ tính năng
 

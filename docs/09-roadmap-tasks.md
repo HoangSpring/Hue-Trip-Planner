@@ -19,7 +19,7 @@
 - [ ] Đáp ứng đủ tiêu chí nghiệm thu liên quan trong `docs/02-features.md`.
 - [ ] `pnpm typecheck`, `pnpm lint`, `pnpm test` đều qua.
 - [ ] Có test cho logic nghiệp vụ mới (không bắt buộc cho thuần giao diện, nhưng nên có test hành vi cho thành phần quan trọng).
-- [ ] Giao diện: đủ 4 trạng thái (loading, rỗng, lỗi, thành công), dùng tokens ở `docs/08-stitch-ui-prompt.md` mục D, kiểm tra ở 360px.
+- [ ] Giao diện: đủ 4 trạng thái (loading, rỗng, lỗi, thành công), dùng tokens ở `docs/08-stitch-ui-prompt.md` mục D, kiểm tra ở 1280px và 360px.
 - [ ] Không có secret trong code; biến môi trường mới đã thêm vào `.env.example` và `docs/06-api-spec.md` mục 13.
 - [ ] Tài liệu bị ảnh hưởng đã cập nhật (route, API, data model...).
 - [ ] PR có tóm tắt: đã làm gì, thay đổi file nào, điều gì chưa làm.
@@ -85,7 +85,7 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-006 · Layout, router và design tokens · `M`
 - **Tham chiếu:** `docs/04` mục 2, 3, 5, 6; `docs/08` mục D
 - **Dep:** T-001
-- **Làm:** `createBrowserRouter` với toàn bộ route trong bảng (trang tạm), lazy loading; các layout (`PublicLayout`, `FlowLayout`, `TripLayout`, `AuthLayout`, `AccountLayout`, `AdminLayout`); guard (`RequireAuth`, `RequireGuest`, `RequireAdmin`, ...); `paths.ts`; tokens Tailwind + font (subset vietnamese); `NotFoundPage`, `ErrorPage`, `ForbiddenPage`; thanh tab dưới (mobile) và header (desktop).
+- **Làm:** `createBrowserRouter` với toàn bộ route trong bảng (trang tạm), lazy loading; các layout (`PublicLayout`, `FlowLayout`, `TripLayout`, `AuthLayout`, `AccountLayout`, `AdminLayout`); guard (`RequireAuth`, `RequireGuest`, `RequireAdmin`, ...); `paths.ts`; tokens Tailwind + font (subset vietnamese); `NotFoundPage`, `ErrorPage`, `ForbiddenPage`; header (desktop, bố cục chính) và thanh tab dưới (mobile).
 - **Hoàn thành khi:** mọi route trong `docs/04` điều hướng được; guard chuyển hướng đúng (kèm `next` an toàn); điều hướng dùng `paths.ts`; kiểm tra ở 360px.
 
 ### [ ] T-007 · Bộ component giao diện dùng chung · `M`
@@ -404,7 +404,7 @@ M0 ──► M1 ──► M2 ──► M3
 | Việc | Cần trước | Ghi chú |
 |---|---|---|
 | Chốt tên sản phẩm, logo, bảng màu (Stitch) | T-006 | Ảnh hưởng tokens và tiêu đề trang |
-| Thiết kế giao diện bằng Stitch theo `docs/08` | T-014 trở đi | Xuất vào `design/` |
+| Thiết kế giao diện bằng Stitch theo `docs/08` | T-014 trở đi | Đã có trong `docs/stitch/`; còn thiếu bản desktop cho S01–S04, S07, S12, S15, S17 (xem `docs/08` mục D5) |
 | **Nhập 40–60 địa điểm** (Google Sheet → CSV) | T-011 | Nút thắt lớn nhất; làm sớm và song song |
 | Ảnh có giấy phép + ghi công cho từng địa điểm | M1 | Wikimedia Commons, Pexels hoặc ảnh tự chụp |
 | Chọn nhà cung cấp LLM, mở tài khoản, đặt hạn mức chi tiêu | T-029 | Đặt cảnh báo chi phí |

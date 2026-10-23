@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="vi"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Cố Đô — Hue Trip Planner</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#6e4da0", "outline-variant": "#ccc3d2", "on-error": "#ffffff", "secondary-fixed-dim": "#93d3bf", "on-secondary-container": "#2f6f5e", "tertiary-fixed-dim": "#f4bd61", "surface": "#fdf9f1", "secondary-container": "#aef0da", "error-container": "#ffdad6", "on-primary-container": "#ceadff", "primary": "#432173", "on-primary": "#ffffff", "surface-dim": "#dddad2", "surface-container-highest": "#e6e2da", "background": "#fdf9f1", "on-tertiary-container": "#e8b358", "on-tertiary-fixed": "#281900", "tertiary": "#483000", "surface-container-low": "#f7f3eb", "primary-fixed": "#ecdcff", "on-tertiary": "#ffffff", "outline": "#7b7481", "inverse-on-surface": "#f4f0e8", "on-primary-fixed": "#280056", "surface-variant": "#e6e2da", "error": "#ba1a1a", "on-secondary-fixed-variant": "#055141", "secondary-fixed": "#aef0da", "on-tertiary-fixed-variant": "#604100", "surface-container-lowest": "#ffffff", "inverse-primary": "#d6baff", "surface-container": "#f1ede6", "inverse-surface": "#31302b", "tertiary-fixed": "#ffdead", "on-primary-fixed-variant": "#563587", "on-surface": "#1c1c17", "surface-container-high": "#ece8e0", "on-background": "#1c1c17", "on-error-container": "#93000a", "secondary": "#286958", "tertiary-container": "#664500", "on-secondary-fixed": "#002019", "on-surface-variant": "#4a4550", "surface-bright": "#fdf9f1", "on-secondary": "#ffffff", "primary-container": "#5b3a8c", "primary-fixed-dim": "#d6baff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-lg": "1.5rem", "margin-tablet": "2rem", "margin": "1rem", "gutter-desktop": "1.5rem", "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-desktop": "3rem", "space-xs": "0.25rem", "gutter": "1rem" }, "fontFamily": { "headline-lg": ["\"Source Serif 4\""], "body-sm": ["Be Vietnam Pro"], "body-lg": ["Be Vietnam Pro"], "display-lg-mobile": ["\"Source Serif 4\""], "display-lg": ["\"Source Serif 4\""], "body-md": ["Be Vietnam Pro"], "label-lg": ["Be Vietnam Pro"], "label-md": ["Be Vietnam Pro"], "headline-md": ["\"Source Serif 4\""], "headline-sm": ["\"Source Serif 4\""], "headline-lg-mobile": ["\"Source Serif 4\""], "label-sm": ["Be Vietnam Pro"] }, "fontSize": { "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display-lg-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "500" }] } } } };</script></head><body class="min-h-full bg-background font-body-md text-body-md text-on-surface flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-margin md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-space-lg"><a class="flex items-center gap-space-sm group text-left" data-path="trang-chu" href="#"><div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center shadow-[0_2px_8px_rgba(31,26,36,0.06)] group-hover:bg-primary transition-colors"><span class="material-symbols-outlined text-on-primary text-[22px]">temple_buddhist</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md leading-none text-primary-container tracking-tight">Cố Đô</span><span class="font-label-sm text-label-sm tracking-widest uppercase text-tertiary-container mt-space-xs font-semibold">Hue Trip Planner</span></div></a></div><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-surface-container-high text-primary font-semibold"><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="trang-chu" href="#">Trang chủ</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="kham-pha" href="#">Khám phá</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="ban-do" href="#">Bản đồ</a><a class="px-space-md py-space-sm rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="chuyen-di-cua-toi" href="#">Chuyến đi của tôi</a></nav><div class="flex items-center gap-space-md"><a class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_2px_8px_rgba(31,26,36,0.06)] hover:bg-primary hover:text-on-primary transition-all" data-path="tao-lich-trinh" href="#"><span class="material-symbols-outlined text-[18px]">add</span><span>Tạo lịch trình</span></a><div class="flex items-center gap-space-sm pl-space-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<!-- Subtle decorative cultural ambient glow -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-32 right-1/4 w-96 h-96 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-20 left-10 w-72 h-72 bg-secondary-fixed/20 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Main Content Container with constrained editorial width -->
+<div class="max-w-[1240px] w-full mx-auto px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl">
+<!-- Account Sub-navigation Tabs -->
+<nav class="flex items-center gap-space-xl mb-space-lg">
+<a class="relative pb-space-sm font-label-lg text-label-lg text-primary font-semibold flex items-center gap-2" href="#">
+<span>Chuyến đi của tôi</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary text-[11px] font-semibold">3</span>
+<span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></span>
+</a>
+<a class="pb-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span>Địa điểm đã lưu</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium">12</span>
+</a>
+<a class="pb-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span>Cài đặt tài khoản</span>
+</a>
+</nav>
+<!-- Editorial Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-lg mb-space-xl">
+<div class="flex flex-col max-w-2xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="w-6 h-[1.5px] bg-tertiary-container inline-block"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-tertiary-container font-semibold">Sổ tay lữ hành Cố Đô</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface font-semibold tracking-tight">Chuyến đi của tôi</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2 leading-relaxed">
+            Quản lý các hành trình di sản, chỉnh sửa và chia sẻ kế hoạch du lịch Huế của bạn một cách tinh tế và trọn vẹn.
+          </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<button class="h-12 px-6 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg inline-flex items-center gap-2 shadow-[0_2px_8px_rgba(31,26,36,0.08)] hover:bg-primary-container transition-all" id="btn-create-trip">
+<span class="material-symbols-outlined text-[20px]">add</span>
+<span>Tạo chuyến đi mới</span>
+</button>
+</div>
+</div>
+<!-- Search & Heritage Filter Controls Bar -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-[0_2px_8px_rgba(31,26,36,0.04)] mb-space-xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+<!-- Search Input -->
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full pl-11 pr-4 py-2.5 rounded-xl bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Tìm kiếm chuyến đi, đền đài, quán trà..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+<button class="h-9 px-4 rounded-full bg-primary text-on-primary font-label-md text-label-md shrink-0 shadow-sm transition-all">
+            Tất cả (3)
+          </button>
+<button class="h-9 px-4 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md shrink-0 transition-colors">
+            Đang lên kế hoạch
+          </button>
+<button class="h-9 px-4 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md shrink-0 transition-colors">
+            Đã hoàn thành
+          </button>
+<button class="h-9 px-4 rounded-full bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md shrink-0 transition-colors flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">share</span>
+<span>Được chia sẻ</span>
+</button>
+<div class="h-6 w-[1px] bg-surface-container-highest mx-1 hidden sm:block"></div>
+<button class="h-9 px-3 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Sắp xếp</span>
+</button>
+</div>
+</div>
+<!-- Grid of Trip Cards (3 Columns Desktop) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg mb-space-xl">
+<!-- CARD 1: Ongoing & Active -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(31,26,36,0.06)] hover:shadow-[0_8px_24px_rgba(31,26,36,0.10)] transition-all flex flex-col justify-between">
+<div>
+<!-- Cover Photo with Badge -->
+<div class="relative w-full h-52 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Majestic morning aerial view of Hue Imperial Citadel Ngo Mon Gate with lotus moat, ancient weathered brick ramparts, golden glazed roof tiles, soft morning mist hovering over Perfume River, warm regal sunlight, cinematic documentary travel photography in Hue Vietnam" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAspCyRlJYSL4RqLuSviB40bKuVzJCL_eJavGZ256Rfg-TQhZE79KBHNZ26EbrUIMqPEXnFp9DQwk_-MDaa6awMnCMjgHSPCvWwLwxIM0tvYWD_-9Apdt3EUJQP8MZ5IRLa4Eu_w_ymEF_lweouM5uFp_gneYxcQkvWJgoC7qOAjqYvai3ImC_5qApNTGF2UDiynkAjGIWvoAyAS2FwJV8En_FYhJiuHmWwKe7tmzmBLOCVaYHTJe1aSw')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-black/20"></div>
+<!-- Status Badge (Top-left) -->
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm backdrop-blur-md shadow-sm">
+<span class="material-symbols-outlined text-[14px]">link</span>
+<span>Đang chia sẻ công khai</span>
+</div>
+<!-- Contextual Dots Menu -->
+<div class="absolute top-3 right-3 relative">
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/80 hover:bg-surface-container-lowest text-on-surface flex items-center justify-center backdrop-blur-md transition-all shadow-sm" onclick="toggleCardMenu('menu-card-1')">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+<!-- Popover Menu -->
+<div class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-surface-container-lowest shadow-xl py-2 z-20 text-left" id="menu-card-1">
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span> Mở xem chi tiết
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit</span> Đổi tên chuyến đi
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">content_copy</span> Nhân bản lịch trình
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span> Chia sẻ liên kết
+                  </button>
+<div class="h-[1px] bg-surface-container-highest my-1"></div>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-error hover:bg-error-container/40 flex items-center gap-2" onclick="openDeleteDialog('Huế 2 ngày cho cặp đôi')">
+<span class="material-symbols-outlined text-[18px]">delete</span> Xóa chuyến đi
+                  </button>
+</div>
+</div>
+<!-- Overlaid Bottom Title & Timeline metadata -->
+<div class="absolute bottom-3 left-4 right-4 text-on-primary">
+<span class="font-label-sm text-label-sm text-secondary-fixed tracking-wider uppercase font-medium">Hành trình lãng mạn</span>
+<p class="font-body-sm text-body-sm text-surface-container-high/90">2 ngày · Bắt đầu 20/12/2025 · Cập nhật hôm qua</p>
+</div>
+</div>
+<!-- Card Content Body -->
+<div class="p-space-md flex flex-col gap-3">
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">
+                Huế 2 ngày cho cặp đôi
+              </h3>
+<!-- Descriptive tags and metadata -->
+<div class="grid grid-cols-2 gap-2 pt-1 pb-2">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-[18px]">tour</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Quy mô</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">8 địa điểm</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-secondary text-[18px]">directions_walk</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nhịp độ</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Vừa phải</span>
+</div>
+</div>
+</div>
+<!-- Progress & highlights pill row -->
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-tertiary-container text-[16px]">payments</span>
+<span>Ngân sách: <strong>Vừa</strong></span>
+</span>
+<span class="flex items-center gap-1 text-primary">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-medium text-secondary">Đang diễn ra</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-space-md pt-0 flex items-center gap-2">
+<a class="flex-1 py-2.5 px-4 rounded-xl bg-primary text-on-primary font-label-md text-label-md text-center hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[18px]">edit_calendar</span>
+<span>Chỉnh sửa lịch trình</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface transition-colors" onclick="toggleCardMenu('menu-card-1')">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- CARD 2: Food & Culture Experience -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(31,26,36,0.06)] hover:shadow-[0_8px_24px_rgba(31,26,36,0.10)] transition-all flex flex-col justify-between">
+<div>
+<!-- Cover Photo with Badge -->
+<div class="relative w-full h-52 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Historic Thien Mu Pagoda Phuoc Duyen tower standing gracefully on Ha Khe hill by the calm Perfume River in Hue, surrounded by pine trees and frangipani blossoms, peaceful sunset twilight with gentle river reflection, refined imperial aesthetic, high resolution travel portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8BP7DHdI6U2TuvW9UG6RDV-hmFtRznUkocsbCqyURFxunsiv_zKOja0x_2K6OgMLgWWIzg2PHrwjFX9uKdFxzEzgSbhQ59NgQEAC5IuL4fvtGqfXvGLVEY8Fny3B632B0fKq9jndlkI9YHVd-AV9ii9sDQ-_zKqN8WoJOZ-4hDxcDLfq6CHvzw1c-MUGQ6IkdAXwfBiebdvHrsBvTnegkVV0fCudqCyaEIbogprzlqooPuy9GnngK3Q')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-black/20"></div>
+<!-- Status Badge (Top-left) -->
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high/90 text-on-surface font-label-sm text-label-sm backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Riêng tư</span>
+</div>
+<!-- Contextual Dots Menu -->
+<div class="absolute top-3 right-3 relative">
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/80 hover:bg-surface-container-lowest text-on-surface flex items-center justify-center backdrop-blur-md transition-all shadow-sm" onclick="toggleCardMenu('menu-card-2')">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+<div class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-surface-container-lowest shadow-xl py-2 z-20 text-left" id="menu-card-2">
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span> Mở xem chi tiết
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit</span> Đổi tên chuyến đi
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">content_copy</span> Nhân bản lịch trình
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span> Chia sẻ liên kết
+                  </button>
+<div class="h-[1px] bg-surface-container-highest my-1"></div>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-error hover:bg-error-container/40 flex items-center gap-2" onclick="openDeleteDialog('Cuối tuần khám phá ẩm thực Cố Đô')">
+<span class="material-symbols-outlined text-[18px]">delete</span> Xóa chuyến đi
+                  </button>
+</div>
+</div>
+<!-- Overlaid Bottom Title & Timeline metadata -->
+<div class="absolute bottom-3 left-4 right-4 text-on-primary">
+<span class="font-label-sm text-label-sm text-tertiary-fixed tracking-wider uppercase font-medium">Ẩm thực cung đình &amp; dân dã</span>
+<p class="font-body-sm text-body-sm text-surface-container-high/90">1 ngày · Bắt đầu 05/01/2026 · Cập nhật 3 ngày trước</p>
+</div>
+</div>
+<!-- Card Content Body -->
+<div class="p-space-md flex flex-col gap-3">
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">
+                Cuối tuần khám phá ẩm thực Cố Đô
+              </h3>
+<!-- Descriptive tags and metadata -->
+<div class="grid grid-cols-2 gap-2 pt-1 pb-2">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-[18px]">restaurant</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Địa điểm</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">6 quán &amp; cà phê</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-secondary text-[18px]">spa</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nhịp độ</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Thong thả</span>
+</div>
+</div>
+</div>
+<!-- Extra metadata info -->
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[16px]">coffee</span>
+<span>Trà Cung đình &amp; Bánh Huế</span>
+</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kế hoạch sắp tới</span>
+</div>
+</div>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-space-md pt-0 flex items-center gap-2">
+<a class="flex-1 py-2.5 px-4 rounded-xl bg-surface-container-high text-primary font-label-md text-label-md text-center hover:bg-primary-fixed transition-colors flex items-center justify-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Xem &amp; Chỉnh sửa</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface transition-colors" onclick="toggleCardMenu('menu-card-2')">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- CARD 3: Family Heritage Tour -->
+<div class="group bg-surface-container-lowest rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(31,26,36,0.06)] hover:shadow-[0_8px_24px_rgba(31,26,36,0.10)] transition-all flex flex-col justify-between">
+<div>
+<!-- Cover Photo with Badge -->
+<div class="relative w-full h-52 overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700" data-alt="Intricate architecture of Khai Dinh Tomb in Chau Chu mountain Hue, porcelain mosaic dragon reliefs, dark weathered concrete Gothic and traditional Vietnamese blended stone staircase with statues of mandarin courtiers, overcast peaceful sky, high detail architectural travel photography" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAc0y7Ys7N5Of-TO2obwlpMJxdoasvf5LgS65rOXwToab_Z0QiX-BE7Qjw1uQSDHjngRtelh7_HnnKy8We6FTD-rT2SCfjPejpwAIy0xMfQ5ztpm3gW2TUOkAosvUWtaUoGbu7-WdPhKu5cd4OTNDqTpkanyNckkZc5wUoDZni30GVCPAH4nBaQ243CxxJmksESLvCyesX7yEjRa6MwXwX6o5ucBQ1NUYT4nRgUQ1BGhqmEhp_6hyeC1Q')">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-black/20"></div>
+<!-- Status Badge (Top-left) -->
+<div class="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high/90 text-on-surface font-label-sm text-label-sm backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]">family_restroom</span>
+<span>Gia đình</span>
+</div>
+<!-- Contextual Dots Menu -->
+<div class="absolute top-3 right-3 relative">
+<button class="w-8 h-8 rounded-full bg-surface-container-lowest/80 hover:bg-surface-container-lowest text-on-surface flex items-center justify-center backdrop-blur-md transition-all shadow-sm" onclick="toggleCardMenu('menu-card-3')">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+<div class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-surface-container-lowest shadow-xl py-2 z-20 text-left" id="menu-card-3">
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span> Mở xem chi tiết
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit</span> Đổi tên chuyến đi
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">content_copy</span> Nhân bản lịch trình
+                  </button>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-on-surface hover:bg-surface-container flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">share</span> Chia sẻ liên kết
+                  </button>
+<div class="h-[1px] bg-surface-container-highest my-1"></div>
+<button class="w-full px-4 py-2 font-body-sm text-body-sm text-error hover:bg-error-container/40 flex items-center gap-2" onclick="openDeleteDialog('Hành trình di sản cùng gia đình')">
+<span class="material-symbols-outlined text-[18px]">delete</span> Xóa chuyến đi
+                  </button>
+</div>
+</div>
+<!-- Overlaid Bottom Title & Timeline metadata -->
+<div class="absolute bottom-3 left-4 right-4 text-on-primary">
+<span class="font-label-sm text-label-sm text-secondary-fixed-dim tracking-wider uppercase font-medium">Lăng tẩm &amp; Thắng cảnh</span>
+<p class="font-body-sm text-body-sm text-surface-container-high/90">3 ngày · Dự kiến tháng 02/2026</p>
+</div>
+</div>
+<!-- Card Content Body -->
+<div class="p-space-md flex flex-col gap-3">
+<h3 class="font-headline-md text-headline-md text-on-surface group-hover:text-primary transition-colors">
+                Hành trình di sản cùng gia đình
+              </h3>
+<!-- Descriptive tags and metadata -->
+<div class="grid grid-cols-2 gap-2 pt-1 pb-2">
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-[18px]">temple_buddhist</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Di tích</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">12 địa điểm</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 rounded-lg bg-surface-container-low">
+<span class="material-symbols-outlined text-secondary text-[18px]">groups</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Thành viên</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">4 lớn · 1 trẻ em</span>
+</div>
+</div>
+</div>
+<!-- Extra metadata info -->
+<div class="flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[16px]">directions_car</span>
+<span>Có xe riêng đưa đón</span>
+</span>
+<span class="font-label-sm text-label-sm text-tertiary-container font-medium">Dịp Tết Nguyên Đán</span>
+</div>
+</div>
+</div>
+<!-- Card Actions Footer -->
+<div class="p-space-md pt-0 flex items-center gap-2">
+<a class="flex-1 py-2.5 px-4 rounded-xl bg-surface-container-high text-primary font-label-md text-label-md text-center hover:bg-primary-fixed transition-colors flex items-center justify-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Xem &amp; Chỉnh sửa</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container-high text-on-surface transition-colors" onclick="toggleCardMenu('menu-card-3')">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Historical Insight & Itinerary Tips Section (Adds editorial depth without borders) -->
+<div class="bg-surface-container rounded-3xl p-space-xl mb-space-xl relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 w-64 h-64 bg-primary/5 rounded-full pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center relative z-10">
+<div class="lg:col-span-8 flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-[20px]">lightbulb</span>
+<span class="font-label-md text-label-md text-tertiary-container uppercase tracking-wider font-semibold">Lời khuyên điều hướng</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Bạn có biết: Buổi sớm là khoảnh khắc đẹp nhất để viếng lăng?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl leading-relaxed">
+              Các lăng tẩm triều Nguyễn như Lăng Gia Long và Minh Mạng thường đón gió mát trong lành từ đồi thông vào khoảng 7h30 – 9h00 sáng. Hãy cân nhắc kéo thả thứ tự các điểm dừng chân trong lịch trình để có trải nghiệm thư thái nhất.
+            </p>
+</div>
+<div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col justify-end gap-3">
+<button class="px-5 py-3 rounded-xl bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors shadow-sm flex items-center justify-center gap-2" onclick="toggleEmptyStatePreview()">
+<span class="material-symbols-outlined text-[18px]">preview</span>
+<span>Xem mẫu giao diện trống</span>
+</button>
+<a class="px-5 py-3 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md hover:bg-on-secondary-container transition-colors shadow-sm flex items-center justify-center gap-2" href="#">
+<span class="material-symbols-outlined text-[18px]">auto_stories</span>
+<span>Xem lịch trình gợi ý từ chuyên gia</span>
+</a>
+</div>
+</div>
+</div>
+<!-- TOGGLEABLE EMPTY STATE PREVIEW (Hidden by default, triggered via demo button above) -->
+<div class="hidden bg-surface-container-lowest rounded-3xl p-space-xl text-center shadow-[0_2px_8px_rgba(31,26,36,0.04)] mb-space-xl" id="empty-state-container">
+<div class="max-w-md mx-auto flex flex-col items-center">
+<div class="w-20 h-20 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-[40px]">map</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Chưa có chuyến đi nào được lưu</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+            Khởi đầu hành trình thưởng ngoạn xứ Huế bằng cách tạo kế hoạch đầu tiên của bạn với sự hỗ trợ của trợ lý thông minh Cố Đô.
+          </p>
+<div class="flex items-center gap-3">
+<button class="px-6 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Tạo chuyến đi đầu tiên</span>
+</button>
+<button class="px-4 py-3 rounded-xl bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors" onclick="toggleEmptyStatePreview()">
+              Đóng xem trước
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- DELETE CONFIRMATION DIALOG MODAL (Heritage Styled) -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4" id="delete-modal">
+<div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-space-lg shadow-2xl relative transform transition-all">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-error-container text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">delete_forever</span>
+</div>
+<div class="flex flex-col flex-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Xóa chuyến đi di sản?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">
+            Bạn có chắc chắn muốn xóa chuyến đi <span class="font-semibold text-on-surface" id="trip-to-delete-name"></span>? Tất cả các ghi chú, cung đường và điểm tham quan đã sắp xếp sẽ bị xóa vĩnh viễn và không thể hoàn tác.
+          </p>
+</div>
+</div>
+<div class="mt-space-lg flex items-center justify-end gap-3 pt-space-sm">
+<button class="px-5 py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-md text-label-md transition-colors" onclick="closeDeleteDialog()">
+          Hủy bỏ
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-error text-on-error hover:opacity-90 font-label-md text-label-md transition-opacity shadow-sm flex items-center gap-1.5" onclick="confirmDelete()">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span>Xác nhận xóa</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Logic for Menus and Dialogs -->
+<script>
+    function toggleCardMenu(menuId) {
+      // Close all other open popovers
+      const allMenus = document.querySelectorAll('[id^="menu-card-"]');
+      allMenus.forEach(menu => {
+        if (menu.id !== menuId) {
+          menu.classList.add('hidden');
+        }
+      });
+      const targetMenu = document.getElementById(menuId);
+      if (targetMenu) {
+        targetMenu.classList.toggle('hidden');
+      }
+    }
+
+    // Close open menus when clicking anywhere outside
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('[id^="menu-card-"]') && !event.target.closest('button[onclick^="toggleCardMenu"]')) {
+        const allMenus = document.querySelectorAll('[id^="menu-card-"]');
+        allMenus.forEach(menu => menu.classList.add('hidden'));
+      }
+    });
+
+    function openDeleteDialog(tripName) {
+      const nameElem = document.getElementById('trip-to-delete-name');
+      if (nameElem) nameElem.textContent = `"${tripName}"`;
+      const modal = document.getElementById('delete-modal');
+      if (modal) modal.classList.remove('hidden');
+      // Close popover menus
+      const allMenus = document.querySelectorAll('[id^="menu-card-"]');
+      allMenus.forEach(menu => menu.classList.add('hidden'));
+    }
+
+    function closeDeleteDialog() {
+      const modal = document.getElementById('delete-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmDelete() {
+      alert('Đã xóa chuyến đi thành công.');
+      closeDeleteDialog();
+    }
+
+    function toggleEmptyStatePreview() {
+      const container = document.getElementById('empty-state-container');
+      if (container) {
+        container.classList.toggle('hidden');
+        if (!container.classList.contains('hidden')) {
+          container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-low shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="w-full px-margin md:px-margin-tablet lg:px-margin-desktop py-space-xl"><div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg mb-space-xl"><div class="md:col-span-5 flex flex-col gap-space-sm"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">temple_buddhist</span></div><span class="font-headline-sm text-headline-sm text-primary-container">Cố Đô — Hue Trip Planner</span></div><p class="font-body-md text-body-md text-on-surface-variant max-w-md">Nền tảng kiến tạo hải trình di sản và trải nghiệm văn hóa cố đô Huế tinh tế, chậm rãi dành cho lữ khách trân quý hồn cốt ngàn xưa.</p></div><div class="md:col-span-7 flex flex-wrap gap-space-xl justify-start md:justify-end"><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md uppercase tracking-wider text-tertiary-container font-semibold">Khám phá</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="gioi-thieu" href="#">Giới thiệu</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="kham-pha-co-do" href="#">Khám phá Cố Đô</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="lich-trinh-mau" href="#">Lịch trình mẫu</a></div><div class="flex flex-col gap-space-sm"><span class="font-label-md text-label-md uppercase tracking-wider text-tertiary-container font-semibold">Pháp lý &amp; Quy chuẩn</span><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="chinh-sach-bao-mat" href="#">Chính sách bảo mật</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="dieu-khoan-su-dung" href="#">Điều khoản sử dụng</a></div></div></div><div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-sm text-center md:text-left"><p class="font-body-sm text-body-sm text-on-surface-variant">Ảnh: Wikimedia Commons, Pexels · Bản đồ © OpenStreetMap contributors · © 2025 Cố Đô — Hue Trip Planner</p><p class="font-label-sm text-label-sm text-tertiary">Di sản Hoàng triều Nguyễn · Thừa Thiên Huế</p></div></div></footer></body></html>

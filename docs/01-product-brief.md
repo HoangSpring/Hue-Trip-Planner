@@ -101,7 +101,7 @@ Du khách đến Huế thường gặp các khó khăn sau:
 
 1. **Chính xác hơn nhiều, không phải nhiều hơn:** 50 địa điểm đã kiểm chứng tốt hơn 1.000 địa điểm chưa rõ độ tin cậy.
 2. **Luôn có kết quả:** dù AI lỗi vẫn có lịch trình dự phòng.
-3. **Mobile trước:** phần lớn du khách dùng điện thoại; giao diện ưu tiên màn hình nhỏ.
+3. **Desktop trước, mobile vẫn dùng tốt:** giao diện thiết kế cho màn hình rộng (lập kế hoạch, chỉnh lịch trình), đồng thời responsive đầy đủ vì du khách xem và chỉnh lịch trình trên điện thoại khi đang ở Huế.
 4. **Minh bạch nguồn:** ghi rõ nguồn ảnh, nguồn bản đồ, và đánh dấu thông tin chưa được kiểm duyệt.
 5. **Đơn giản trước, mở rộng sau:** thêm tính năng chỉ khi luồng chính đã chạy ổn.
 6. **Tôn trọng người dùng:** thu thập ít dữ liệu cá nhân nhất có thể.

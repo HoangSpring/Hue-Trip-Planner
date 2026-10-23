@@ -378,7 +378,7 @@
 | Hạng mục | Yêu cầu |
 |---|---|
 | Hiệu năng | LCP ≤ 2.5s trên mobile 4G ở các trang chính; ảnh dùng WebP/AVIF, lazy-load, có kích thước phù hợp |
-| Responsive | Hỗ trợ từ 360px; thiết kế mobile-first |
+| Responsive | Thiết kế desktop-first (chuẩn 1440×900, nội dung tối đa 1200px), thu gọn đẹp xuống tablet và mobile từ 360px; `/s/:token` và trình chỉnh lịch trình phải dùng tốt trên mobile |
 | Truy cập (a11y) | Điều hướng bàn phím, nhãn cho form và nút biểu tượng, độ tương phản đạt WCAG AA |
 | SEO | Title/description riêng; Open Graph; sitemap cho `/place/:slug`; trang người dùng/lịch trình riêng tư gắn `noindex` |
 | Bảo mật | RLS mọi bảng; xác thực JWT ở backend; không lộ secret; giới hạn tần suất endpoint LLM |

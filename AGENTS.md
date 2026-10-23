@@ -12,6 +12,8 @@ Dự án lấy cảm hứng từ hue4u.com nhưng **gọn hơn**:
 - Có: khám phá địa điểm, bản đồ, tạo/sửa/lưu/chia sẻ lịch trình, đăng nhập, trang admin nhập liệu.
 - **Không làm:** trải nghiệm 3D/bảo tàng số, trang khẩn cấp & hỗ trợ. Không tự thêm các tính năng này.
 
+**Hướng thiết kế: desktop-first, vẫn responsive tốt trên mobile.** Ưu tiên trải nghiệm trên màn hình rộng (≥ 1024px); mobile vẫn phải dùng được trọn vẹn, đặc biệt trang chia sẻ lịch trình (`/s/:token`) và trình chỉnh lịch trình vì du khách mở chúng trên điện thoại khi đang ở Huế.
+
 Ngôn ngữ giao diện MVP: **tiếng Việt**. Thiết kế DB và code sẵn sàng cho đa ngôn ngữ sau này (xem `docs/05-data-model.md`).
 
 ## 2. Tài liệu cần đọc
@@ -25,7 +27,7 @@ Ngôn ngữ giao diện MVP: **tiếng Việt**. Thiết kế DB và code sẵn 
 | `docs/05-data-model.md` | Tạo bảng, RLS, migration, định dạng CSV import |
 | `docs/06-api-spec.md` | Viết/gọi API: endpoint, lỗi, giới hạn tần suất, quyền |
 | `docs/07-ai-itinerary-spec.md` | Làm tính năng sinh lịch trình: pipeline, LLM, thuật toán dự phòng, cảnh báo |
-| `docs/08-stitch-ui-prompt.md` | Design tokens, component, quy tắc giao diện (mục D); thiết kế tham chiếu nằm trong `design/` |
+| `docs/08-stitch-ui-prompt.md` | Design tokens, component, quy tắc giao diện (mục D); thiết kế tham chiếu nằm trong `docs/stitch/stitch_file_analysis_assistant/` (xem mục 12) |
 | `docs/09-roadmap-tasks.md` | **Chọn task tiếp theo** (mốc M0–M6, phụ thuộc, tiêu chí hoàn thành) |
 
 Nếu một file chưa tồn tại mà task cần thông tin đó: **hỏi người dùng**, đừng tự đoán rồi làm.
@@ -175,3 +177,11 @@ Biến có tiền tố `VITE_` sẽ lộ ra trình duyệt. Chỉ đặt giá tr
 - [ ] Nhà cung cấp LLM và model mặc định.
 - [ ] Nhà cung cấp tile bản đồ (OSM trực tiếp hay dịch vụ có gói miễn phí).
 - [ ] Danh sách tài khoản admin ban đầu.
+
+## 12. Thiết kế tham chiếu (Stitch)
+
+- Thư mục: `docs/stitch/stitch_file_analysis_assistant/`. Mỗi màn có `screen.png` và `code.html`; `hue_imperial_editorial/DESIGN.md` là **design system đã duyệt** (tokens, font, bố cục, đổ bóng). Tokens trong `docs/08` mục D1 đã đồng bộ với file này.
+- S01–S17 hiện chỉ có bản **mobile**; S18–S21 chỉ có bản **desktop**. Với desktop, agent dựa vào bảng bố cục desktop ở `docs/08` mục D5 thay vì kéo giãn bản mobile thành một cột.
+- `code.html` dùng Tailwind CDN và ảnh giữ chỗ (`lh3.googleusercontent.com`): chỉ để tham chiếu. **Dựng lại thành component React**, không sao chép nguyên mã, không đưa ảnh giữ chỗ vào sản phẩm.
+- Tên địa điểm/quán trong mockup (ví dụ "Quán Bún Bò Bà Tuyết") chỉ là dữ liệu mẫu, không đưa vào dữ liệu thật khi chưa kiểm chứng.
+- Không làm các mục ngoài phạm vi xuất hiện trong mockup admin: "Thống kê & Lịch trình", "Cài đặt hệ thống", chỉ báo "Hệ thống: Trực tuyến", chuông thông báo, thẻ thống kê; và thanh tiến độ "Đã hoàn thành x/y địa điểm" ở S01 (thẻ "Tiếp tục chuyến đi" chỉ cần tên chuyến đi và nút mở). Admin chỉ gồm danh sách, bộ lọc, thao tác hàng loạt, form địa điểm và import CSV (F-12).
