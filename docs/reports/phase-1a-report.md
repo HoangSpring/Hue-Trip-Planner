@@ -11,7 +11,7 @@
 | Task | Nhánh / commit | Đã đạt "Hoàn thành khi"? | Ghi chú |
 |---|---|---|---|
 | T-011 | `feat/T-011-csv-import` · `4f41bf5` | Có | `places.sample.csv`: dry-run 20/20 hợp lệ; lần ghi đầu tạo 20; chạy lại cập nhật 20 theo slug, không tạo thêm. Có test dòng có ảnh nhưng thiếu credit/license. 20 fixture giả lập hiện vẫn nằm trong Supabase ở trạng thái `draft`, `verified=false`. |
-| T-012 | `feat/T-012-place-read` · `0eaf838` | Một phần | Migration 8 `nearby_places`, service, mapper và filter Zod đã có; typecheck/lint/test/build qua. Chưa chạy RPC/migration trên DB vì chưa được phép áp dụng migration remote; Docker local không có. T-012 còn để `[ ]` trong roadmap đến khi xác nhận tích hợp với DB/dữ liệu published. |
+| T-012 | `feat/T-012-place-read` · `0eaf838`, `0437d1e` | Một phần | Migration 8 `nearby_places`, service, mapper và filter Zod đã có; typecheck/lint/test/build qua. Chưa chạy RPC/migration trên DB vì chưa được phép áp dụng migration remote; Docker local không có. T-012 còn để `[ ]` trong roadmap đến khi xác nhận tích hợp với DB/dữ liệu published. |
 | T-013 | `feat/T-013-public-places-api` · `f7c4b73` | Có phần code/test | `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug`; kiểm tra 200, 400, 404, pagination, cache và 429. Test route dùng service giả. Endpoint chi tiết phụ thuộc RPC của migration 8 nên chưa chạy end-to-end với Supabase. |
 
 Các nhánh xếp chồng theo phụ thuộc: T-012 bắt đầu từ T-011; T-013 bắt đầu từ T-012. Cả ba đã push để chủ dự án review. Không tạo PR.
