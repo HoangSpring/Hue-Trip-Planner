@@ -1,5 +1,6 @@
 import { apiErrorSchema } from '@shared/schemas'
 import type { z } from 'zod'
+import { vi } from './strings/vi'
 
 type ApiRequestOptions = Omit<RequestInit, 'body'> & {
   accessToken?: string
@@ -22,7 +23,7 @@ export async function apiRequest<T>(path: string, schema: z.ZodType<T>, options:
   if (!response.ok) {
     const parsedError = apiErrorSchema.safeParse(payload)
     if (parsedError.success) throw new ApiRequestError(response.status, parsedError.data)
-    throw new Error('Không thể kết nối đến dịch vụ. Vui lòng thử lại.')
+    throw new Error(vi.system.serviceConnectionError)
   }
   return schema.parse(payload)
 }
