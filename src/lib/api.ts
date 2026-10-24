@@ -1,4 +1,11 @@
-import { apiErrorSchema } from '@shared/schemas'
+import {
+  apiErrorSchema,
+  mapPlacesSchema,
+  paginatedPlacesSchema,
+  placeDetailResponseSchema,
+  placeMetaSchema,
+} from '@shared/schemas'
+import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import type { z } from 'zod'
 import { vi } from './strings/vi'
 
@@ -26,6 +33,34 @@ export async function apiRequest<T>(path: string, schema: z.ZodType<T>, options:
     throw new Error(vi.system.serviceConnectionError)
   }
   return schema.parse(payload)
+}
+
+export function getPublicMeta() {
+  return apiRequest('meta', placeMetaSchema)
+}
+
+export function getPlaces(filters: Partial<PlaceListQuery> = {}) {
+  const query = new URLSearchParams()
+  if (filters.category) query.set('category', filters.category)
+  for (const tag of filters.tag ?? []) query.append('tag', tag)
+  if (filters.q) query.set('q', filters.q)
+  if (filters.sort) query.set('sort', filters.sort)
+  if (filters.featured) query.set('featured', filters.featured)
+  if (filters.page !== undefined) query.set('page', String(filters.page))
+  if (filters.pageSize !== undefined) query.set('pageSize', String(filters.pageSize))
+  const suffix = query.size ? `?${query.toString()}` : ''
+  return apiRequest(`places${suffix}`, paginatedPlacesSchema)
+}
+
+export function getMapPlaces(filters: PlaceMapQuery = {}) {
+  const query = new URLSearchParams()
+  if (filters.category) query.set('category', filters.category)
+  const suffix = query.size ? `?${query.toString()}` : ''
+  return apiRequest(`places/map${suffix}`, mapPlacesSchema)
+}
+
+export function getPlaceBySlug(slug: string) {
+  return apiRequest(`places/${encodeURIComponent(slug)}`, placeDetailResponseSchema)
 }
 
 export class ApiRequestError extends Error {

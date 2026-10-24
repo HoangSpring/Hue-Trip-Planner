@@ -7,6 +7,7 @@ import { createUserSupabaseClient } from './lib/supabase'
 import { AppError } from './lib/errors'
 import { profileSchema } from '@shared/schemas'
 import type { ApiEnv } from './types'
+import { createPublicPlaceRoutes } from './routes/publicPlaces'
 
 export const app = new Hono<ApiEnv>()
 
@@ -15,6 +16,7 @@ app.onError(errorHandler)
 app.notFound((context) => context.json({ error: { code: 'NOT_FOUND', message: 'Không tìm thấy nội dung.', requestId: context.get('requestId') ?? 'req_unavailable' } }, 404))
 
 app.get('/api/health', publicCache, (context) => context.json({ status: 'ok' as const }))
+app.route('/api', createPublicPlaceRoutes())
 
 app.get('/api/me', requireAuth, async (context) => {
   const user = context.get('user')

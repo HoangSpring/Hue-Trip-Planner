@@ -130,7 +130,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8; chỉ RPC này thuộc task T-012).
 - **Hoàn thành khi:** truy vấn chạy với dữ liệu đã import; "lang tu duc" tìm ra "Lăng Tự Đức"; chỉ trả `published`.
 
-### [ ] T-013 · API đọc dữ liệu công khai · `M`
+### [x] T-013 · API đọc dữ liệu công khai · `M`
 - **Tham chiếu:** `docs/06` mục 5
 - **Dep:** T-012
 - **Làm:** `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug` (kèm `nearby`); header `Cache-Control` công khai.

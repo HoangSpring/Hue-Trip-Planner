@@ -274,6 +274,7 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 ### 5.2 `GET /api/places`
 **Query:** `category`, `tag` (lặp được), `q`, `sort` (`featured` | `name`), `featured` (`true`), `page`, `pageSize`.
 - `q` tìm theo `search_text` (không dấu, không phân biệt hoa thường) bằng `ILIKE`/trigram trên `f_unaccent(lower(q))`.
+- Khi lặp nhiều `tag`, một địa điểm khớp nếu có **ít nhất một** tag đã chọn (OR).
 - Chỉ trả `status = 'published'`.
 - Giá trị `category`/`tag` lạ → `400 VALIDATION_ERROR` (không im lặng bỏ qua).
 
@@ -284,7 +285,7 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 
 ### 5.4 `GET /api/places/:slug`
 **Response 200:** `{ "place": PlaceDetail, "nearby": PlaceSummary[] }`
-- `nearby`: 3–5 địa điểm published gần nhất (công thức khoảng cách trong `shared/itinerary/geo.ts`), **không** gồm chính nó.
+- `nearby`: tối đa 5 địa điểm `published` gần nhất từ RPC `nearby_places` (Haversine), **không** gồm chính nó.
 - Slug không tồn tại hoặc chưa published → `404 NOT_FOUND`.
 
 ## 6. Chi tiết: sinh lịch trình
@@ -484,7 +485,7 @@ Các hàm được chia theo task để migration theo đúng thứ tự:
 
 | Hàm | Mục đích |
 |---|---|
-| `nearby_places(p_lat float8, p_lng float8, p_limit int, p_exclude uuid[])` | Migration 8 · T-012. Trả địa điểm published theo khoảng cách (Haversine), dùng cho `nearby` và thay thế. |
+| `nearby_places(p_lat float8, p_lng float8, p_limit int, p_exclude uuid[])` | Migration 8 · T-012. Trả địa điểm published theo khoảng cách (Haversine), giới hạn 1–20 (mặc định 5), dùng cho `nearby` và thay thế. |
 | `save_trip(p_trip_id uuid, p_payload jsonb, p_expected_updated_at timestamptz)` | Migration 9 · T-034. Trong một transaction: khóa dòng `trips`, kiểm tra phiên bản, upsert `trip_days`, upsert/xóa `trip_items`, cập nhật `updated_at`. `SECURITY INVOKER` để RLS vẫn áp dụng |
 | `create_trip_from_payload(p_payload jsonb)` | Migration 9 · T-034. Tạo mới `trips` + ngày + mục; xử lý idempotent theo `(user_id, client_draft_id)` |
 
