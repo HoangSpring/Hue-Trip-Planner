@@ -124,7 +124,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `pnpm db:seed` / script `supabase/seed/importPlaces.ts`: đọc CSV (UTF-8), kiểm tra từng dòng bằng Zod, upsert theo `slug`, gắn tag + trọng số, ghi `place_audit_log` (`import`); chế độ `--dry-run`; xuất báo cáo (tạo/cập nhật/bỏ qua/lỗi) và tệp CSV các dòng lỗi.
 - **Hoàn thành khi:** import `places.sample.csv` thành công; chạy lại **không tạo trùng**; dòng thiếu `image_credit` (khi có ảnh) bị báo lỗi; mặc định `draft` + `verified = false`; **không ghi đè** địa điểm đã `verified` trừ khi có cờ rõ ràng; có test cho logic phân tích/kiểm tra.
 
-### [x] T-012 · Logic dùng chung cho đọc địa điểm (service + mapper) · `M`
+### [ ] T-012 · Logic dùng chung cho đọc địa điểm (service + mapper) · `M`
 - **Tham chiếu:** `docs/06` mục 5; `docs/05`
 - **Dep:** T-005, T-011
 - **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8; chỉ RPC này thuộc task T-012).
