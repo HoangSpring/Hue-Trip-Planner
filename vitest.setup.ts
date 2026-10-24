@@ -17,14 +17,15 @@ class RouterTestRequest {
 
 globalThis.Request = RouterTestRequest as unknown as typeof Request
 
-if (!globalThis.localStorage) {
-  const entries = new Map<string, string>()
-  globalThis.localStorage = {
-    getItem: key => entries.get(key) ?? null,
-    setItem: (key, value) => entries.set(key, String(value)),
-    removeItem: key => entries.delete(key),
+const entries = new Map<string, string>()
+Object.defineProperty(globalThis, 'localStorage', {
+  configurable: true,
+  value: {
+    getItem: (key: string) => entries.get(key) ?? null,
+    setItem: (key: string, value: string) => entries.set(key, String(value)),
+    removeItem: (key: string) => entries.delete(key),
     clear: () => entries.clear(),
-    key: index => [...entries.keys()][index] ?? null,
+    key: (index: number) => [...entries.keys()][index] ?? null,
     get length() { return entries.size },
-  }
-}
+  } satisfies Storage,
+})

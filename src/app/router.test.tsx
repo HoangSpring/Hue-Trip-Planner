@@ -67,9 +67,16 @@ async function renderPath(path: string, session: Session | null = null, role: 'u
   }
 }
 
+async function waitForText(container: HTMLElement, text: string) {
+  for (let attempt = 0; attempt < 40 && !container.textContent?.includes(text); attempt += 1) {
+    await act(async () => new Promise(resolve => window.setTimeout(resolve, 25)))
+  }
+  expect(container.textContent).toContain(text)
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
-  window.localStorage?.clear()
+  globalThis.localStorage.clear()
 })
 
 const documentedRoutes: Array<{ label: string; path: string; expected: string }> = [
@@ -79,6 +86,8 @@ const documentedRoutes: Array<{ label: string; path: string; expected: string }>
   { label: 'map', path: paths.map, expected: paths.map },
   { label: 'about', path: paths.about, expected: paths.about },
   { label: 'privacy', path: paths.privacy, expected: paths.privacy },
+  { label: 'dev components', path: paths.devComponents, expected: paths.devComponents },
+  { label: 'dev auth', path: paths.devAuth, expected: paths.devAuth },
   { label: 'plan wizard', path: paths.planNew, expected: paths.planNew },
   { label: 'plan generating guard', path: paths.planGenerating, expected: paths.planNew },
   { label: 'trip draft guard', path: paths.tripDraft, expected: paths.planNew },
@@ -135,7 +144,7 @@ describe('memory router for every route in docs/04', () => {
     try {
       expect(regular.router.state.location.pathname).toBe(paths.adminPlaces)
       expect(vi.mocked(fetch)).toHaveBeenCalled()
-      await vi.waitFor(() => expect(regular.container.textContent).toContain('Bạn chưa có quyền truy cập'))
+      await waitForText(regular.container, 'Bạn chưa có quyền truy cập')
     } finally {
       await regular.cleanup()
     }
@@ -143,7 +152,7 @@ describe('memory router for every route in docs/04', () => {
     const admin = await renderPath(paths.adminPlaces, testSession, 'admin')
     try {
       expect(admin.router.state.location.pathname).toBe(paths.adminPlaces)
-      await vi.waitFor(() => expect(admin.container.textContent).toContain('Quản trị nội dung'))
+      await waitForText(admin.container, 'Quản trị nội dung')
       const request = vi.mocked(fetch).mock.calls[0]
       expect(new Headers(request?.[1]?.headers).get('Authorization')).toBe('Bearer test-session-token')
     } finally {
@@ -158,7 +167,7 @@ describe('memory router for every route in docs/04', () => {
       paths.login, paths.register, paths.forgotPassword, paths.resetPassword, paths.authCallback,
       paths.account, paths.accountTrips, paths.accountSaved, paths.accountSettings,
       paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
-      paths.forbidden, '*',
+      paths.devComponents, paths.devAuth, paths.forbidden, '*',
     ]))
   })
 })
