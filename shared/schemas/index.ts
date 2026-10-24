@@ -1,6 +1,7 @@
 export * from './apiError'
 export * from './enums'
 export * from './place'
+export * from './placeQueries'
 export * from './profile'
 export * from './trip'
 export * from './tripInput'
