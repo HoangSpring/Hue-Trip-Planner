@@ -14,7 +14,7 @@
     "preview": "vite preview",
     "db:migrate": "supabase db push --yes",
     "db:seed": "supabase db push --include-seed --yes",
-    "db:types": "supabase gen types typescript --linked --schema public > src/types/database.types.ts",
+    "db:types": "supabase gen types typescript --linked --schema public > src/types/supabase.ts",
     "db:test:rls": "supabase test db --local supabase/tests"
   },
   "dependencies": {
