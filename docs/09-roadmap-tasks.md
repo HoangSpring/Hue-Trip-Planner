@@ -118,7 +118,7 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 1 — Dữ liệu và khám phá (M1)
 
-### [ ] T-011 · CLI import CSV vào Supabase · `M`
+### [x] T-011 · CLI import CSV vào Supabase · `M`
 - **Tham chiếu:** `docs/05` mục 8, 9; `docs/06` mục 9.5
 - **Dep:** T-003, T-004, T-010
 - **Làm:** `pnpm db:seed` / script `supabase/seed/importPlaces.ts`: đọc CSV (UTF-8), kiểm tra từng dòng bằng Zod, upsert theo `slug`, gắn tag + trọng số, ghi `place_audit_log` (`import`); chế độ `--dry-run`; xuất báo cáo (tạo/cập nhật/bỏ qua/lỗi) và tệp CSV các dòng lỗi.

@@ -685,6 +685,8 @@ Lưu đúng dữ liệu đã qua Zod. Schema Zod nằm ở `shared/schemas/tripI
 - Import lại cùng `slug` → **cập nhật**; không ghi đè các trường đã `verified` trừ khi admin chọn "Ghi đè" rõ ràng.
 - Ghi một dòng `place_audit_log` (`action = 'import'`) cho mỗi bản ghi tạo/sửa.
 
+CLI: `pnpm db:seed -- --csv=supabase/seed/places.sample.csv --dry-run` để kiểm tra trước; bỏ `--dry-run` để ghi. Mặc định địa điểm `verified` bị bỏ qua; chỉ dùng `--overwrite-verified` khi chủ động muốn thay thế và đưa địa điểm về `draft`, `verified = false`. Mỗi lần chạy sinh JSON báo cáo và CSV các dòng lỗi cạnh file đầu vào. Cần `VITE_SUPABASE_URL` và `SUPABASE_SERVICE_ROLE_KEY` trong môi trường hoặc `.env.local`.
+
 ## 9. Quy tắc dữ liệu cho thuật toán lịch trình
 
 Thuật toán (`docs/07-ai-itinerary-spec.md`) **chỉ xét** địa điểm thỏa mọi điều kiện sau:
