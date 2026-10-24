@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate, Outlet, useParams } from 'react-router-dom'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { uuidSchema } from '@shared/schemas'
 import { AuthProvider } from './authState'
 import { RequireAdmin } from './guards/RequireAdmin'
@@ -18,6 +19,7 @@ import { ForbiddenPage } from '@/features/static/ForbiddenPage'
 import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { vi } from '@/lib/strings/vi'
 import { ComponentGalleryPage } from '@/features/dev/ComponentGalleryPage'
+import { supabaseClient } from '@/lib/supabase'
 
 const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -36,8 +38,9 @@ export const routePaths = [
   paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport, paths.forbidden, '*',
 ]
 
-export const router = createBrowserRouter([{
-  element: <AuthProvider><Outlet /></AuthProvider>, errorElement: <ErrorPage />,
+export function createAppRoutes(authClient: SupabaseClient | null = supabaseClient) {
+  return [{
+  element: <AuthProvider client={authClient}><Outlet /></AuthProvider>, errorElement: <ErrorPage />,
   children: [
     { element: <PublicLayout />, children: [
       { index: true, element: page(vi.pages.home) },
@@ -82,4 +85,7 @@ export const router = createBrowserRouter([{
     { path: paths.forbidden, element: <ForbiddenPage /> },
     { path: '*', element: <NotFoundPage /> },
   ],
-}])
+}]
+}
+
+export const router = createBrowserRouter(createAppRoutes())

@@ -1,83 +1,106 @@
 # Báo cáo Phase 0 — Nền móng
 
-> Cập nhật ngày 24/10/2026. Báo cáo dừng giữa phase vì chưa có project Supabase và quyền GitHub integration không cho tạo PR.
+> Cập nhật ngày 24/10/2026, sau khi kiểm tra lại working tree và chạy lại các lệnh. Phase 0 chưa đạt cổng cuối; không bắt đầu Phase 1.
 
 ## 1. Tóm tắt
 
-Đã dựng scaffold React/Vite, CI, schema Zod dùng chung, API Hono khung, router/layout/tokens, component UI, thư viện lịch trình thuần và dữ liệu mẫu CSV/JSON. Typecheck, lint, 21 test và production build đều qua; Vite chạy cục bộ và trả 200 cho `/` và `/dev/components`. Phase chưa đạt cổng cuối do chưa có Supabase để tạo/chạy migration và test RLS, chưa tích hợp Supabase Auth, CI chưa được xác nhận trên PR, và API chưa triển khai Vercel preview. Các task đã làm nằm trên nhánh riêng và đã push; tạo PR trả lỗi GitHub API 403.
+Đã sửa harness của router test để mô phỏng điều hướng createMemoryRouter trong jsdom; toàn bộ 52 test hiện qua, gồm 31 trường hợp router cho các route và guard trong docs/04. Typecheck, lint và build cũng qua. Đã rà soát tĩnh bảy migration, seed và bộ pgTAP; chúng khớp phần lớn docs/05 nhưng còn thiếu migration 8 được liệt kê trong tài liệu. CLI tìm thấy project Supabase nhưng chưa link; DB password vắng mặt và DB local không nghe cổng 54322. Vì vậy migration, sinh kiểu từ DB và RLS chưa được chạy thật; T-003 và T-008 vẫn chưa hoàn tất.
 
-## 2. Task đã hoàn thành
+## 2. Task đã hoàn thành hoặc làm một phần
 
 | Task | Nhánh / PR / commit | Đã đạt "Hoàn thành khi"? | Ghi chú |
 |---|---|---|---|
-| T-001 | `feat/T-001-bootstrap` · `3416b7e` · đã push | Có | Scaffold React/Vite, TypeScript strict, Tailwind, router/query/Zod, scripts, alias, cấu trúc, Vitest/Playwright config. |
-| T-004 | `feat/T-004-shared-schemas` · `f70b11f` · đã push | Có | Zod schema dùng chung và test giới hạn TripInput. |
-| T-006 | `feat/T-006-router-layout` · `26428a1` · đã push | Một phần | Route/layout/guard và tokens đã dựng; còn thiếu kiểm tra điều hướng mọi route và rà soát 360px trên trình duyệt. |
-| T-007 | `feat/T-007-ui-components` · `6cc8f6b` · đã push | Có | Component dùng chung, chuỗi tiếng Việt và gallery chỉ bật trong dev. |
-| T-009 | `feat/T-009-itinerary-utils` · `397e9f6` · đã push | Có | Haversine, giờ mở cửa VN, qua nửa đêm, travel estimate và test. |
-| T-010 | `feat/T-010-sample-place-data` · `a6dc2d1` · đã push | Có | CSV 20 dòng giả lập, fixture 40 dòng giả lập, test schema/edge cases. Không chứa địa điểm thật được xác minh. |
+| T-001 | feat/T-001-bootstrap · 3416b7e · đã push | Có (theo trạng thái đã có) | Scaffold React/Vite, TypeScript strict, Tailwind, router/query/Zod và scripts. |
+| T-004 | feat/T-004-shared-schemas · f70b11f · đã push | Có (theo trạng thái đã có) | Zod schema dùng chung và test TripInput. |
+| T-006 | feat/T-010-sample-place-data (nhánh hiện tại) | Một phần | Memory router kiểm tra tất cả route/guard theo docs/04; 360px chưa được xem trực quan. Error boundary chưa được kích hoạt riêng trong test. |
+| T-007 | feat/T-007-ui-components · 6cc8f6b · đã push | Có (theo trạng thái đã có) | Component dùng chung và gallery nội bộ. |
+| T-009 | feat/T-009-itinerary-utils · 397e9f6 · đã push | Có (theo trạng thái đã có) | Hàm lịch trình thuần và test. |
+| T-010 | feat/T-010-sample-place-data · a6dc2d1 · đã push | Có (theo trạng thái đã có) | CSV và fixture giả lập. |
+| T-002 | feat/T-010-sample-place-data (nhánh hiện tại) | Một phần | Workflow CI có trong repo nhưng không xác nhận được run xanh trên GitHub từ lượt này. Các lệnh cục bộ đều chạy qua. |
+| T-003 | feat/T-010-sample-place-data (nhánh hiện tại) | Không | CLI/config, migration 1–7, seed và pgTAP đã có trong working tree; lệnh áp dụng bị chặn vì project chưa link, chưa sinh kiểu từ DB. |
+| T-005 | feat/T-010-sample-place-data (nhánh hiện tại) | Một phần | API khung cục bộ đã có; chưa chạy Vercel preview hoặc kiểm tra endpoint trên deployment. Không triển khai Vercel. |
+| T-008 | feat/T-010-sample-place-data (nhánh hiện tại) | Không | Supabase Auth client/hooks/guards đã viết; kiểm tra dùng phiên giả trong memory router, chưa đăng nhập bằng phiên hosted thật và chưa xác minh profile thật trên DB. |
 
 ## 3. Task chưa xong hoặc làm một phần
 
 | Task | Còn thiếu gì | Lý do |
 |---|---|---|
-| T-002 | CI xanh trên một PR thử; xác nhận thử nghiệm secret giả | Không tạo được PR qua GitHub integration (403). File workflow và PR template đã có; `.gitignore` loại trừ `.env*` thật. |
-| T-003 | Project/CLI, migration 1–7, seed SQL, migrate/types và test RLS | Chủ dự án xác nhận chưa tạo project Supabase và yêu cầu tiếp tục các task độc lập. Không có DB để chạy nghiệm thu. |
-| T-005 | Vercel preview và kiểm tra `/api/health` trên preview | Chưa triển khai Vercel. API khung và test middleware cục bộ đã có. |
-| T-008 | Supabase client, `useSession`, `useProfile` và đăng nhập bằng tài khoản test | Phụ thuộc T-003 chưa xong và thiếu Supabase project. |
+| T-002 | Xác nhận CI run xanh trên GitHub | Không có gh CLI; GitHub Actions run không xác minh được trong lượt này. |
+| T-003 | Áp dụng migration trên DB trống; chạy pgTAP trên DB; supabase gen types | CLI liệt kê được project Hue-Trip-Planner ở trạng thái ACTIVE_HEALTHY nhưng project chưa link. Lệnh link/push cần mật khẩu Postgres; .env.local không có DB password hoặc DATABASE_URL. Database local cũng không nghe tại 127.0.0.1:54322. Chỉ kiểm tra tên biến .env.local, không in giá trị. |
+| T-005 | Vercel preview và /api/health trên preview | Chưa được triển khai; user đã yêu cầu chỉ triển khai khi được bảo. |
+| T-006 | Kiểm tra trực quan ở 360px và thực thi riêng error boundary | Chưa kiểm tra bằng trình duyệt/viewport. Điều hướng route/guard đã được test qua createMemoryRouter. |
+| T-008 | Đăng nhập hosted thật, xác thực profile/role từ Supabase DB | Không có tài khoản thử/phiên thật đã cấp cho kiểm thử; test hiện dùng Supabase Session giả và response /api/me giả. |
 
-Các PR chưa được tạo. GitHub API trả `403 Resource not accessible by integration` khi tạo PR; nhánh task đã push thành công để review thủ công hoặc tạo PR sau khi quyền integration được khắc phục. T-002 đến T-010 là các nhánh nối tiếp theo thứ tự dependency; T-003/T-008 không có nhánh vì chưa thể bắt đầu phần phụ thuộc dịch vụ.
+### T-005 — phần đã có / chưa làm
+
+- Đã có: middleware requestId, errorHandler, auth/requireAdmin và cache; GET /api/health; api/[[...route]].ts cho Hono/Vercel; vercel.json có rewrite SPA/API; src/lib/api.ts có xử lý schema/error và bearer token.
+- Chưa làm: triển khai Vercel, preview deployment, kiểm tra HTTP /api/health trên deployment. Không triển khai theo yêu cầu của user.
 
 ## 4. Kết quả chạy lệnh
 
-Ngày chạy cuối: 24/10/2026, khoảng 09:29–09:30 giờ Việt Nam.
+Ngày chạy: 24/10/2026, giờ Việt Nam khoảng 15:27–15:34.
 
 | Lệnh | Kết quả | Đầu ra thật |
 |---|---|---|
-| `pnpm install --frozen-lockfile --offline` | Qua | `Already up to date` · `Done in 1.1s using pnpm v11.25.0` |
-| `pnpm typecheck` | Qua | `$ tsc --noEmit` · exit code 0 |
-| `pnpm lint` | Qua | `$ eslint .` · exit code 0 |
-| `pnpm test` | Qua | `Test Files 5 passed (5)` · `Tests 21 passed (21)` · exit code 0 |
-| `pnpm build` | Qua | `✓ 217 modules transformed.` · `✓ built in 13.29s` · exit code 0. Rollup cảnh báo hai comment `@__PURE__` trong Zod sẽ bị bỏ; build vẫn thành công. |
-| `pnpm dev --host 127.0.0.1 --port 5173` | Qua | `VITE v6.4.1 ready in 756 ms` · `Local: http://127.0.0.1:5173/` |
-| HTTP smoke `/` và `/dev/components` | Qua | Cả hai trả `200` bằng `Invoke-WebRequest`. |
-| Supabase migration/RLS | Chưa chạy | Không có project Supabase. |
-| Vercel preview / CI trên GitHub PR | Chưa chạy | Không có PR; GitHub API từ chối tạo PR với HTTP 403. |
+| pnpm typecheck | Qua | $ tsc --noEmit · exit code 0 |
+| pnpm lint | Qua | $ eslint . · exit code 0 |
+| pnpm test | Qua | Test Files 6 passed (6) · Tests 52 passed (52) · exit code 0. Có cảnh báo Node về localStorage không khả dụng và React test warning về act(...); test vẫn qua. |
+| pnpm build | Qua | ✓ 265 modules transformed. · ✓ built in 3.01s · exit code 0. Rollup bỏ hai annotation @__PURE__ trong Zod; bundle cảnh báo chunk JS chính 619.67 kB vượt 500 kB. |
+| pnpm exec supabase --version | Qua | 2.121.0 |
+| pnpm exec supabase projects list | Qua | CLI thấy project Hue-Trip-Planner (ACTIVE_HEALTHY); linked: false. |
+| gh run list --branch feat/T-010-sample-place-data --limit 5 | Không chạy được | gh CLI unavailable. |
+| pnpm exec supabase test db --local supabase/tests | Không chạy được | Connecting to local database... · DbConnectError · failed to connect to postgres ... 127.0.0.1:54322 · ECONNREFUSED · CLI hướng dẫn khởi động Docker/Supabase local. |
+| pnpm db:migrate | Thất bại trước khi kết nối DB | $ supabase db push --yes · ProjectRefNotLinkedError · Cannot find project ref. Have you run supabase link? · exit code 1. Không gửi truy vấn thay đổi nào lên project hosted. |
+| pnpm db:types | Chưa chạy | Project chưa được link; chưa có kết quả supabase gen types --linked từ DB. |
 
-## 5. Cổng kiểm tra cuối phase
+## 5. Rà soát migration và RLS
 
-- [x] Repo cài dependency theo lockfile, `pnpm dev` chạy và trang chính phản hồi 200.
-- [x] Typecheck, lint, test và build cục bộ qua.
-- [ ] Mọi route được kiểm tra điều hướng trên preview; đã khai báo route và trang placeholder, nhưng chưa có lượt E2E/preview xác nhận tất cả.
-- [ ] CI xanh trên PR.
-- [ ] Database/migration và test RLS qua.
-- [ ] Tích hợp Supabase Auth hoàn chỉnh.
-- [ ] API chạy trên Vercel preview và `/api/health` trả 200.
+- Migration 20261024000001–...00007 có 12 bảng được docs/05 mô tả: profiles, places, place_images, tags, place_tags, start_points, trips, trip_days, trip_items, saved_places, place_audit_log, generation_events.
+- RLS được bật cho đủ 12 bảng. generation_events cố ý không có client policy, phù hợp với docs/05; các bảng còn lại có policy tương ứng cho quyền chủ sở hữu, đọc công khai/published và admin.
+- Có trigger cập nhật updated_at cho profiles, places, trips, trip_items; trigger tạo profile, chặn tự đổi role và kiểm tra nhất quán trip_items.trip_id/trip_days.trip_id.
+- Migration storage tạo public bucket place-images cùng policy đọc công khai và policy ghi/sửa/xóa dành cho admin.
+- Seed có 10 tag theo docs/05 và một mốc trung tâm thành phố lấy qua OSM Nominatim, có ghi nguồn trong comment.
+- Khác biệt tài liệu: docs/05 mục 4 liệt kê thêm migration 8 rpc_functions.sql (RPC save_trip, create_trip_from_payload, nearby_places); repo chưa có file này. T-003 đang yêu cầu migrations 1–7, nhưng cần xử lý điểm thiếu đó trước khi những RPC tương ứng được triển khai.
+- Điểm cần xác nhận khi chạy migration thật: migration đặt pgcrypto, unaccent, pg_trgm trong schema extensions và tham chiếu extensions.gin_trgm_ops; nếu project đã cài một extension trong schema khác từ trước thì CREATE EXTENSION IF NOT EXISTS không tự chuyển schema, có thể làm migration lỗi.
+- supabase/tests/rls.test.sql có bốn kiểm tra: user A không đọc trip B; user A update trip B ảnh hưởng 0 dòng; anon insert places bị từ chối với SQLSTATE 42501; user thường insert places bị từ chối với SQLSTATE 42501. Fixture users/trip nằm trong transaction và được rollback. Đây là rà soát mã SQL; chưa xác nhận thực thi thành công trên DB.
 
-## 6. Khác biệt so với tài liệu
+## 6. Cổng kiểm tra cuối phase
 
-- T-010 dùng tên và mô tả giả lập, không gán thông tin giả cho địa điểm Huế có thật; phù hợp D-09.
-- Kiểm tra fixture đặt ở `shared/itinerary/sampleData.test.ts` vì cấu hình Vitest hiện chỉ thu thập test trong `src/`, `shared/`, `server/`; tệp dữ liệu vẫn ở `tests/fixtures/places.sample.json`. Ghi chú đã thêm vào nhật ký mục 7 của `docs/09-roadmap-tasks.md`.
-- Tên sản phẩm dùng giá trị tạm tập trung trong `src/lib/brand.ts` theo D-01; chưa có logo chính thức.
-- Không dựng trang nghiệp vụ hoặc phần mockup ngoài phạm vi Phase 0.
+- [x] pnpm typecheck, pnpm lint, pnpm test, pnpm build chạy qua tại local.
+- [ ] Mọi route trong docs/04 điều hướng được và kiểm tra viewport 360px. Router test đã đi qua route/guard; 360px và error boundary chưa kiểm tra trực quan/thực thi riêng.
+- [ ] CI xanh trên GitHub.
+- [ ] Migration áp dụng trên DB, sinh types và test RLS qua trên DB thật.
+- [ ] Supabase Auth đăng nhập bằng phiên hosted thật; xác minh profile/role thật.
+- [ ] Vercel preview chạy /api/health (chưa triển khai theo chỉ dẫn của user).
 
-## 7. Điểm nghi ngờ, rủi ro, nợ kỹ thuật
+## 7. Khác biệt so với tài liệu
 
-- Các nhánh T-004 trở đi được xếp nối tiếp để đáp ứng dependency; khi tạo PR thủ công, dùng nhánh task ngay trước làm base để mỗi diff chỉ chứa task tương ứng.
-- Auth provider hiện là stub khách ẩn danh cho router/guard; cần thay bằng Supabase Auth ở T-008.
-- Hằng số tốc độ và giới hạn chặng đi theo tài liệu mặc định, cần người địa phương hiệu chỉnh như D-14.
-- Đã kiểm tra HTTP 200 ở trang gốc và gallery; chưa chạy E2E trình duyệt cho tất cả route hoặc rà soát trực quan toàn bộ layout ở 360px.
+- Thêm test route bằng createMemoryRouter, bao gồm route công khai, route có guard, redirect next, kiểm tra admin và manifest route.
+- Thêm vitest.setup.ts cung cấp Request tương thích jsdom/Node cho redirect navigation; Node Request mặc định từ undici không nhận AbortSignal khác realm.
+- Migration hiện dừng ở 1–7 như task T-003, trong khi docs/05 còn liệt kê migration 8 RPC.
 
-## 8. Cần chủ dự án
+## 8. Điểm nghi ngờ, rủi ro, nợ kỹ thuật
 
-- Tạo project Supabase và cấu hình URL/anon key trong `.env.local`; không gửi service-role key qua chat. Sau đó mới có thể hoàn tất T-003, T-008, migration/RLS và đăng nhập thử.
-- Khắc phục quyền GitHub integration để agent có thể tạo các PR riêng từ nhánh đã push.
-- Chọn logo chính thức trước giai đoạn ra mắt; tên tạm hiện không chặn Phase 0.
+- SQL migration chưa được PostgreSQL chạy thử; lỗi cú pháp hoặc khác biệt extension/schema vẫn có thể tồn tại.
+- Cần xác nhận schema hiện tại của pg_trgm/unaccent trên project trước khi áp dụng migration.
+- Auth guard đã test với session/profile giả, không chứng minh phiên Supabase hosted hoặc RLS thực tế.
+- Test suite có cảnh báo React act(...); dù 52 test qua, nên dọn cảnh báo khi chỉnh tiếp router test.
+- Build hiện có chunk JS chính 619.67 kB trước gzip; chưa tối ưu chia chunk trong Phase 0.
+- Chưa xác minh hiển thị 360px.
 
-## 9. Cách chạy thử
+## 9. Cần chủ dự án
 
-1. Cài dependency: `pnpm install --frozen-lockfile`.
-2. Kiểm tra mã: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`.
-3. Chạy frontend: `pnpm dev`; mở `http://localhost:5173/`.
-4. Khi dùng dev server, mở `/dev/components` để xem gallery component.
-5. Không chạy migration/Auth trước khi project Supabase được cấu hình.
+- Để hoàn tất T-003: link project bằng supabase link --project-ref ... sau khi cung cấp DB password qua CLI an toàn; sau đó chạy migration, sinh types và RLS test. CLI hiện đã có session xem project list nhưng project chưa link.
+- Để hoàn tất T-008: cung cấp tài khoản/phiên test Auth hosted qua môi trường an toàn (không gửi secret trong chat) để xác minh đăng nhập và profile thật.
+- Quyết định cách xử lý RPC migration 8 đã liệt kê trong docs/05 khi triển khai RPC liên quan.
+- Chưa triển khai Vercel theo yêu cầu; cần chỉ thị riêng trước khi triển khai.
+
+## 10. Cách chạy thử
+
+1. pnpm typecheck
+2. pnpm lint
+3. $env:CI='true'; pnpm test
+4. pnpm build
+5. Khi local Supabase chạy và CLI đã cấu hình an toàn: pnpm db:migrate, pnpm db:types, pnpm db:test:rls.
+
+Không có giá trị nào từ .env.local được ghi vào báo cáo hoặc in ra màn hình.

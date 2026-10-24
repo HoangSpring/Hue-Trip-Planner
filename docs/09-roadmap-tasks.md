@@ -10,7 +10,7 @@
 3. Làm trên nhánh riêng: `feat/T-xxx-ten-ngan` (hoặc `fix/`, `chore/`, `docs/`). **Một task = một PR nhỏ.**
 4. Chỉ đánh dấu xong khi **mọi mục trong "Hoàn thành khi"** đạt và `typecheck`, `lint`, `test` chạy qua.
 5. Cập nhật ô trạng thái `[ ]` → `[x]` trong file này ở cùng PR; ghi chú ngắn nếu có thay đổi so với kế hoạch.
-6. Nếu task mơ hồ hoặc mâu thuẫn tài liệu: **dừng và hỏi** (xem `AGENTS.md` mục 11).
+6. Nếu task mơ hồ hoặc mâu thuẫn tài liệu: **dừng và hỏi** (xem `AGENTS.md` mục 11). Với câu hỏi còn mở, dùng quyết định mặc định ở `docs/10-decisions.md`; chỉ hỏi khi mục đó ghi "Cần chủ dự án".
 
 ### Kích thước ước lượng
 `S` ≈ vài giờ · `M` ≈ nửa đến một ngày · `L` ≈ 1–3 ngày (với một agent làm việc có người rà soát). Chỉ là gợi ý để chia nhỏ; task `L` nên được tách thêm nếu thấy quá lớn.
@@ -53,7 +53,7 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 0 — Nền móng (M0)
 
-### [ ] T-001 · Khởi tạo repo và công cụ · `S`
+### [x] T-001 · Khởi tạo repo và công cụ · `S`
 - **Tham chiếu:** `AGENTS.md` mục 3, 4, 5, 7
 - **Dep:** —
 - **Làm:** tạo dự án Vite + React + TypeScript (`strict`), Tailwind, React Router, TanStack Query, Zod; cấu trúc thư mục theo `AGENTS.md` (gồm `server/`, `shared/`); ESLint + Prettier; Vitest; Playwright (cấu hình khung); script `pnpm dev/typecheck/lint/test/build`.
@@ -70,7 +70,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** tạo project Supabase; cấu hình Supabase CLI; viết **migration 1–7** (extensions, profiles + trigger, places/tags/..., trips, saved + logs, RLS, storage); seed tag (`001_tags.sql`) và mốc xuất phát (`002_start_points.sql`); script `pnpm db:migrate`.
 - **Hoàn thành khi:** migration chạy sạch trên DB trống; mọi bảng đã bật RLS; sinh được kiểu TypeScript (`supabase gen types`); có **test RLS** (user A không đọc/sửa dữ liệu của user B, khách không ghi `places`, user thường không ghi `places`).
 
-### [ ] T-004 · Zod schema và kiểu dùng chung · `M`
+### [x] T-004 · Zod schema và kiểu dùng chung · `M`
 - **Tham chiếu:** `docs/05` mục 3, 7; `docs/06` mục 3
 - **Dep:** T-001
 - **Làm:** tạo `shared/schemas/` cho enum (loại, slot, nhịp độ...), `TripInput`, `PlaceSummary/Detail`, `Trip/TripDraft/TripItem/TripDay`, `Warning/Notice`, định dạng lỗi API.
@@ -88,7 +88,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `createBrowserRouter` với toàn bộ route trong bảng (trang tạm), lazy loading; các layout (`PublicLayout`, `FlowLayout`, `TripLayout`, `AuthLayout`, `AccountLayout`, `AdminLayout`); guard (`RequireAuth`, `RequireGuest`, `RequireAdmin`, ...); `paths.ts`; tokens Tailwind + font (subset vietnamese); `NotFoundPage`, `ErrorPage`, `ForbiddenPage`; header (desktop, bố cục chính) và thanh tab dưới (mobile).
 - **Hoàn thành khi:** mọi route trong `docs/04` điều hướng được; guard chuyển hướng đúng (kèm `next` an toàn); điều hướng dùng `paths.ts`; kiểm tra ở 360px.
 
-### [ ] T-007 · Bộ component giao diện dùng chung · `M`
+### [x] T-007 · Bộ component giao diện dùng chung · `M`
 - **Tham chiếu:** `docs/08` mục D2, D3
 - **Dep:** T-006
 - **Làm:** `Button`, `Chip/ChipGroup`, `Dialog`, `BottomSheet/SidePanel`, `Toast`, `Skeleton`, `EmptyState`, `PlaceCard`; chuỗi tiếng Việt ở `src/lib/strings/vi.ts`.
@@ -100,13 +100,13 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `src/lib/supabase.ts`; hook `useSession`, `useProfile` (qua `GET /api/me` sau khi có T-005); xử lý trạng thái "đang tải phiên" không nhấp nháy chuyển hướng.
 - **Hoàn thành khi:** có thể đăng nhập thử bằng tài khoản test (giao diện hoàn chỉnh ở T-040); guard đọc được phiên và vai trò.
 
-### [ ] T-009 · Thư viện hàm thuần cho lịch trình (phần 1) · `M`
+### [x] T-009 · Thư viện hàm thuần cho lịch trình (phần 1) · `M`
 - **Tham chiếu:** `docs/07` mục 9.2, 9.3; `docs/06` mục 3
 - **Dep:** T-004
 - **Làm:** `shared/itinerary/geo.ts` (haversine), `openHours.ts` (`isOpenAt`, thứ ISO theo múi giờ VN), `travel.ts` (ước lượng di chuyển theo phương tiện, đọc `config`), `config.ts` (hằng số ở `docs/07` mục 18).
 - **Hoàn thành khi:** test đầy đủ theo `docs/07` mục 17.2 (nhóm Giờ mở cửa, Di chuyển): mốc biên `close − 30'`, qua nửa đêm, ngày nghỉ, `unknown`.
 
-### [ ] T-010 · Mẫu CSV và bộ dữ liệu test · `S`
+### [x] T-010 · Mẫu CSV và bộ dữ liệu test · `S`
 - **Tham chiếu:** `docs/05` mục 8; `docs/07` mục 17.1
 - **Dep:** T-004
 - **Làm:** `supabase/seed/places.sample.csv` (≥ 20 dòng thật hoặc giả hợp lý, có cả dòng thiếu giờ mở cửa/ngày nghỉ); `tests/fixtures/places.sample.json` (~40 địa điểm).
@@ -404,7 +404,7 @@ M0 ──► M1 ──► M2 ──► M3
 | Việc | Cần trước | Ghi chú |
 |---|---|---|
 | Chốt tên sản phẩm, logo, bảng màu (Stitch) | T-006 | Ảnh hưởng tokens và tiêu đề trang |
-| Thiết kế giao diện bằng Stitch theo `docs/08` | T-014 trở đi | Đã có trong `docs/stitch/`; còn thiếu bản desktop cho S01–S04, S07, S12, S15, S17 (xem `docs/08` mục D5) |
+| Thiết kế giao diện bằng Stitch theo `docs/08` | T-014 trở đi | **Đã đủ**: S01–S21 trong `docs/stitch/`, gồm bản desktop cho S01–S04, S07, S12, S15, S17 |
 | **Nhập 40–60 địa điểm** (Google Sheet → CSV) | T-011 | Nút thắt lớn nhất; làm sớm và song song |
 | Ảnh có giấy phép + ghi công cho từng địa điểm | M1 | Wikimedia Commons, Pexels hoặc ảnh tự chụp |
 | Chọn nhà cung cấp LLM, mở tài khoản, đặt hạn mức chi tiêu | T-029 | Đặt cảnh báo chi phí |
@@ -446,7 +446,7 @@ Theo thứ tự đề xuất, quyết định lại dựa trên dữ liệu sử
 
 | Ngày | Task | Thay đổi | Lý do |
 |---|---|---|---|
-| | | | |
+| 2026-10-24 | T-010 | Đặt kiểm tra fixture tại `shared/itinerary/` để Vitest hiện có thu thập được; fixture JSON vẫn ở `tests/fixtures/`. | Vitest chỉ include `src/`, `shared/`, `server/`. |
 
 ## Câu hỏi còn mở
 

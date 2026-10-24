@@ -60,12 +60,13 @@ Khi xong: cập nhật `[ ]` → `[x]` trong `docs/09`, ghi thay đổi (nếu c
 
 ```text
 Đọc AGENTS.md ở gốc repo, sau đó đọc docs/phases/phase-4-accounts-share.md và docs/09-roadmap-tasks.md.
-Nhiệm vụ: hoàn thành Phase 4 (T-034 → T-036).
+Nhiệm vụ: hoàn thành Phase 4 (T-034 → T-042).
 - Làm lần lượt từng task chưa xong có đủ phụ thuộc; mỗi task một nhánh và một PR nhỏ.
 - Trước mỗi task: đọc các tài liệu ở cột "Tham chiếu" của task đó.
 - Giao diện: bám docs/stitch/ nhưng BỎ các mục ở phần "Bỏ / không làm khi dựng giao diện".
 - Nếu tài liệu mơ hồ, mâu thuẫn, hoặc cần thứ chủ dự án chưa chuẩn bị: dừng và hỏi.
 - Không làm tính năng ngoài danh sách; không làm 3D/bảo tàng số, khẩn cấp/hỗ trợ.
 - Cuối mỗi task: chạy typecheck, lint, test; tick [x] trong docs/09; tóm tắt đã làm gì, file nào đổi, điều gì chưa làm.
+- Khi xong cả phase (hoặc khi phải dừng giữa chừng): tạo `docs/reports/phase-4-report.md` theo mẫu `docs/reports/_template.md`, kèm đầu ra THẬT của typecheck, lint, test, build. Không ghi đã chạy nếu chưa chạy.
 Bắt đầu bằng task đầu tiên chưa hoàn thành của Phase 4.
 ```

@@ -41,6 +41,7 @@ Thư mục: `docs/stitch/stitch_file_analysis_assistant/`. Chỉ để tham chi�
 
 ## Bỏ / không làm khi dựng giao diện
 
+- S12: nút "+ Thêm ngày" (MVP không đổi số ngày sau khi tạo, xem `docs/06` mục 7.4).
 - S12: nút "Xuất file PDF" (F-24, giai đoạn 2).
 - S12: thẻ "Thời tiết Huế hôm nay" (F-21, giai đoạn 2).
 - S12: nút "Chỉ đường Google Maps" và nhãn "Giờ cao điểm": chỉ làm nếu có trong `docs/02`; nếu không thì hỏi chủ dự án.
@@ -71,5 +72,6 @@ Nhiệm vụ: hoàn thành Phase 2 (T-018 → T-028).
 - Nếu tài liệu mơ hồ, mâu thuẫn, hoặc cần thứ chủ dự án chưa chuẩn bị: dừng và hỏi.
 - Không làm tính năng ngoài danh sách; không làm 3D/bảo tàng số, khẩn cấp/hỗ trợ.
 - Cuối mỗi task: chạy typecheck, lint, test; tick [x] trong docs/09; tóm tắt đã làm gì, file nào đổi, điều gì chưa làm.
+- Khi xong cả phase (hoặc khi phải dừng giữa chừng): tạo `docs/reports/phase-2-report.md` theo mẫu `docs/reports/_template.md`, kèm đầu ra THẬT của typecheck, lint, test, build. Không ghi đã chạy nếu chưa chạy.
 Bắt đầu bằng task đầu tiên chưa hoàn thành của Phase 2.
 ```
