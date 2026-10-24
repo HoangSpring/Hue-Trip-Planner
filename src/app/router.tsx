@@ -18,10 +18,11 @@ import { ErrorPage } from '@/features/static/ErrorPage'
 import { ForbiddenPage } from '@/features/static/ForbiddenPage'
 import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { vi } from '@/lib/strings/vi'
-import { ComponentGalleryPage } from '@/features/dev/ComponentGalleryPage'
 import { supabaseClient } from '@/lib/supabase'
 
 const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
+const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
+const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -35,7 +36,8 @@ export const routePaths = [
   paths.planNew, paths.planGenerating, paths.tripDraft, paths.tripPattern, paths.sharedTripPattern,
   paths.login, paths.register, paths.forgotPassword, paths.resetPassword, paths.authCallback,
   paths.account, paths.accountTrips, paths.accountSaved, paths.accountSettings,
-  paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport, paths.forbidden, '*',
+  paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
+  paths.devComponents, paths.devAuth, paths.forbidden, '*',
 ]
 
 export function createAppRoutes(authClient: SupabaseClient | null = supabaseClient) {
@@ -49,7 +51,10 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.map, element: page(vi.pages.map) },
       { path: paths.about, element: page(vi.pages.about) },
       { path: paths.privacy, element: page(vi.pages.privacy) },
-      ...(import.meta.env.DEV ? [{ path: paths.devComponents, element: <ComponentGalleryPage /> }] : []),
+      ...(import.meta.env.DEV ? [
+        { path: paths.devComponents, element: <Suspense fallback={loading}><ComponentGalleryPage /></Suspense> },
+        { path: paths.devAuth, element: <Suspense fallback={loading}><DevAuthPage /></Suspense> },
+      ] : []),
     ] },
     { element: <FlowLayout />, children: [
       { path: paths.planNew, element: page(vi.pages.plan) },

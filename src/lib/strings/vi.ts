@@ -40,5 +40,15 @@ export const vi = {
     imageCredit: 'Ảnh', savePlace: (name: string) => `Lưu ${name}`, unsavePlace: (name: string) => `Bỏ lưu ${name}`,
     chipHeritage: 'Di sản', chipFood: 'Ẩm thực', chipCafe: 'Cà phê',
   },
+  devAuth: {
+    title: 'Kiểm tra Supabase Auth',
+    note: 'Trang nội bộ chỉ có trong môi trường phát triển.',
+    email: 'Email', password: 'Mật khẩu', signIn: 'Đăng nhập thử',
+    signOut: 'Đăng xuất', loading: 'Đang kiểm tra phiên…',
+    signedInAs: 'Đã đăng nhập:', profileTitle: 'GET /api/me',
+    profileLoading: 'Đang tải hồ sơ…', profileError: 'Không tải được hồ sơ:',
+    notConfigured: 'Thiếu cấu hình Supabase công khai trong môi trường phát triển.',
+    signInSuccess: 'Đăng nhập thành công.',
+  },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
 } as const
