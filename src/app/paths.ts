@@ -10,6 +10,7 @@ export const paths = {
   admin: '/admin', adminPlaces: '/admin/places', adminPlaceNew: '/admin/places/new',
   adminPlace: (id: string) => `/admin/places/${encodeURIComponent(id)}`,
   adminPlacePattern: '/admin/places/:id', adminImport: '/admin/import', forbidden: '/403',
+  devComponents: '/dev/components',
 } as const
 
 export function safeNextPath(next: string | null, fallback = paths.accountTrips): string {

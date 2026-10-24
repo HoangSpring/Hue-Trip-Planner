@@ -28,4 +28,17 @@ export const vi = {
     back: 'Quay lại', retry: 'Thử lại', goHome: 'Về trang chủ',
     errorBody: 'Bạn thử tải lại trang nhé.', serviceConnectionError: 'Không thể kết nối đến dịch vụ. Vui lòng thử lại.',
   },
+  components: {
+    demoTitle: 'Thư viện thành phần', demoNote: 'Bản xem trước nội bộ',
+    primary: 'Tiếp tục', secondary: 'Quay lại', tertiary: 'Tìm hiểu thêm', danger: 'Xóa',
+    loading: 'Đang lưu…', selected: 'Đã chọn', dialogTitle: 'Xác nhận thao tác',
+    dialogBody: 'Bạn có muốn tiếp tục không?', cancel: 'Hủy', confirm: 'Xác nhận',
+    openDialog: 'Mở hộp thoại', openPanel: 'Mở bảng thông tin', close: 'Đóng',
+    toast: 'Đã lưu thay đổi', undo: 'Hoàn tác', emptyTitle: 'Chưa có mục nào',
+    emptyBody: 'Nội dung sẽ xuất hiện ở đây khi có dữ liệu.', showToast: 'Hiện thông báo',
+    placeName: 'Tên địa điểm', placeArea: 'Khu vực', placeAlt: 'Ảnh minh họa địa điểm',
+    imageCredit: 'Ảnh', savePlace: (name: string) => `Lưu ${name}`, unsavePlace: (name: string) => `Bỏ lưu ${name}`,
+    chipHeritage: 'Di sản', chipFood: 'Ẩm thực', chipCafe: 'Cà phê',
+  },
+  placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
 } as const

@@ -17,6 +17,7 @@ import { ErrorPage } from '@/features/static/ErrorPage'
 import { ForbiddenPage } from '@/features/static/ForbiddenPage'
 import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { vi } from '@/lib/strings/vi'
+import { ComponentGalleryPage } from '@/features/dev/ComponentGalleryPage'
 
 const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([{
       { path: paths.map, element: page(vi.pages.map) },
       { path: paths.about, element: page(vi.pages.about) },
       { path: paths.privacy, element: page(vi.pages.privacy) },
+      ...(import.meta.env.DEV ? [{ path: paths.devComponents, element: <ComponentGalleryPage /> }] : []),
     ] },
     { element: <FlowLayout />, children: [
       { path: paths.planNew, element: page(vi.pages.plan) },
