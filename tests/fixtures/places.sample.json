@@ -1,0 +1,1914 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "slug": "dia-diem-gia-lap-01",
+    "name": "Địa điểm giả lập 01",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.451,
+    "lng": 107.561,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "slug": "dia-diem-gia-lap-02",
+    "name": "Địa điểm giả lập 02",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.452,
+    "lng": 107.562,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "slug": "dia-diem-gia-lap-03",
+    "name": "Địa điểm giả lập 03",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.453,
+    "lng": 107.563,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "slug": "dia-diem-gia-lap-04",
+    "name": "Địa điểm giả lập 04",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.454,
+    "lng": 107.564,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000005",
+    "slug": "dia-diem-gia-lap-05",
+    "name": "Địa điểm giả lập 05",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.455,
+    "lng": 107.565,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "slug": "dia-diem-gia-lap-06",
+    "name": "Địa điểm giả lập 06",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.456,
+    "lng": 107.566,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000007",
+    "slug": "dia-diem-gia-lap-07",
+    "name": "Địa điểm giả lập 07",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.457,
+    "lng": 107.567,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "17:00",
+    "closeTime": "01:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000008",
+    "slug": "dia-diem-gia-lap-08",
+    "name": "Địa điểm giả lập 08",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.458,
+    "lng": 107.568,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000009",
+    "slug": "dia-diem-gia-lap-09",
+    "name": "Địa điểm giả lập 09",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.459,
+    "lng": 107.569,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000010",
+    "slug": "dia-diem-gia-lap-10",
+    "name": "Địa điểm giả lập 10",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.46,
+    "lng": 107.57,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "slug": "dia-diem-gia-lap-11",
+    "name": "Địa điểm giả lập 11",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.461,
+    "lng": 107.571,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000012",
+    "slug": "dia-diem-gia-lap-12",
+    "name": "Địa điểm giả lập 12",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.462,
+    "lng": 107.572,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000013",
+    "slug": "dia-diem-gia-lap-13",
+    "name": "Địa điểm giả lập 13",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.463,
+    "lng": 107.573,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000014",
+    "slug": "dia-diem-gia-lap-14",
+    "name": "Địa điểm giả lập 14",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.464,
+    "lng": 107.574,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000015",
+    "slug": "dia-diem-gia-lap-15",
+    "name": "Địa điểm giả lập 15",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.465,
+    "lng": 107.575,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000016",
+    "slug": "dia-diem-gia-lap-16",
+    "name": "Địa điểm giả lập 16",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.466,
+    "lng": 107.576,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000017",
+    "slug": "dia-diem-gia-lap-17",
+    "name": "Địa điểm giả lập 17",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.467,
+    "lng": 107.577,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000018",
+    "slug": "dia-diem-gia-lap-18",
+    "name": "Địa điểm giả lập 18",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.468,
+    "lng": 107.578,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000019",
+    "slug": "dia-diem-gia-lap-19",
+    "name": "Địa điểm giả lập 19",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.469,
+    "lng": 107.579,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000020",
+    "slug": "dia-diem-gia-lap-20",
+    "name": "Địa điểm giả lập 20",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.47,
+    "lng": 107.58,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [
+      1
+    ],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000021",
+    "slug": "dia-diem-gia-lap-21",
+    "name": "Địa điểm giả lập 21",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.471,
+    "lng": 107.581,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000022",
+    "slug": "dia-diem-gia-lap-22",
+    "name": "Địa điểm giả lập 22",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.472,
+    "lng": 107.582,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000023",
+    "slug": "dia-diem-gia-lap-23",
+    "name": "Địa điểm giả lập 23",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.473,
+    "lng": 107.583,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000024",
+    "slug": "dia-diem-gia-lap-24",
+    "name": "Địa điểm giả lập 24",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.474,
+    "lng": 107.584,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000025",
+    "slug": "dia-diem-gia-lap-25",
+    "name": "Địa điểm giả lập 25",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.475,
+    "lng": 107.585,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000026",
+    "slug": "dia-diem-gia-lap-26",
+    "name": "Địa điểm giả lập 26",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.476,
+    "lng": 107.586,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000027",
+    "slug": "dia-diem-gia-lap-27",
+    "name": "Địa điểm giả lập 27",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.477,
+    "lng": 107.587,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000028",
+    "slug": "dia-diem-gia-lap-28",
+    "name": "Địa điểm giả lập 28",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.478,
+    "lng": 107.588,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000029",
+    "slug": "dia-diem-gia-lap-29",
+    "name": "Địa điểm giả lập 29",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.479,
+    "lng": 107.589,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000030",
+    "slug": "dia-diem-gia-lap-30",
+    "name": "Địa điểm giả lập 30",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.48,
+    "lng": 107.59,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000031",
+    "slug": "dia-diem-gia-lap-31",
+    "name": "Địa điểm giả lập 31",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.481,
+    "lng": 107.591,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000032",
+    "slug": "dia-diem-gia-lap-32",
+    "name": "Địa điểm giả lập 32",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.482,
+    "lng": 107.592,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000033",
+    "slug": "dia-diem-gia-lap-33",
+    "name": "Địa điểm giả lập 33",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.483,
+    "lng": 107.593,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000034",
+    "slug": "dia-diem-gia-lap-34",
+    "name": "Địa điểm giả lập 34",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.484,
+    "lng": 107.594,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000035",
+    "slug": "dia-diem-gia-lap-35",
+    "name": "Địa điểm giả lập 35",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.485,
+    "lng": 107.595,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [
+      1
+    ],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000036",
+    "slug": "dia-diem-gia-lap-36",
+    "name": "Địa điểm giả lập 36",
+    "category": "heritage",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.486,
+    "lng": 107.596,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000037",
+    "slug": "dia-diem-gia-lap-37",
+    "name": "Địa điểm giả lập 37",
+    "category": "food",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.487,
+    "lng": 107.597,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [
+      "lunch"
+    ],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000038",
+    "slug": "dia-diem-gia-lap-38",
+    "name": "Địa điểm giả lập 38",
+    "category": "cafe",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.488,
+    "lng": 107.598,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000039",
+    "slug": "dia-diem-gia-lap-39",
+    "name": "Địa điểm giả lập 39",
+    "category": "sightseeing",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.489,
+    "lng": 107.599,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": "09:00",
+    "closeTime": "17:00",
+    "closedDays": [],
+    "openingNote": null,
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000040",
+    "slug": "dia-diem-gia-lap-40",
+    "name": "Địa điểm giả lập 40",
+    "category": "shopping",
+    "shortDescription": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật.",
+    "area": "Khu vực giả lập",
+    "lat": 16.49,
+    "lng": 107.6,
+    "coverImageUrl": null,
+    "coverImageAlt": null,
+    "imageCredit": null,
+    "imageLicense": null,
+    "tags": [
+      {
+        "slug": "sample",
+        "name": "Mẫu kiểm thử"
+      }
+    ],
+    "verified": false,
+    "status": "published",
+    "openTime": null,
+    "closeTime": null,
+    "closedDays": [
+      1
+    ],
+    "openingNote": "Giờ mở cửa mẫu",
+    "visitDurationMin": 60,
+    "priceLevel": 1,
+    "ticketPriceVnd": null,
+    "priceNote": null,
+    "bestTime": [
+      "morning",
+      "afternoon"
+    ],
+    "mealType": [],
+    "suitableFor": [
+      "solo",
+      "couple",
+      "friends"
+    ],
+    "walkingIntensity": 1,
+    "phone": null,
+    "website": null,
+    "images": [],
+    "lastVerifiedAt": null,
+    "description": "Bản ghi minh họa nội bộ; không dùng làm dữ liệu địa điểm thực tế.",
+    "address": ""
+  }
+]

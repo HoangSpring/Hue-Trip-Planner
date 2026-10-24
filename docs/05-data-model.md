@@ -78,7 +78,8 @@ supabase/migrations/
   20250101000005_saved_and_logs.sql
   20250101000006_rls_policies.sql
   20250101000007_storage.sql
-  20250101000008_rpc_functions.sql      # save_trip, create_trip_from_payload, nearby_places (xem docs/06 mục 10)
+  20250101000008_nearby_places.sql      # nearby_places (T-012; xem docs/06 mục 10)
+  20250101000009_trip_rpcs.sql          # save_trip, create_trip_from_payload (T-034; xem docs/06 mục 10)
 supabase/seed/
   001_tags.sql
   002_start_points.sql

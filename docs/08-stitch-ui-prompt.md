@@ -12,7 +12,7 @@
 
 ### Cách làm việc đề xuất
 
-1. Tạo một dự án Stitch mới. Thiết kế **desktop-first**: các màn chính cần bản **Desktop** (1440×900). Stitch đã sinh bản mobile cho S01–S17; dùng prompt ở mục D5 để tạo bản desktop từ các màn đó.
+1. **Trạng thái:** thiết kế đã đủ cho giai đoạn MVP. Bản **desktop (1440×900)** có cho S01, S02, S03, S04, S07, S12, S15, S17, S18–S21; các màn còn lại (S05, S06, S08–S11, S13, S14, S16) chỉ có bản mobile và được dựng responsive. Muốn bổ sung hoặc sửa thêm, dùng prompt ở mục D5.
 2. Dán **Master Prompt (mục B)** vào lần đầu hoặc vào ô mô tả/ngữ cảnh chung của dự án để Stitch hiểu phong cách xuyên suốt.
 3. Với **mỗi màn hình**, dán một prompt ở **mục C**. Mỗi lần chỉ một màn hình; không gộp nhiều màn hình vào một prompt.
 4. Làm theo thứ tự ưu tiên: **S01 → S02 → S03 → S05–S10 (wizard) → S12 (trình chỉnh lịch trình) → S04 (bản đồ)**, rồi các màn còn lại.
@@ -65,7 +65,7 @@ COLOR PALETTE
 Contrast must meet WCAG AA. Dark mode is NOT required.
 
 TYPOGRAPHY
-- Headings: "Lora" (serif), semi-bold, elegant.
+- Headings: "Source Serif 4" (serif), semi-bold, elegant.
 - Body and UI: "Be Vietnam Pro" (sans-serif), both with full Vietnamese support.
 - Scale: H1 32/40 (mobile) 48/56 (desktop), H2 24/32, H3 20/28, body 16/24, small 14/20.
 
@@ -455,6 +455,24 @@ boxShadow:    { card: '0 2px 8px rgba(31,26,36,0.08)' },
 - Tải font với tập ký tự **vietnamese** (Google Fonts: `subset=vietnamese,latin`), dùng `font-display: swap`.
 - Mọi màu dùng qua token, **không** viết mã hex trực tiếp trong component.
 
+**Chuyển lớp Tailwind của `code.html` sang token của dự án** (khi dựng lại component):
+
+| Trong `code.html` (Stitch) | Dùng trong dự án |
+|---|---|
+| `bg-primary-container`, `bg-primary` (nút chính) | `bg-primary` (#5B3A8C); hover `bg-primary-hover` |
+| `bg-surface`, `bg-background` | `bg-bg` |
+| `bg-surface-container-lowest` | `bg-surface` (thẻ, trắng) |
+| `text-on-surface`, `text-on-surface-variant` | `text-ink`, `text-ink-muted` |
+| `border-outline-variant` | `border-line` |
+| `bg-tertiary-fixed`, `text-tertiary` (vàng) | `bg-accent-tint`, `text-accent` |
+| `bg-secondary-container`, `text-secondary` (xanh ngọc) | `bg-secondary-tint`, `text-secondary` |
+| `bg-error-container`, `text-error` | nền nhạt của `danger`, `text-danger` |
+| `rounded-xl` / `rounded-2xl` | `rounded-control` (nút, ô nhập) / `rounded-card` (thẻ, hộp thoại) |
+| `font-headline-*`, `font-display-*` | `font-serif` với cỡ chữ theo thang ở trên |
+| `font-body-*`, `font-label-*` | `font-sans` |
+
+Màu nền dùng `#FAF6EE` (theo `DESIGN.md`); ảnh mockup hiển thị `#FDF9F1`, chênh lệch nhỏ, không cần khớp từng điểm ảnh.
+
 ### D2. Component dùng chung (đặt trong `src/components/`)
 
 | Component | Ghi chú |
@@ -483,7 +501,28 @@ boxShadow:    { card: '0 2px 8px rgba(31,26,36,0.08)' },
 - **Chuỗi giao diện:** gom vào `src/lib/strings/vi.ts` (không viết cứng rải rác) để dễ dịch giai đoạn 2.
 - **Định dạng:** ngày `dd/MM/yyyy`; giờ 24h `HH:mm`; tiền `200.000 ₫`; khoảng cách `3,2 km` (dấu phẩy thập phân), thời gian `12 phút`.
 
+### D4. Bảng map: màn hình ↔ route ↔ tính năng
+
+| Mã | Màn hình | Route | Tính năng |
+|---|---|---|---|
+| S01 | Landing | `/` | F-01 |
+| S02 | Khám phá | `/explore` | F-02 |
+| S03 | Chi tiết địa điểm | `/place/:slug` | F-03 |
+| S04 | Bản đồ | `/map` | F-04 |
+| S05–S10 | Wizard 6 bước | `/plan/new?step=1..6` | F-05 |
+| S11 | Đang tạo | `/plan/generating` | F-06 |
+| S12 | Trình chỉnh lịch trình | `/trip/draft`, `/trip/:id` | F-07 |
+| S13 | Sheet thay thế/thêm, hộp thoại tạo lại ngày | (trong S12) | F-07 |
+| S14 | Đăng nhập/Đăng ký | `/login`, `/register` | F-08 |
+| S15 | Chuyến đi của tôi | `/account/trips` | F-09 |
+| S16 | Đã lưu, Cài đặt | `/account/saved`, `/account/settings` | F-10, F-08 |
+| S17 | Lịch trình chia sẻ + sheet chia sẻ | `/s/:token` | F-11 |
+| S18–S20 | Admin | `/admin/*` | F-12 |
+| S21 | Lỗi, 404, offline, trang tĩnh | `*`, `/about`, `/privacy` | F-13, F-14 |
+
 ### D5. Bố cục desktop (1440×900) cho các màn chính
+
+Bản desktop đã có trong `docs/stitch/` cho: S01, S02, S03, S04, S07, S12, S15, S17 (thư mục `*_desktop`) và S18–S21.
 
 | Màn | Bố cục desktop |
 |---|---|
@@ -510,27 +549,8 @@ max content width 1200px; use multi-column grids; side panels instead of bottom 
 Layout for this screen: <dòng bố cục tương ứng>.
 ```
 
-### D4. Bảng map: màn hình ↔ route ↔ tính năng
-
-| Mã | Màn hình | Route | Tính năng |
-|---|---|---|---|
-| S01 | Landing | `/` | F-01 |
-| S02 | Khám phá | `/explore` | F-02 |
-| S03 | Chi tiết địa điểm | `/place/:slug` | F-03 |
-| S04 | Bản đồ | `/map` | F-04 |
-| S05–S10 | Wizard 6 bước | `/plan/new?step=1..6` | F-05 |
-| S11 | Đang tạo | `/plan/generating` | F-06 |
-| S12 | Trình chỉnh lịch trình | `/trip/draft`, `/trip/:id` | F-07 |
-| S13 | Sheet thay thế/thêm, hộp thoại tạo lại ngày | (trong S12) | F-07 |
-| S14 | Đăng nhập/Đăng ký | `/login`, `/register` | F-08 |
-| S15 | Chuyến đi của tôi | `/account/trips` | F-09 |
-| S16 | Đã lưu, Cài đặt | `/account/saved`, `/account/settings` | F-10, F-08 |
-| S17 | Lịch trình chia sẻ + sheet chia sẻ | `/s/:token` | F-11 |
-| S18–S20 | Admin | `/admin/*` | F-12 |
-| S21 | Lỗi, 404, offline, trang tĩnh | `*`, `/about`, `/privacy` | F-13, F-14 |
-
 ## Câu hỏi còn mở
 
-- [ ] Bảng màu và font đã được bạn đồng ý chưa? (Tím Huế + vàng cung đình + xanh ngọc; Lora + Be Vietnam Pro)
-- [ ] Tên sản phẩm và logo để Stitch dùng thay cho "Hue Trip Planner".
-- [ ] Có cần phiên bản desktop đầy đủ cho mọi màn hình không, hay chỉ S01, S03, S12 và các màn admin?
+- [x] Bảng màu và font: đã chốt theo Stitch (tím Huế + vàng cung đình + xanh ngọc; Source Serif 4 + Be Vietnam Pro).
+- [ ] Tên sản phẩm và logo chính thức (mockup đang dùng "Cổ Đô" / "Hue Trip Planner"); xem `docs/10-decisions.md` D-01.
+- [x] Bản desktop: đã có cho 12 màn quan trọng (xem D5); các màn còn lại dựng responsive.

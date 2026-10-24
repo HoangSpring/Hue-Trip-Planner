@@ -27,7 +27,8 @@ Ngôn ngữ giao diện MVP: **tiếng Việt**. Thiết kế DB và code sẵn 
 | `docs/05-data-model.md` | Tạo bảng, RLS, migration, định dạng CSV import |
 | `docs/06-api-spec.md` | Viết/gọi API: endpoint, lỗi, giới hạn tần suất, quyền |
 | `docs/07-ai-itinerary-spec.md` | Làm tính năng sinh lịch trình: pipeline, LLM, thuật toán dự phòng, cảnh báo |
-| `docs/08-stitch-ui-prompt.md` | Design tokens, component, quy tắc giao diện (mục D); thiết kế tham chiếu nằm trong `docs/stitch/stitch_file_analysis_assistant/` (xem mục 12) |
+| `docs/08-stitch-ui-prompt.md` | Design tokens, component, quy tắc giao diện (mục D); thiết kế tham chiếu nằm trong `docs/stitch/stitch_file_analysis_assistant/` (xem mục 13) |
+| `docs/10-decisions.md` | **Quyết định mặc định** cho mọi câu hỏi còn mở (tên sản phẩm, LLM, bản đồ, phân trang...). Đọc trước khi hỏi chủ dự án |
 | `docs/09-roadmap-tasks.md` | **Chọn task tiếp theo** (mốc M0–M6, phụ thuộc, tiêu chí hoàn thành) |
 
 Nếu một file chưa tồn tại mà task cần thông tin đó: **hỏi người dùng**, đừng tự đoán rồi làm.
@@ -38,7 +39,7 @@ Nếu một file chưa tồn tại mà task cần thông tin đó: **hỏi ngư�
 |---|---|
 | Frontend | React 18 + Vite + TypeScript, React Router, Tailwind CSS |
 | Server state | TanStack Query |
-| Bản đồ | Leaflet hoặc MapLibre GL, tile từ OpenStreetMap (phải ghi công) |
+| Bản đồ | Leaflet (`react-leaflet`), URL tile cấu hình qua `VITE_MAP_TILE_URL`, tile từ OpenStreetMap (phải ghi công); chi tiết ở `docs/10-decisions.md` D-19, D-20 |
 | Backend | Node.js + TypeScript + **Hono**, chạy dưới dạng **một Vercel Function** (`api/[[...route]].ts`), mã nguồn ở `server/` (không có server riêng). Frontend luôn gọi dữ liệu qua `/api/*`; Supabase client ở frontend chỉ dùng cho Auth và tải ảnh admin |
 | Database, Auth, Storage | Supabase (Postgres + RLS + Supabase Auth + Storage) |
 | AI | Gọi LLM **từ backend**, trả JSON theo schema cố định |
@@ -170,18 +171,18 @@ Biến có tiền tố `VITE_` sẽ lộ ra trình duyệt. Chỉ đặt giá tr
 4. Làm theo từng bước nhỏ; viết test cho logic nghiệp vụ (đặc biệt phần sinh lịch trình).
 5. Chạy `typecheck`, `lint`, `test`.
 6. Tóm tắt cuối task: đã làm gì, file nào thay đổi, điều gì chưa làm/còn nghi ngờ.
+7. Khi xong một phase (hoặc phải dừng giữa chừng): viết báo cáo `docs/reports/phase-N-report.md` theo mẫu `docs/reports/_template.md`, dán đầu ra thật của các lệnh kiểm tra. Báo cáo là nơi ghi kết quả; **không** ghi báo cáo vào `README.md`.
 
-## 12. TODO cho chủ dự án (chưa quyết định)
+## 12. Câu hỏi còn mở
 
-- [ ] Tên chính thức của sản phẩm và tên miền.
-- [ ] Nhà cung cấp LLM và model mặc định.
-- [ ] Nhà cung cấp tile bản đồ (OSM trực tiếp hay dịch vụ có gói miễn phí).
-- [ ] Danh sách tài khoản admin ban đầu.
+Các câu hỏi "còn mở" rải ở cuối từng file docs đã có **quyết định mặc định** trong `docs/10-decisions.md`. Làm theo mặc định đó; chỉ hỏi chủ dự án với các mục ghi **"Cần chủ dự án"** (ví dụ chọn nhà cung cấp LLM trước T-029, nhà cung cấp tile bản đồ và tài khoản admin trước T-052).
 
-## 12. Thiết kế tham chiếu (Stitch)
+## 13. Thiết kế tham chiếu (Stitch)
 
 - Thư mục: `docs/stitch/stitch_file_analysis_assistant/`. Mỗi màn có `screen.png` và `code.html`; `hue_imperial_editorial/DESIGN.md` là **design system đã duyệt** (tokens, font, bố cục, đổ bóng). Tokens trong `docs/08` mục D1 đã đồng bộ với file này.
-- S01–S17 hiện chỉ có bản **mobile**; S18–S21 chỉ có bản **desktop**. Với desktop, agent dựa vào bảng bố cục desktop ở `docs/08` mục D5 thay vì kéo giãn bản mobile thành một cột.
+- **Bản desktop đã có** cho S01–S04, S07, S12, S15, S17 và S18–S21 (thư mục `*_desktop`); các màn còn lại chỉ có bản mobile (`*_mobile`). Với màn chỉ có bản mobile, dựng responsive từ bản mobile và khung desktop ở `docs/08` mục D5, **không** kéo giãn thành một cột.
 - `code.html` dùng Tailwind CDN và ảnh giữ chỗ (`lh3.googleusercontent.com`): chỉ để tham chiếu. **Dựng lại thành component React**, không sao chép nguyên mã, không đưa ảnh giữ chỗ vào sản phẩm.
 - Tên địa điểm/quán trong mockup (ví dụ "Quán Bún Bò Bà Tuyết") chỉ là dữ liệu mẫu, không đưa vào dữ liệu thật khi chưa kiểm chứng.
 - Không làm các mục ngoài phạm vi xuất hiện trong mockup admin: "Thống kê & Lịch trình", "Cài đặt hệ thống", chỉ báo "Hệ thống: Trực tuyến", chuông thông báo, thẻ thống kê; và thanh tiến độ "Đã hoàn thành x/y địa điểm" ở S01 (thẻ "Tiếp tục chuyến đi" chỉ cần tên chuyến đi và nút mở). Admin chỉ gồm danh sách, bộ lọc, thao tác hàng loạt, form địa điểm và import CSV (F-12).
+- Các mục thừa ở bản desktop cũng **bỏ**: nút "+ Thêm ngày" ở S12 (MVP không đổi số ngày sau khi tạo), "Xuất file PDF", thẻ "Thời tiết Huế hôm nay", liên kết chân trang "Điều khoản sử dụng" (MVP chỉ có `/about`, `/privacy`), nhãn "Giờ cao điểm"/"Mẹo" khi không có dữ liệu thật.
+- Tên thương hiệu trong mockup ("Cổ Đô") chỉ là tạm. Không viết cứng tên sản phẩm; dùng `src/lib/brand.ts` (xem `docs/10-decisions.md` D-01).
