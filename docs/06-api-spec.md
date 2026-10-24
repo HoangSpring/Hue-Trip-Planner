@@ -477,13 +477,16 @@ Body: `{ "verified": true }`. Ghi `verified_by`, `verified_at`, `last_verified_a
 
 ## 10. Hàm cơ sở dữ liệu (RPC) cần tạo
 
-Thêm migration `..._rpc_save_trip.sql` (sau migration RLS):
+Các hàm được chia theo task để migration theo đúng thứ tự:
+
+- Migration 8, task T-012: `nearby_places`.
+- Migration 9, task T-034: `save_trip` và `create_trip_from_payload`.
 
 | Hàm | Mục đích |
 |---|---|
-| `save_trip(p_trip_id uuid, p_payload jsonb, p_expected_updated_at timestamptz)` | Trong một transaction: khóa dòng `trips`, kiểm tra phiên bản, upsert `trip_days`, upsert/xóa `trip_items`, cập nhật `updated_at`. `SECURITY INVOKER` để RLS vẫn áp dụng |
-| `create_trip_from_payload(p_payload jsonb)` | Tạo mới `trips` + ngày + mục; xử lý idempotent theo `(user_id, client_draft_id)` |
-| `nearby_places(p_lat float8, p_lng float8, p_limit int, p_exclude uuid[])` | Trả địa điểm published theo khoảng cách (Haversine), dùng cho `nearby` và thay thế |
+| `nearby_places(p_lat float8, p_lng float8, p_limit int, p_exclude uuid[])` | Migration 8 · T-012. Trả địa điểm published theo khoảng cách (Haversine), dùng cho `nearby` và thay thế. |
+| `save_trip(p_trip_id uuid, p_payload jsonb, p_expected_updated_at timestamptz)` | Migration 9 · T-034. Trong một transaction: khóa dòng `trips`, kiểm tra phiên bản, upsert `trip_days`, upsert/xóa `trip_items`, cập nhật `updated_at`. `SECURITY INVOKER` để RLS vẫn áp dụng |
+| `create_trip_from_payload(p_payload jsonb)` | Migration 9 · T-034. Tạo mới `trips` + ngày + mục; xử lý idempotent theo `(user_id, client_draft_id)` |
 
 > Lỗi phiên bản ném `exception` có mã riêng để server ánh xạ sang `409 CONFLICT`.
 

@@ -127,7 +127,7 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-012 · Logic dùng chung cho đọc địa điểm (service + mapper) · `M`
 - **Tham chiếu:** `docs/06` mục 5; `docs/05`
 - **Dep:** T-005, T-011
-- **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8, chỉ phần này ở task này).
+- **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8; chỉ RPC này thuộc task T-012).
 - **Hoàn thành khi:** truy vấn chạy với dữ liệu đã import; "lang tu duc" tìm ra "Lăng Tự Đức"; chỉ trả `published`.
 
 ### [ ] T-013 · API đọc dữ liệu công khai · `M`
@@ -277,7 +277,7 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-034 · Migration RPC lưu chuyến đi · `M`
 - **Tham chiếu:** `docs/06` mục 10; `docs/05` mục 5.4
 - **Dep:** T-003
-- **Làm:** migration 8: `save_trip`, `create_trip_from_payload` (idempotent theo `(user_id, client_draft_id)`); bảo đảm `SECURITY INVOKER`, giữ RLS.
+- **Làm:** migration 9: `save_trip`, `create_trip_from_payload` (idempotent theo `(user_id, client_draft_id)`); bảo đảm `SECURITY INVOKER`, giữ RLS. Migration 8 `nearby_places` thuộc T-012.
 - **Hoàn thành khi:** test: lưu hai lần cùng `clientDraftId` chỉ tạo một bản ghi; `p_expected_updated_at` lệch → lỗi phiên bản; user B không ghi được vào chuyến đi của A.
 
 ### [ ] T-035 · API chuyến đi của người dùng · `L`
