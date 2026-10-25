@@ -21,6 +21,7 @@ import { vi } from '@/lib/strings/vi'
 import { supabaseClient } from '@/lib/supabase'
 
 const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
+const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -46,7 +47,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
   children: [
     { element: <PublicLayout />, children: [
       { index: true, element: page(vi.pages.home) },
-      { path: paths.explore, element: page(vi.pages.explore) },
+      { path: paths.explore, element: <Suspense fallback={loading}><ExplorePage /></Suspense> },
       { path: paths.placePattern, element: page(vi.pages.place) },
       { path: paths.map, element: page(vi.pages.map) },
       { path: paths.about, element: page(vi.pages.about) },

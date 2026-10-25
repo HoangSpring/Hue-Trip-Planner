@@ -1,5 +1,11 @@
 # Báo cáo Phase 1a — Import CSV và API đọc địa điểm
 
+> **Kết quả xác minh mới nhất — 26/10/2026:** ghi đè trạng thái smoke lịch sử phía dưới. Trên `main` (`origin/main`, có `97b7f72` là tổ tiên), `pnpm smoke:api` đạt **7/7** bằng Supabase thật, chỉ dùng GET/API đọc. Có 46 địa điểm published; `/api/meta` có 10 tag và 3 startPoints; API list/map/detail + nearby, 400 category sai, 404 slug thiếu và draft đều đạt. Vì vậy T-012 và T-013 được đánh dấu `[x]` theo điều kiện smoke 7/7 mà chủ dự án đặt. Không có migration hay thay đổi dữ liệu Supabase trong lượt xác minh này.
+
+Các lệnh nền trên `main`: `pnpm install --frozen-lockfile` → “Already up to date”, exit 0; `pnpm typecheck` → `$ tsc --noEmit`, exit 0; `pnpm lint` → `$ eslint .`, exit 0; `pnpm test` → 11 files / 71 tests passed, exit 0; `pnpm build` → 268 modules, built in 2.88s, exit 0 (2 cảnh báo PURE của Zod); smoke → 7 passed, 0 failed, 0 skipped, exit 0.
+
+**Ghi chú:** phần nội dung trước đây trong báo cáo ghi smoke 0 published/thiếu startPoints là lịch sử ngày 25/10, không còn mô tả trạng thái hiện tại.
+
 > Cập nhật ngày 25/10/2026. Chỉ làm T-011, T-012, T-013; chưa làm T-014 → T-017.
 
 ## 1. Tóm tắt
