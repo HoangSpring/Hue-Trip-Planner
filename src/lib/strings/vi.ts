@@ -51,4 +51,12 @@ export const vi = {
     signInSuccess: 'Đăng nhập thành công.',
   },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
+  explore: {
+    eyebrow: 'Tạp chí khám phá Huế', title: 'Đi chậm, thấy nhiều hơn', intro: 'Tìm một góc di sản, một món ngon hay khoảng lặng bên dòng Hương theo nhịp riêng của bạn.',
+    searchLabel: 'Bạn muốn khám phá điều gì?', searchPlaceholder: 'Thử “lăng tẩm”, “ẩm thực”…', sortLabel: 'Sắp xếp', sortFeatured: 'Gợi ý', sortName: 'Tên A–Z',
+    categories: 'Lọc theo loại', tags: 'Lọc theo chủ đề', invalidFilter: 'Bộ lọc trong đường dẫn không hợp lệ; đang hiển thị tất cả địa điểm.',
+    resultTitle: 'Góc Huế dành cho bạn', loadingCount: 'Đang tìm địa điểm', emptyTitle: 'Chưa tìm thấy địa điểm phù hợp', emptyBody: 'Thử đổi từ khóa hoặc bỏ bớt bộ lọc.',
+    loading: 'Đang tải địa điểm', errorTitle: 'Chưa thể tải địa điểm', errorBody: 'Kiểm tra kết nối rồi thử lại nhé.', retry: 'Thử lại', clearFilters: 'Xóa bộ lọc', placeCount: (count: number) => `${count} địa điểm`, previous: 'Trước', next: 'Tiếp', page: (current: number, total: number) => `Trang ${current} / ${total}`,
+    placeholderCredit: 'Ảnh giữ chỗ minh họa · Không phải ảnh địa điểm',
+  },
 } as const
