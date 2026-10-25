@@ -15,7 +15,8 @@
     "db:migrate": "supabase db push --yes",
     "db:seed": "tsx supabase/seed/importPlaces.ts",
     "db:types": "supabase gen types typescript --linked --schema public > src/types/supabase.ts",
-    "db:test:rls": "supabase test db --local supabase/tests"
+    "db:test:rls": "supabase test db --local supabase/tests",
+    "smoke:api": "tsx scripts/smokeApi.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
