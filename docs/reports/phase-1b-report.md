@@ -17,7 +17,7 @@
 | T-015 | `feat/T-015-explore` · `9b255ca`, `84b0a70` | Có | Lọc loại/tag, tìm kiếm, sort, trang 24 mục; query string được Zod kiểm tra; trạng thái tải/rỗng/lỗi; có test logic và component bộ lọc. Nút tim được để ở T-040 theo roadmap. |
 | T-017 | `feat/T-017-map` · `2233132` | Có | Leaflet + markercluster, marker theo loại, bộ lọc, thẻ xem nhanh, chế độ đánh số cho `MapView`, ghi công OSM và danh sách thay thế khi tile lỗi. Trình duyệt render 200 marker tổng hợp trong 1.441 ms, không có lỗi trang. |
 | T-016 | `feat/T-016-place-detail` · `9facd76` | Có | Nội dung, trường rỗng được ẩn, 404, title/description riêng, liên kết bản đồ theo tọa độ, nearby và mini map dùng chung. Credit/license/source link hiển thị cạnh ảnh. |
-| T-014 | `feat/T-014-landing` · xem commit cuối của nhánh | Một phần | Đã làm landing, featured lấy từ API và ẩn nếu rỗng, lịch trình mẫu, FAQ, SEO/OG và thẻ tiếp tục nháp đã kiểm tra Zod. Chưa có Lighthouse mobile Performance ≥ 80 nên giữ `[ ]`. |
+| T-014 | `feat/T-014-landing` · `331376b` | Một phần | Đã làm landing, featured lấy từ API và ẩn nếu rỗng, lịch trình mẫu, FAQ, SEO/OG và thẻ tiếp tục nháp đã kiểm tra Zod. Chưa có Lighthouse mobile Performance ≥ 80 nên giữ `[ ]`. |
 
 T-012/T-013 được tick `[x]` ở `docs/09-roadmap-tasks.md` sau khi smoke thật trên main đạt 7/7. Kết quả này được ghi bổ sung trong `docs/reports/phase-1a-report.md`.
 
