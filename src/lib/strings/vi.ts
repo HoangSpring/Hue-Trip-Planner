@@ -67,7 +67,7 @@ export const vi = {
   },
   place: {
     notFoundTitle: 'Không tìm thấy địa điểm này', notFoundBody: 'Địa điểm có thể chưa được công bố hoặc đường dẫn đã thay đổi.', explore: 'Khám phá địa điểm',
-    errorTitle: 'Chưa thể tải địa điểm', breadcrumb: 'Khám phá', introTitle: 'Một nơi để dừng chân', infoTitle: 'Thông tin ghé thăm', locationTitle: 'Vị trí', nearbyTitle: 'Gần đây',
+    errorTitle: 'Chưa thể tải địa điểm', errorBody: 'Đã có trục trặc khi tải thông tin. Bạn thử lại nhé.', loading: 'Đang tải thông tin địa điểm', breadcrumb: 'Khám phá', introTitle: 'Một nơi để dừng chân', infoTitle: 'Thông tin ghé thăm', locationTitle: 'Vị trí', nearbyTitle: 'Gần đây',
     visitNote: 'Thông tin có thể thay đổi; vui lòng kiểm tra lại trước khi đến.', directions: 'Chỉ đường', address: 'Địa chỉ', openHours: 'Giờ mở cửa', closedDays: 'Ngày nghỉ', price: 'Giá vé', priceLevel: 'Mức giá', duration: 'Thời lượng', bestTime: 'Nên đi lúc', note: 'Lưu ý',
     priceLevels: ['Miễn phí', 'Bình dân', 'Vừa phải', 'Cao'], timeLabels: { morning: 'Buổi sáng', noon: 'Buổi trưa', afternoon: 'Buổi chiều', evening: 'Buổi tối' }, days: ['Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy', 'Chủ nhật'],
   },

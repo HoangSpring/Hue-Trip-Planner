@@ -55,6 +55,7 @@ describe('place mapper', () => {
       slug: 'lang-tu-duc',
       shortDescription: 'Di tích thử nghiệm',
       coverImageUrl: null,
+      imageSourceUrl: null,
       tags: [{ slug: 'heritage', name: 'Di sản' }],
       status: 'published',
     }))

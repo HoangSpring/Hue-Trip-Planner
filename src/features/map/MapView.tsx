@@ -58,13 +58,12 @@ export function MapView({ places, numbered = false, height = '520px', className 
   const [tileFailed, setTileFailed] = useState(false)
   const [selected, setSelected] = useState<PlaceMapItemDto | null>(null)
   const choosePlace = useCallback((place: PlaceMapItemDto) => setSelected(place), [])
-  if (tileFailed) return <div className={`overflow-hidden rounded-card border border-line ${className}`} style={{ height }}><PlacesFallback places={places}/></div>
   return <div className={`relative overflow-hidden rounded-card border border-line bg-[#e8e4d8] ${className}`} style={{ height }}>
     <MapBoundary fallback={<PlacesFallback places={places}/> }>
-      <MapContainer center={hueCenter} zoom={13} scrollWheelZoom className="h-full w-full" aria-label="Bản đồ địa điểm Huế">
+      {tileFailed ? <PlacesFallback places={places}/> : <MapContainer center={hueCenter} zoom={13} scrollWheelZoom className="h-full w-full" aria-label="Bản đồ địa điểm Huế">
         <TileLayer url={tileUrl} eventHandlers={{ tileerror: () => setTileFailed(true) }} />
         <ClusterLayer places={places} numbered={numbered} onChoose={choosePlace}/>
-      </MapContainer>
+      </MapContainer>}
     </MapBoundary>
     <div className="pointer-events-none absolute bottom-0 right-0 z-[500] bg-white/90 px-2 py-1 text-[11px] leading-4 text-ink"><a className="pointer-events-auto underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">{vi.layout.osmCredit}</a></div>
     {selected && <aside className="absolute left-3 top-3 z-[500] max-w-[calc(100%-24px)] rounded-card border border-line bg-white p-3 shadow-card sm:left-auto sm:right-3 sm:w-64" aria-live="polite"><button onClick={() => setSelected(null)} aria-label={vi.map.closeCard} className="float-right grid size-8 place-items-center rounded-full text-ink-muted">×</button><p className="pr-6 text-xs text-ink-muted">{categoryLabel[selected.category]}</p><h3 className="mt-1 font-serif text-lg leading-6">{selected.name}</h3><a href={paths.place(selected.slug)} className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline underline-offset-4">{vi.map.details}</a></aside>}

@@ -17,6 +17,7 @@ export const placeSummarySchema = z.object({
   coverImageAlt: z.string().nullable(),
   imageCredit: z.string().nullable(),
   imageLicense: z.string().nullable(),
+  imageSourceUrl: z.string().url().nullable().optional(),
   tags: z.array(tagSchema),
   verified: z.boolean(),
   status: z.enum(['published', 'archived']).optional(),

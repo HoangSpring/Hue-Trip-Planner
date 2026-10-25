@@ -147,8 +147,14 @@ export class PlaceService {
     })
     if (error || !data) throw serviceUnavailable()
     const rows = data as NearbyPlaceRow[]
-    const tags = await this.getTagsByPlaceIds(rows.map(({ id }) => id))
-    return rows.map((place) => mapNearbyPlace(place, tags.get(place.id) ?? []))
+    const ids = rows.map(({ id }) => id)
+    const [tags, sourceResponse] = await Promise.all([
+      this.getTagsByPlaceIds(ids),
+      ids.length ? this.client.from('places').select('id,image_source_url').in('id', ids) : Promise.resolve({ data: [], error: null }),
+    ])
+    if (sourceResponse.error || !sourceResponse.data) throw serviceUnavailable()
+    const sourceById = new Map(sourceResponse.data.map((place) => [place.id, place.image_source_url]))
+    return rows.map((place) => mapNearbyPlace(place, tags.get(place.id) ?? [], sourceById.get(place.id) ?? null))
   }
 }
 

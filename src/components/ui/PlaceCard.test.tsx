@@ -10,7 +10,7 @@ Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 const place = {
   id: 'b5fcba36-8100-4b53-996b-2b3528f48645', slug: 'sample-place', name: 'Địa điểm mẫu', category: 'heritage' as const,
   shortDescription: null, area: 'Thuận Hóa', lat: 16.46, lng: 107.59, coverImageUrl: null, coverImageAlt: null,
-  imageCredit: null, imageLicense: null, tags: [], verified: true,
+  imageCredit: null, imageLicense: null, imageSourceUrl: null, tags: [], verified: true,
 }
 
 describe('PlaceCard', () => {

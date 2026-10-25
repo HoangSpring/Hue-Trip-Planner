@@ -144,7 +144,7 @@ interface PlaceSummary {
   shortDescription: string | null; area: string | null;
   lat: number; lng: number;
   coverImageUrl: string | null; coverImageAlt: string | null;
-  imageCredit: string | null; imageLicense: string | null;
+  imageCredit: string | null; imageLicense: string | null; imageSourceUrl: string | null;
   tags: { slug: string; name: string }[];
   verified: boolean;
   status?: 'published' | 'archived';   // 'archived' chỉ xuất hiện khi địa điểm nằm trong chuyến đi cũ
