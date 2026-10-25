@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { MemoryRouter } from 'react-router-dom'
 import { PlaceCard } from './PlaceCard'
 import { ImageCredit } from './ImageCredit'
+import { PlacePhoto } from './PlacePhoto'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -32,6 +33,18 @@ describe('ImageCredit', () => {
     const credit = container.querySelector('a')
     expect(credit?.getAttribute('href')).toBe('https://example.com/source')
     expect(credit?.textContent).toBe('Ảnh: Tác giả · CC BY 4.0')
+    act(() => root.unmount())
+  })
+})
+
+describe('PlacePhoto', () => {
+  it('replaces a failed remote image with an internal SVG placeholder', () => {
+    const container = document.createElement('div')
+    const root = createRoot(container)
+    act(() => root.render(<PlacePhoto src="https://example.com/missing.jpg" alt="Ảnh địa điểm"/>))
+    act(() => container.querySelector('img')?.dispatchEvent(new Event('error')))
+    expect(container.querySelector('svg')).not.toBeNull()
+    expect(container.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('Ảnh địa điểm')
     act(() => root.unmount())
   })
 })

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs><linearGradient id="paper" x2="1" y2="1"><stop stop-color="#FAF6EE"/><stop offset="1" stop-color="#E9E0D0"/></linearGradient></defs>
+  <rect width="1200" height="630" fill="url(#paper)"/>
+  <path d="M0 525c194-72 334 35 524-4s375-118 676-15v124H0z" fill="#6f9994"/>
+  <path d="M112 525V332h278v193M453 525V257h355v268" fill="#ead9b8" stroke="#98764b" stroke-width="16"/>
+  <path d="M112 350c0-90 62-154 139-154s139 64 139 154M453 276c0-119 79-204 178-204s177 85 177 204" fill="none" stroke="#98764b" stroke-width="20"/>
+  <text x="860" y="275" fill="#432173" font-family="Georgia,serif" font-size="76" font-weight="600">Một chuyến Huế</text>
+  <text x="860" y="365" fill="#432173" font-family="Georgia,serif" font-size="76" font-weight="600">thật vừa vặn</text>
+  <text x="866" y="425" fill="#2F6F5E" font-family="Arial,sans-serif" font-size="24">Khám phá Huế theo nhịp điệu của bạn</text>
+</svg>

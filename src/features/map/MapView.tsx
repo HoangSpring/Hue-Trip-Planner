@@ -14,7 +14,7 @@ import './map.css'
 
 type MapViewProps = { places: PlaceMapItemDto[]; numbered?: boolean; height?: string; className?: string }
 const hueCenter: L.LatLngExpression = [16.4637, 107.5909]
-const categoryColor: Record<PlaceMapItemDto['category'], string> = { heritage: '#5B3A8C', food: '#C65D36', cafe: '#2F6F5E', sightseeing: '#347A9C', shopping: '#B7791F' }
+export const categoryColor: Record<PlaceMapItemDto['category'], string> = { heritage: '#5B3A8C', food: '#C65D36', cafe: '#2F6F5E', sightseeing: '#347A9C', shopping: '#B7791F' }
 const categoryLabel: Record<PlaceMapItemDto['category'], string> = vi.placeCategories
 const tileUrl = import.meta.env.VITE_MAP_TILE_URL || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 
@@ -60,7 +60,7 @@ export function MapView({ places, numbered = false, height = '520px', className 
   const choosePlace = useCallback((place: PlaceMapItemDto) => setSelected(place), [])
   return <div className={`relative overflow-hidden rounded-card border border-line bg-[#e8e4d8] ${className}`} style={{ height }}>
     <MapBoundary fallback={<PlacesFallback places={places}/> }>
-      {tileFailed ? <PlacesFallback places={places}/> : <MapContainer center={hueCenter} zoom={13} scrollWheelZoom className="h-full w-full" aria-label="Bản đồ địa điểm Huế">
+      {tileFailed ? <PlacesFallback places={places}/> : <MapContainer center={hueCenter} zoom={13} scrollWheelZoom attributionControl={false} className="h-full w-full" aria-label="Bản đồ địa điểm Huế">
         <TileLayer url={tileUrl} eventHandlers={{ tileerror: () => setTileFailed(true) }} />
         <ClusterLayer places={places} numbered={numbered} onChoose={choosePlace}/>
       </MapContainer>}

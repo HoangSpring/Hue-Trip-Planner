@@ -24,6 +24,7 @@ const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
 const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const MapPage = lazy(() => import('@/features/map/MapPage'))
 const PlacePage = lazy(() => import('@/features/place/PlacePage'))
+const HomePage = lazy(() => import('@/features/home/HomePage'))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -48,7 +49,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
   element: <AuthProvider client={authClient}><Outlet /></AuthProvider>, errorElement: <ErrorPage />,
   children: [
     { element: <PublicLayout />, children: [
-      { index: true, element: page(vi.pages.home) },
+      { index: true, element: <Suspense fallback={loading}><HomePage /></Suspense> },
       { path: paths.explore, element: <Suspense fallback={loading}><ExplorePage /></Suspense> },
       { path: paths.placePattern, element: <Suspense fallback={loading}><PlacePage /></Suspense> },
       { path: paths.map, element: <Suspense fallback={loading}><MapPage /></Suspense> },

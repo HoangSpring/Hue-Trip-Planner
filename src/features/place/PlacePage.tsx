@@ -9,6 +9,7 @@ import { vi } from '@/lib/strings/vi'
 import { ImageCredit } from '@/components/ui/ImageCredit'
 import { PlaceCard } from '@/components/ui/PlaceCard'
 import { MapView } from '@/features/map/MapView'
+import { PlacePhoto } from '@/components/ui/PlacePhoto'
 
 export default function PlacePage() {
   const { slug = '' } = useParams()
@@ -31,14 +32,14 @@ export default function PlacePage() {
   if (!place) return null
 
   const mapItem = placeMapItemSchema.parse({ id: place.id, slug: place.slug, name: place.name, category: place.category, lat: place.lat, lng: place.lng, coverImageUrl: place.coverImageUrl })
-  const images = place.images.length ? place.images : place.coverImageUrl ? [{ url: place.coverImageUrl, alt: place.coverImageAlt, credit: place.imageCredit ?? '', license: place.imageLicense ?? '', sourceUrl: null }] : []
+  const images = place.images.length ? place.images : place.coverImageUrl ? [{ url: place.coverImageUrl, alt: place.coverImageAlt, credit: place.imageCredit ?? '', license: place.imageLicense ?? '', sourceUrl: place.imageSourceUrl ?? null }] : []
   const price = place.ticketPriceVnd != null ? `${new Intl.NumberFormat('vi-VN').format(place.ticketPriceVnd)} ₫` : place.priceNote
   const timeLabel = (slot: keyof typeof vi.place.timeLabels) => vi.place.timeLabels[slot] ?? slot
   const directionsUrl = `https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=${place.lat}%2C${place.lng}%3B${place.lat}%2C${place.lng}`
   return <article className="mx-auto max-w-content px-4 pb-16 pt-8 md:px-8 md:pt-12">
     <nav className="text-sm text-ink-muted"><Link to={paths.explore} className="underline underline-offset-4">{vi.place.breadcrumb}</Link><span aria-hidden="true"> / </span>{vi.placeCategories[place.category]}</nav>
     <header className="mt-4 max-w-4xl"><p className="text-xs font-semibold uppercase tracking-[.15em] text-secondary">{vi.placeCategories[place.category]}{place.area ? ` · ${place.area}` : ''}</p><h1 className="mt-2 text-4xl font-semibold leading-tight md:text-5xl">{place.name}</h1>{place.shortDescription && <p className="mt-4 text-lg leading-8 text-ink-muted">{place.shortDescription}</p>}</header>
-    {images.length > 0 ? <div className="mt-7 grid gap-3 md:grid-cols-[1.5fr_1fr]">{images.slice(0, 3).map((image, index) => <figure key={`${image.url}-${index}`} className={`overflow-hidden rounded-card border border-line bg-white ${index > 0 ? 'hidden md:block' : ''}`}><img src={image.url} alt={image.alt ?? place.name} className={`w-full object-cover ${index === 0 ? 'aspect-[4/3] md:aspect-[16/10]' : 'aspect-[16/9]'}`} loading={index ? 'lazy' : 'eager'}/><ImageCredit credit={image.credit || null} license={image.license || null} sourceUrl={image.sourceUrl}/></figure>)}</div> : <figure className="mt-7"><div className="grid min-h-64 place-items-center rounded-card bg-[radial-gradient(ellipse_at_50%_90%,#d7c2a0_0%,#efe7d8_55%,#f7f3eb_100%)] text-6xl text-primary/70" aria-label="Ảnh giữ chỗ">❋</div><ImageCredit credit={null} license={null} placeholder/></figure>}
+    {images.length > 0 ? <div className="mt-7 grid gap-3 md:grid-cols-[1.5fr_1fr]">{images.slice(0, 3).map((image, index) => <figure key={`${image.url}-${index}`} className={`overflow-hidden rounded-card border border-line bg-white ${index > 0 ? 'hidden md:block' : ''}`}><PlacePhoto src={image.url} alt={image.alt ?? place.name} loading={index ? 'lazy' : 'eager'} className={`aspect-[4/3] ${index === 0 ? 'md:aspect-[16/10]' : 'md:aspect-[16/9]'}`}/><ImageCredit credit={image.credit || null} license={image.license || null} sourceUrl={image.sourceUrl}/></figure>)}</div> : <figure className="mt-7 overflow-hidden rounded-card border border-line bg-white"><PlacePhoto src={null} alt={vi.place.placeholderAlt} className="aspect-[4/3] min-h-64"/><ImageCredit credit={null} license={null} placeholder/></figure>}
     <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,.9fr)]">
       <div className="space-y-8"><section><h2 className="font-serif text-2xl">{vi.place.introTitle}</h2>{place.description && <p className="mt-3 whitespace-pre-line text-base leading-7 text-ink-muted">{place.description}</p>}{place.address && <p className="mt-3 text-sm"><span className="font-semibold">{vi.place.address}: </span>{place.address}</p>}</section>
         {place.tags.length > 0 && <section><h2 className="font-serif text-xl">Hợp với</h2><div className="mt-3 flex flex-wrap gap-2">{place.tags.map((tag) => <span key={tag.slug} className="rounded-full bg-primary-tint px-3 py-2 text-xs font-semibold text-primary">{tag.name}</span>)}</div></section>}
