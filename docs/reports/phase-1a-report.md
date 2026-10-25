@@ -1,18 +1,18 @@
 # Báo cáo Phase 1a — Import CSV và API đọc địa điểm
 
-> Cập nhật ngày 24/10/2026. Chỉ làm T-011, T-012, T-013; chưa làm T-014 → T-017.
+> Cập nhật ngày 25/10/2026. Chỉ làm T-011, T-012, T-013; chưa làm T-014 → T-017.
 
 ## 1. Tóm tắt
 
-Đã checkout và pull `main`; `pnpm install --frozen-lockfile`, typecheck, lint, test và build nền móng đều qua. T-011 CLI đã kiểm tra file CSV mẫu và thực hiện import/upsert trên Supabase; file chỉ có dữ liệu giả lập, mọi dòng được lưu `draft` và `verified = false`. T-012 đã có migration 8, service, mapper và kiểu RPC; chưa chạy migration trên remote theo yêu cầu, nên tích hợp live chưa xác nhận. T-013 đã có API public, schema, cache, rate limit và route tests. Ba nhánh task đã push; không tạo PR.
+Đã checkout và pull `main`; `pnpm install --frozen-lockfile`, typecheck, lint, test và build nền móng đều qua. T-011 CLI đã kiểm tra file CSV mẫu và thực hiện import/upsert trên Supabase; file chỉ có dữ liệu giả lập, mọi dòng được lưu `draft` và `verified = false`. T-012 có migration 8, service, mapper và kiểu RPC; migration 8 hiện có trên remote. T-013 có API public, schema, cache, rate limit và route tests. Smoke test trên DB thật xác nhận hiện không có địa điểm `published`, endpoint meta thiếu `startPoints`; các kiểm tra phụ thuộc địa điểm published chưa thể chạy. T-012/T-013 vẫn chưa đạt tiêu chí live data. T-014 → T-017 chưa làm.
 
 ## 2. Task đã hoàn thành
 
 | Task | Nhánh / commit | Đã đạt "Hoàn thành khi"? | Ghi chú |
 |---|---|---|---|
 | T-011 | `feat/T-011-csv-import` · `4f41bf5` | Có | `places.sample.csv`: dry-run 20/20 hợp lệ; lần ghi đầu tạo 20; chạy lại cập nhật 20 theo slug, không tạo thêm. Có test dòng có ảnh nhưng thiếu credit/license. 20 fixture giả lập hiện vẫn nằm trong Supabase ở trạng thái `draft`, `verified=false`. |
-| T-012 | `feat/T-012-place-read` · `0eaf838`, `0437d1e` | Một phần | Migration 8 `nearby_places`, service, mapper và filter Zod đã có; typecheck/lint/test/build qua. Chưa chạy RPC/migration trên DB vì chưa được phép áp dụng migration remote; Docker local không có. T-012 còn để `[ ]` trong roadmap đến khi xác nhận tích hợp với DB/dữ liệu published. |
-| T-013 | `feat/T-013-public-places-api` · `f7c4b73` | Có phần code/test | `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug`; kiểm tra 200, 400, 404, pagination, cache và 429. Test route dùng service giả. Endpoint chi tiết phụ thuộc RPC của migration 8 nên chưa chạy end-to-end với Supabase. |
+| T-012 | `feat/T-012-place-read` · `0eaf838`, `0437d1e` | Một phần | Migration 8 `nearby_places`, service, mapper và filter Zod đã có; migration 8 hiện có trên remote. Smoke test không thể xác minh truy vấn tìm kiếm/nearby với dữ liệu published vì DB hiện có 0 địa điểm published. T-012 vẫn `[ ]`. |
+| T-013 | `feat/T-013-public-places-api` · `f7c4b73` | Một phần | API và route tests có sẵn. Smoke test thật: list/map trả 200 và rỗng; category sai trả 400; slug draft trả 404. `/api/meta` báo 10 tag nhưng không có `startPoints`; không có dữ liệu published để kiểm tra phân trang nhiều trang, detail/nearby hoặc slug 404 live. T-013 vẫn `[ ]`. |
 
 Các nhánh xếp chồng theo phụ thuộc: T-012 bắt đầu từ T-011; T-013 bắt đầu từ T-012. Cả ba đã push để chủ dự án review. Không tạo PR.
 
@@ -20,8 +20,8 @@ Các nhánh xếp chồng theo phụ thuộc: T-012 bắt đầu từ T-011; T-0
 
 | Task | Còn thiếu gì | Lý do |
 |---|---|---|
-| T-012 | Chạy migration 8 và xác minh `nearby_places`/truy vấn đọc trên DB với dữ liệu published | Không áp dụng migration remote khi chưa được chủ dự án cho phép; Docker CLI không khả dụng cho DB local. |
-| T-013 | Kiểm thử API với Supabase thật, đặc biệt `nearby` ở chi tiết địa điểm | Migration 8 chưa được áp dụng; test hiện dùng `app.request` và service giả. |
+| T-012 | Xác minh tìm kiếm và `nearby_places` với dữ liệu published | Remote có migration 8, nhưng hiện không có địa điểm published. Không tự xuất bản dữ liệu. |
+| T-013 | Bổ sung startPoints và kiểm thử API live trên published data (pagination nhiều trang, detail/nearby, slug không tồn tại) | Smoke phát hiện `/api/meta` thiếu startPoints và DB có 0 published places. Test route hiện dùng service giả. |
 | T-014 → T-017 | Chưa bắt đầu | Ngoài phạm vi yêu cầu hiện tại. |
 
 ## 4. Kết quả chạy lệnh (24/10/2026)
@@ -78,3 +78,40 @@ Vitest/Vite bị Windows báo `spawn EPERM` khi chạy trong sandbox; chạy l�
 2. `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`.
 3. Sau khi chủ dự án cho phép áp dụng migration 8: chạy migration theo quy trình dự án, sau đó thử `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug` trên môi trường có Supabase.
 4. Chưa làm T-014 → T-017.
+
+## Cập nhật smoke API trên `chore/smoke-api` (25/10/2026)
+
+Đã thêm `pnpm smoke:api` (`tsx scripts/smokeApi.ts`), gọi trực tiếp Hono `app.request` và dùng cấu hình Supabase từ `.env.local`. Script không in biến môi trường và chỉ dùng truy vấn đọc; không xuất bản hay ghi địa điểm. T-012/T-013 trong roadmap được để `[ ]` theo điều kiện chỉ đánh dấu hoàn thành khi smoke đạt trên dữ liệu thật.
+
+### Đầu ra thật
+
+`pnpm smoke:api`:
+
+```text
+Kết quả smoke:api
+| Kiểm tra | Kết quả | Chi tiết |
+|---|---|---|
+| GET /api/meta: 10 tag và startPoints | FAIL | tags=10; startPoints=0 |
+| GET /api/places: 200, phân trang và chỉ published | PASS | HTTP 200; 0 published; danh sách rỗng như mong đợi |
+| GET /api/places pagination: trang kế tiếp | SKIP | Không có published data để kiểm tra phân trang |
+| GET /api/places?category=<sai>: 400 | PASS | HTTP 400 |
+| GET /api/places/map: schema dữ liệu nhẹ | PASS | HTTP 200; items=0; chỉ có trường DTO nhẹ |
+| GET /api/places/:slug: nearby RPC hoạt động, không có chính nó | SKIP | Không có địa điểm published để kiểm tra |
+| GET /api/places/:slug không tồn tại: 404 | PASS | HTTP 404 |
+| GET draft slug: 404, không lộ dữ liệu | PASS | HTTP 404 |
+
+Tổng: 5 đạt, 1 lỗi, 2 bỏ qua.
+exit code 1
+```
+
+Các lệnh tiếp theo chạy trên nhánh này:
+
+| Lệnh | Đầu ra thật |
+|---|---|
+| `pnpm typecheck` | `$ tsc --noEmit`; exit 0. |
+| `pnpm lint` | `$ eslint .`; exit 0. |
+| `pnpm test` | `Test Files 11 passed (11)`; `Tests 71 passed (71)`; `Duration 19.56s`; exit 0. |
+| `pnpm build` | `✓ 268 modules transformed`; `✓ built in 5.61s`; exit 0. Có 2 cảnh báo `@__PURE__` từ Zod. |
+| `supabase migration list` | Các migration `20261024000001` đến `20261024000008` đều có `local` và `remote` khớp; exit 0. |
+
+Smoke chưa đạt nên T-012/T-013 không được đánh dấu hoàn tất. Cần nạp startPoints và dữ liệu địa điểm đã được chủ dự án kiểm chứng/xuất bản trước khi chạy lại các kiểm tra phụ thuộc published. Không có giá trị `.env.local` trong đầu ra/báo cáo.
