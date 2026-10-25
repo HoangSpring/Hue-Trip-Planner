@@ -130,7 +130,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8; chỉ RPC này thuộc task T-012).
 - **Hoàn thành khi:** truy vấn chạy với dữ liệu đã import; "lang tu duc" tìm ra "Lăng Tự Đức"; chỉ trả `published`.
 
-### [ ] T-013 · API đọc dữ liệu công khai · `M`
+### [x] T-013 · API đọc dữ liệu công khai · `M`
 - **Tham chiếu:** `docs/06` mục 5
 - **Dep:** T-012
 - **Làm:** `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug` (kèm `nearby`); header `Cache-Control` công khai.
@@ -447,6 +447,7 @@ Theo thứ tự đề xuất, quyết định lại dựa trên dữ liệu sử
 | Ngày | Task | Thay đổi | Lý do |
 |---|---|---|---|
 | 2026-10-24 | T-010 | Đặt kiểm tra fixture tại `shared/itinerary/` để Vitest hiện có thu thập được; fixture JSON vẫn ở `tests/fixtures/`. | Vitest chỉ include `src/`, `shared/`, `server/`. |
+| 2026-10-24 | T-013 | Chọn semantics OR khi lọc nhiều `tag` và ghi rõ trong `docs/06`. | API spec cho phép lặp query `tag` nhưng chưa nêu cách kết hợp. |
 
 ## Câu hỏi còn mở
 

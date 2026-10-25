@@ -641,6 +641,25 @@ export type Database = {
     Functions: {
       f_unaccent: { Args: { "": string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
+      nearby_places: {
+        Args: { p_lat: number; p_lng: number; p_limit?: number; p_exclude?: string[] }
+        Returns: {
+          id: string
+          slug: string
+          name: string
+          category: string
+          short_description: string | null
+          area: string | null
+          lat: number
+          lng: number
+          cover_image_url: string | null
+          cover_image_alt: string | null
+          image_credit: string | null
+          image_license: string | null
+          verified: boolean
+          distance_m: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
