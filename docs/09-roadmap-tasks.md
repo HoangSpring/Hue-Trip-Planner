@@ -166,7 +166,7 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 2 — Lịch trình không cần AI (M2)
 
-### [ ] T-018 · Pipeline phần dữ liệu: ứng viên, chấm điểm, nhóm ứng viên · `M`
+### [x] T-018 · Pipeline phần dữ liệu: ứng viên, chấm điểm, nhóm ứng viên · `M`
 - **Tham chiếu:** `docs/07` mục 4, 5, 6
 - **Dep:** T-009, T-012
 - **Làm:** `candidates.ts` (tải, lọc cứng, nới lỏng + `Notice`), `scoring.ts` (công thức có trọng số ở `config.ts`), `pool.ts`; interface `PlacesRepo`.
