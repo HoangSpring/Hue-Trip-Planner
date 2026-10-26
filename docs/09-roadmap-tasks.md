@@ -184,7 +184,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `fallback.ts`, `reasons.ts`; hàm `generateTrip` chạy **chỉ bằng dự phòng** (cờ `LLM_ENABLED=false` mặc định ở giai đoạn này) trả `TripDraft` + `Warning` + `Notice`.
 - **Hoàn thành khi:** golden test (cùng đầu vào → cùng kết quả); thỏa R1–R8 trên ≥ 10 đầu vào; property test (`docs/07` mục 17.3): không trùng địa điểm, mọi `placeId` thuộc DB, số mục/ngày đúng khoảng, không kết thúc sau 21:30.
 
-### [ ] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
+### [x] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
 - **Tham chiếu:** `docs/07` mục 15
 - **Dep:** T-009
 - **Làm:** `shared/itinerary/warnings.ts` đủ các mã; tính lại di chuyển khi thay đổi thứ tự.
