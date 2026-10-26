@@ -124,13 +124,13 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `pnpm db:seed` / script `supabase/seed/importPlaces.ts`: đọc CSV (UTF-8), kiểm tra từng dòng bằng Zod, upsert theo `slug`, gắn tag + trọng số, ghi `place_audit_log` (`import`); chế độ `--dry-run`; xuất báo cáo (tạo/cập nhật/bỏ qua/lỗi) và tệp CSV các dòng lỗi.
 - **Hoàn thành khi:** import `places.sample.csv` thành công; chạy lại **không tạo trùng**; dòng thiếu `image_credit` (khi có ảnh) bị báo lỗi; mặc định `draft` + `verified = false`; **không ghi đè** địa điểm đã `verified` trừ khi có cờ rõ ràng; có test cho logic phân tích/kiểm tra.
 
-### [ ] T-012 · Logic dùng chung cho đọc địa điểm (service + mapper) · `M`
+### [x] T-012 · Logic dùng chung cho đọc địa điểm (service + mapper) · `M`
 - **Tham chiếu:** `docs/06` mục 5; `docs/05`
 - **Dep:** T-005, T-011
 - **Làm:** `server/services/placeService.ts`, `server/mappers/place.ts` (snake_case → camelCase), truy vấn lọc theo loại/tag/tìm kiếm không dấu/sắp xếp/phân trang; RPC `nearby_places` (migration 8; chỉ RPC này thuộc task T-012).
 - **Hoàn thành khi:** truy vấn chạy với dữ liệu đã import; "lang tu duc" tìm ra "Lăng Tự Đức"; chỉ trả `published`.
 
-### [ ] T-013 · API đọc dữ liệu công khai · `M`
+### [x] T-013 · API đọc dữ liệu công khai · `M`
 - **Tham chiếu:** `docs/06` mục 5
 - **Dep:** T-012
 - **Làm:** `GET /api/meta`, `/api/places`, `/api/places/map`, `/api/places/:slug` (kèm `nearby`); header `Cache-Control` công khai.
@@ -142,19 +142,19 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** hero, "Cách hoạt động", địa điểm nổi bật (dữ liệu thật, ẩn khi rỗng), lịch trình mẫu tĩnh, FAQ, chân trang có ghi công; thẻ "Tiếp tục chuyến đi" khi có `wizard_draft_v1`/`trip_draft_v1`; SEO cơ bản.
 - **Hoàn thành khi:** đạt AC F-01; Lighthouse mobile Performance ≥ 80.
 
-### [ ] T-015 · Trang Khám phá (F-02) · `M`
+### [x] T-015 · Trang Khám phá (F-02) · `M`
 - **Tham chiếu:** `docs/02` F-02; `docs/04` mục 4; `docs/08` S02
 - **Dep:** T-007, T-013
 - **Làm:** lưới thẻ, bộ lọc loại/tag, ô tìm kiếm, sắp xếp, bộ lọc **đồng bộ query string** (kiểm tra bằng Zod), trạng thái rỗng/lỗi/skeleton, phân trang hoặc "Xem thêm".
 - **Hoàn thành khi:** đạt AC F-02 (trừ phần nút tim cho khách, hoàn thiện ở T-040); mở lại URL cho cùng kết quả.
 
-### [ ] T-016 · Trang Chi tiết địa điểm (F-03) · `M`
+### [x] T-016 · Trang Chi tiết địa điểm (F-03) · `M`
 - **Tham chiếu:** `docs/02` F-03; `docs/08` S03
 - **Dep:** T-007, T-013
 - **Làm:** ảnh + ghi công, thông tin chính, mô tả, mini map, "Chỉ đường" (link tọa độ), khối "Gần đây", cảnh báo "thông tin có thể thay đổi"; ẩn trường rỗng; 404 cho slug sai; SEO (title/description riêng, dữ liệu cấu trúc).
 - **Hoàn thành khi:** đạt AC F-03. (Nút "Lưu" gắn ở T-040, nút "Thêm vào chuyến đi" gắn ở T-041.)
 
-### [ ] T-017 · Trang Bản đồ (F-04) · `M`
+### [x] T-017 · Trang Bản đồ (F-04) · `M`
 - **Tham chiếu:** `docs/02` F-04; `docs/08` S04
 - **Dep:** T-007, T-013
 - **Làm:** component `MapView` dùng chung (Leaflet/MapLibre), marker theo loại, gom cụm, thẻ xem nhanh, bộ lọc loại, ghi công OSM, chế độ đánh số (dùng lại ở trình chỉnh lịch trình), phương án thay thế khi bản đồ lỗi.

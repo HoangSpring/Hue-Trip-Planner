@@ -41,6 +41,7 @@ export function mapPlaceSummary(row: PlaceRow, tags: PlaceTag[] = []): PlaceSumm
     coverImageAlt: row.cover_image_alt,
     imageCredit: row.image_credit,
     imageLicense: row.image_license,
+    imageSourceUrl: row.image_source_url,
     tags,
     verified: row.verified,
     status: row.status === 'published' ? 'published' : undefined,
@@ -60,7 +61,7 @@ export function mapPlaceMapItem(row: PlaceRow): PlaceMapItem {
   }
 }
 
-export function mapNearbyPlace(row: NearbyPlaceRow, tags: PlaceTag[] = []): PlaceSummary {
+export function mapNearbyPlace(row: NearbyPlaceRow, tags: PlaceTag[] = [], imageSourceUrl: string | null = null): PlaceSummary {
   return placeSummarySchema.parse({
     id: row.id,
     slug: row.slug,
@@ -74,6 +75,7 @@ export function mapNearbyPlace(row: NearbyPlaceRow, tags: PlaceTag[] = []): Plac
     coverImageAlt: row.cover_image_alt,
     imageCredit: row.image_credit,
     imageLicense: row.image_license,
+    imageSourceUrl,
     tags,
     verified: row.verified,
     status: 'published',
