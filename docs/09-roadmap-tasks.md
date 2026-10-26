@@ -172,7 +172,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `candidates.ts` (tải, lọc cứng, nới lỏng + `Notice`), `scoring.ts` (công thức có trọng số ở `config.ts`), `pool.ts`; interface `PlacesRepo`.
 - **Hoàn thành khi:** test theo `docs/07` mục 17.2 (Chấm điểm, Lọc & nới lỏng, Pool); hòa điểm theo `slug`; `NO_CANDIDATES` khi không đủ.
 
-### [ ] T-019 · Bộ xếp giờ (scheduler) · `M`
+### [x] T-019 · Bộ xếp giờ (scheduler) · `M`
 - **Tham chiếu:** `docs/07` mục 7, 9.1
 - **Dep:** T-009, T-018
 - **Làm:** `scheduler.ts`: giờ bắt đầu ngày, đồng bộ khung giờ, dời đến giờ mở cửa, không quá 21:30, xử lý mục không xếp được (hoán khung/thay thế/bỏ), tối ưu thứ tự trong khung (láng giềng gần nhất).
