@@ -8,7 +8,7 @@ export const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
   LLM_API_KEY: z.string().min(1).optional(),
   LLM_MODEL: z.string().min(1).optional(),
-  LLM_ENABLED: z.enum(['true', 'false']).default('true'),
+  LLM_ENABLED: z.enum(['true', 'false']).default('false'),
   LLM_TIMEOUT_MS: z.coerce.number().int().positive().default(12_000),
   LLM_DAILY_CALL_CAP: z.coerce.number().int().nonnegative().default(500),
   RATE_LIMIT_SALT: z.string().min(1).optional(),

@@ -537,7 +537,7 @@ Trả HTML tối giản chứa thẻ `<title>`, `description`, Open Graph (`og:t
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Kết nối Supabase | — |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chỉ backend | — |
 | `LLM_API_KEY`, `LLM_MODEL` | Gọi LLM | — |
-| `LLM_ENABLED` | Công tắc khẩn cấp | `true` |
+| `LLM_ENABLED` | Công tắc khẩn cấp (mặc định fallback trong Phase 2) | `false` |
 | `LLM_TIMEOUT_MS` | Thời gian chờ mỗi lần gọi LLM | `12000` |
 | `LLM_DAILY_CALL_CAP` | Trần số lần gọi LLM mỗi ngày | `500` |
 | `RATE_LIMIT_SALT` | Muối để băm `client_key` | — (bắt buộc) |

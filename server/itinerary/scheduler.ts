@@ -78,7 +78,9 @@ function scheduleCandidate(
   const duration = place.visitDurationMin
   if (duration === null) return null
   const from = previous ?? (firstItem ? start : null)
-  const travel = from ? estimateTravel(from, place, input.transport) : { distanceKm: 0, travelMin: 0 }
+  const travel = from ? estimateTravel(from, place, input.transport)
+    : { distanceKm: 0, travelMin: 0, maxLegKm: Number.POSITIVE_INFINITY, maxLegMin: Number.POSITIVE_INFINITY }
+  if (travel.distanceKm > travel.maxLegKm || travel.travelMin > travel.maxLegMin) return null
   const window = windows[slot]
   let arrival = Math.max(cursor + travel.travelMin, window.start)
   if (arrival > window.end || arrival + duration > toMinutes(ITINERARY_CONFIG.latestEnd)) return null
