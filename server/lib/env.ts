@@ -12,6 +12,10 @@ export const envSchema = z.object({
   LLM_TIMEOUT_MS: z.coerce.number().int().positive().default(12_000),
   LLM_DAILY_CALL_CAP: z.coerce.number().int().nonnegative().default(500),
   RATE_LIMIT_SALT: z.string().min(1).optional(),
+  RATE_LIMIT_GUEST_GENERATE_PER_HOUR: z.coerce.number().int().positive().default(3),
+  RATE_LIMIT_GUEST_GENERATE_PER_DAY: z.coerce.number().int().positive().default(6),
+  RATE_LIMIT_USER_GENERATE_PER_HOUR: z.coerce.number().int().positive().default(10),
+  RATE_LIMIT_USER_GENERATE_PER_DAY: z.coerce.number().int().positive().default(30),
   APP_BASE_URL: optionalUrl,
 })
 

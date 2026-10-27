@@ -307,7 +307,7 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
   "draft": { /* TripDraft, items đã hydrate "place" */ },
   "warnings": [ /* Warning[] */ ],
   "notices": [ { "code": "FALLBACK_USED", "message": "Lịch trình được tạo theo cách đơn giản hơn." } ],
-  "generation": { "by": "llm", "model": "xxx", "durationMs": 8123 }
+  "generation": { "by": "fallback", "model": null, "durationMs": 120 }
 }
 ```
 
@@ -315,11 +315,11 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 
 **Hành vi bắt buộc**
 1. Kiểm tra giới hạn tần suất **trước** khi làm việc nặng.
-2. Chạy pipeline ở `docs/07-ai-itinerary-spec.md`. LLM lỗi/trả sai/quá thời gian → **tự chạy fallback**, vẫn trả `200` kèm `notice FALLBACK_USED`.
+2. Trong Phase 2, chạy thuật toán dự phòng hoàn toàn; chưa tích hợp LLM. Kết quả trả `200` kèm `notice FALLBACK_USED`.
 3. Mọi `placeId` trong kết quả **phải** tồn tại và `published` (kiểm tra lại ở bước cuối).
 4. Ghi `generation_events` (service role) cho mọi lần gọi, thành công hay thất bại.
-5. Hỗ trợ hủy: nếu client ngắt kết nối, dừng gọi LLM càng sớm càng tốt (dùng `AbortSignal`).
-6. Tổng thời gian mục tiêu p90 ≤ 15s; **thời gian chờ cứng** cho phần LLM theo `docs/07`.
+5. Hỗ trợ hủy bằng `AbortSignal`; dừng các bước sinh và truy vấn còn hỗ trợ hủy khi client ngắt kết nối.
+6. Tổng thời gian mục tiêu p90 ≤ 15s.
 
 ### 6.2 `POST /api/trips/regenerate-day`
 
@@ -541,8 +541,10 @@ Trả HTML tối giản chứa thẻ `<title>`, `description`, Open Graph (`og:t
 | `LLM_TIMEOUT_MS` | Thời gian chờ mỗi lần gọi LLM | `12000` |
 | `LLM_DAILY_CALL_CAP` | Trần số lần gọi LLM mỗi ngày | `500` |
 | `RATE_LIMIT_SALT` | Muối để băm `client_key` | — (bắt buộc) |
-| `RATE_LIMIT_GUEST_GENERATE_PER_HOUR` | Hạn mức khách | `3` |
-| `RATE_LIMIT_USER_GENERATE_PER_HOUR` | Hạn mức user | `10` |
+| `RATE_LIMIT_GUEST_GENERATE_PER_HOUR` | Hạn mức khách mỗi giờ | `3` |
+| `RATE_LIMIT_GUEST_GENERATE_PER_DAY` | Hạn mức khách mỗi ngày | `6` |
+| `RATE_LIMIT_USER_GENERATE_PER_HOUR` | Hạn mức user mỗi giờ | `10` |
+| `RATE_LIMIT_USER_GENERATE_PER_DAY` | Hạn mức user mỗi ngày | `30` |
 | `MAX_TRIPS_PER_USER` | Số chuyến đi tối đa | `50` |
 | `APP_BASE_URL` | Dùng tạo `shareUrl`, sitemap, Open Graph | — |
 

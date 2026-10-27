@@ -8,41 +8,56 @@ export interface PlacesRepo {
   getDataQuality?(): PlaceDataQuality
 }
 
-export type PlaceDataQuality = { published: number; missingCoordinates: number; missingVisitDuration: number }
+export type PlaceDataQuality = {
+  published: number
+  eligible: number
+  dropped: number
+  missingCoordinates: number
+  missingVisitDuration: number
+}
 
 /** Read-only adapter used by the generator. All data is fetched in batches. */
 export class SupabasePlacesRepo implements PlacesRepo {
-  private quality: PlaceDataQuality = { published: 0, missingCoordinates: 0, missingVisitDuration: 0 }
+  private quality: PlaceDataQuality = { published: 0, eligible: 0, dropped: 0, missingCoordinates: 0, missingVisitDuration: 0 }
 
   constructor(private readonly client: SupabaseClient<Database>) {}
 
   getDataQuality(): PlaceDataQuality { return this.quality }
 
   async listPublished(signal?: AbortSignal): Promise<CandidateRecord[]> {
-    const { data: rows, error } = await this.client.from('places').select('*').eq('status', 'published').order('slug')
+    let placesQuery = this.client.from('places').select('*').eq('status', 'published').order('slug')
+    if (signal) placesQuery = placesQuery.abortSignal(signal)
+    const { data: rows, error } = await placesQuery
     if (error || !rows) throw new Error('Không thể tải địa điểm đã xuất bản.')
     if (signal?.aborted) throw new DOMException('Đã hủy yêu cầu.', 'AbortError')
     this.quality = {
       published: rows.length,
+      eligible: 0,
+      dropped: 0,
       missingCoordinates: rows.filter((row) => row.lat === null || row.lng === null).length,
       missingVisitDuration: rows.filter((row) => row.visit_duration_min === null).length,
     }
     const eligibleRows = rows.filter((row) => row.lat !== null && row.lng !== null &&
       row.visit_duration_min !== null && row.visit_duration_min > 0)
+    this.quality.eligible = eligibleRows.length
+    this.quality.dropped = rows.length - eligibleRows.length
     const ids = eligibleRows.map(({ id }) => id)
     if (!ids.length) return []
 
-    const [linksResponse, imagesResponse] = await Promise.all([
-      this.client.from('place_tags').select('place_id,tag_id,weight').in('place_id', ids),
-      this.client.from('place_images').select('*').in('place_id', ids).order('sort_order'),
-    ])
+    let linksQuery = this.client.from('place_tags').select('place_id,tag_id,weight').in('place_id', ids)
+    let imagesQuery = this.client.from('place_images').select('*').in('place_id', ids).order('sort_order')
+    if (signal) {
+      linksQuery = linksQuery.abortSignal(signal)
+      imagesQuery = imagesQuery.abortSignal(signal)
+    }
+    const [linksResponse, imagesResponse] = await Promise.all([linksQuery, imagesQuery])
     if (linksResponse.error || !linksResponse.data || imagesResponse.error || !imagesResponse.data) {
       throw new Error('Không thể tải thông tin địa điểm.')
     }
     const tagIds = [...new Set(linksResponse.data.map(({ tag_id }) => tag_id))]
-    const tagsResponse = tagIds.length
-      ? await this.client.from('tags').select('id,slug,name').in('id', tagIds)
-      : { data: [], error: null }
+    let tagsQuery = this.client.from('tags').select('id,slug,name').in('id', tagIds)
+    if (signal && tagIds.length) tagsQuery = tagsQuery.abortSignal(signal)
+    const tagsResponse = tagIds.length ? await tagsQuery : { data: [], error: null }
     if (tagsResponse.error || !tagsResponse.data) throw new Error('Không thể tải tag địa điểm.')
 
     const tagById = new Map(tagsResponse.data.map((tag) => [tag.id, { slug: tag.slug, name: tag.name }]))

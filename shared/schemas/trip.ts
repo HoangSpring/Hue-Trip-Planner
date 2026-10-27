@@ -48,6 +48,11 @@ export const tripDraftSchema = tripSchema.omit({ id: true, isShared: true, share
   clientDraftId: uuidSchema,
 })
 
+export const generateTripRequestSchema = z.object({
+  input: tripInputSchema,
+  clientDraftId: uuidSchema.optional(),
+}).strict()
+
 export const warningSchema = z.object({
   code: warningCodeSchema,
   itemId: uuidSchema.nullable(),

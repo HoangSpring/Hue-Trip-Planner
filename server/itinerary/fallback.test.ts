@@ -6,6 +6,7 @@ import { placeDetailSchema, tripInputSchema, type TripInput } from '@shared/sche
 import { FixturePlacesRepo } from './placesRepo'
 import { generateTrip, NoCandidatesError } from './fallback'
 import type { CandidateRecord } from './types'
+import { itineraryEvalCases } from './evalCases'
 
 const placeFixture = placeDetailSchema.array().parse(JSON.parse(readFileSync(resolve('tests/fixtures/places.sample.json'), 'utf8')))
 const records: CandidateRecord[] = placeFixture.map((place, index) => ({
@@ -32,6 +33,14 @@ const input = (overrides: Partial<TripInput> = {}): TripInput => tripInputSchema
 const now = new Date('2026-10-20T12:00:00.000Z')
 
 describe('fallback itinerary generator', () => {
+  it('defines the ten requested manual evaluation scenarios with valid wizard inputs', () => {
+    expect(itineraryEvalCases).toHaveLength(10)
+    expect(new Set(itineraryEvalCases.map(({ id }) => id)).size).toBe(10)
+    expect(itineraryEvalCases[0].input.interests).toContain('cuisine')
+    expect(itineraryEvalCases[2].input.companion).toBe('seniors')
+    expect(itineraryEvalCases[3].input.pace).toBe('packed')
+  })
+
   it('returns the same draft for the same input, time, and seed', async () => {
     const repo = new FixturePlacesRepo(records)
     const first = await generateTrip(repo, input({ numDays: 1, pace: 'relaxed' }), { now, seed: 'golden' })

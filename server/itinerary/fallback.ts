@@ -7,6 +7,7 @@ import type { PlacesRepo } from './placesRepo'
 import { buildReason } from './reasons'
 import { scheduleDay, type ScheduleRequest } from './scheduler'
 import type { ScoredCandidate } from './types'
+import { computeWarnings } from '../../shared/itinerary/warnings'
 
 export class NoCandidatesError extends Error {
   readonly code = 'NO_CANDIDATES'
@@ -14,7 +15,7 @@ export class NoCandidatesError extends Error {
 }
 
 export type GenerateTripResult = { draft: ReturnType<typeof makeDraft>; warnings: Warning[]; notices: Notice[] }
-export type GenerateTripOptions = { now: Date; seed: string | number; signal?: AbortSignal }
+export type GenerateTripOptions = { now: Date; seed: string | number; signal?: AbortSignal; clientDraftId?: string }
 
 function hash32(value: string): number {
   let hash = 2166136261
@@ -99,9 +100,9 @@ function toTripItem(candidate: ScoredCandidate, slot: ScheduleRequest['slot'], p
   }
 }
 
-function makeDraft(input: TripInput, days: TripDay[], now: Date, seed: string | number) {
+function makeDraft(input: TripInput, days: TripDay[], now: Date, seed: string | number, clientDraftId?: string) {
   return {
-    clientDraftId: stableUuid(seed, 'draft'),
+    clientDraftId: clientDraftId ?? stableUuid(seed, 'draft'),
     title: `Lịch trình Huế ${input.startDate ?? now.toISOString().slice(0, 10)}`,
     startDate: input.startDate,
     numDays: input.numDays,
@@ -150,10 +151,16 @@ export async function generateTrip(repo: PlacesRepo, input: TripInput, options: 
     const id = stableUuid(options.seed, `day:${dayIndex}`)
     days.push({ id, dayIndex, date: input.startDate ? dayStartDate(input, options.now) : null, note: null, items })
   }
+  if (!days.some((day) => day.items.length > 0)) throw new NoCandidatesError()
 
   const notices: Notice[] = [
     { code: 'FALLBACK_USED', message: 'Lịch trình được tạo bằng thuật toán dự phòng.' },
     ...selection.notices,
   ]
-  return { draft: makeDraft(input, days, options.now, options.seed), warnings: [], notices }
+  const draft = makeDraft(input, days, options.now, options.seed, options.clientDraftId)
+  const warnings = computeWarnings({
+    days, transport: input.transport, startDate: dayStartDate(input, options.now),
+    pace: input.pace, companion: input.companion, start: input.start,
+  })
+  return { draft, warnings, notices }
 }

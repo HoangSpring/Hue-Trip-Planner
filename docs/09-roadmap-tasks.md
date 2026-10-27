@@ -190,7 +190,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `shared/itinerary/warnings.ts` đủ các mã; tính lại di chuyển khi thay đổi thứ tự.
 - **Hoàn thành khi:** mỗi mã cảnh báo có test dương tính và âm tính.
 
-### [ ] T-022 · API `POST /api/trips/generate` (chạy dự phòng) + giới hạn tần suất · `M`
+### [x] T-022 · API `POST /api/trips/generate` (chạy dự phòng) + giới hạn tần suất · `M`
 - **Tham chiếu:** `docs/06` mục 2.8, 6.1; `docs/07` mục 16
 - **Dep:** T-020, T-021, T-005
 - **Làm:** endpoint `optionalAuth`; kiểm tra `TripInput`; giới hạn tần suất (băm `client_key` bằng `RATE_LIMIT_SALT`); ghi `generation_events`; hỗ trợ `AbortSignal`; `422 NO_CANDIDATES`; hydrate `place` trong kết quả.
