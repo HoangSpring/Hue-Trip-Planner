@@ -42,6 +42,15 @@ describe('itinerary scheduler', () => {
     expect(result.items.map(({ position }) => position)).toEqual(result.items.map((_, index) => index))
   })
 
+  it('uses the calendar date of each itinerary day when checking closed_days across a month boundary', () => {
+    const closedSunday = { ...candidates[0], place: { ...candidates[0].place, closedDays: [7], openTime: '09:00', closeTime: '17:00' } }
+    const result = scheduleDay([{ candidate: closedSunday, slot: 'morning' }], {
+      input: { ...input, startDate: '2026-10-31' }, dayIndex: 2,
+    })
+    expect(result.items).toHaveLength(0)
+    expect(result.droppedPlaceIds).toContain(closedSunday.place.id)
+  })
+
   it('never ends after 21:30 and handles overnight businesses', () => {
     const late = { ...candidates[0], place: { ...candidates[0].place, openTime: '17:00', closeTime: '01:00', visitDurationMin: 60 } }
     const result = scheduleDay([{ candidate: late, slot: 'evening' }], { input, dayIndex: 1 })

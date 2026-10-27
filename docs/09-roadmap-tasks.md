@@ -178,11 +178,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `scheduler.ts`: giờ bắt đầu ngày, đồng bộ khung giờ, dời đến giờ mở cửa, không quá 21:30, xử lý mục không xếp được (hoán khung/thay thế/bỏ), tối ưu thứ tự trong khung (láng giềng gần nhất).
 - **Hoàn thành khi:** test nhóm Scheduler; không mục nào ngoài giờ mở cửa đã biết; `position` liên tục từ 0.
 
-### [x] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
+### [ ] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
 - **Tham chiếu:** `docs/07` mục 7, 11
 - **Dep:** T-018, T-019
 - **Làm:** `fallback.ts`, `reasons.ts`; hàm `generateTrip` chạy **chỉ bằng dự phòng** (cờ `LLM_ENABLED=false` mặc định ở giai đoạn này) trả `TripDraft` + `Warning` + `Notice`.
 - **Hoàn thành khi:** golden test (cùng đầu vào → cùng kết quả); thỏa R1–R8 trên ≥ 10 đầu vào; property test (`docs/07` mục 17.3): không trùng địa điểm, mọi `placeId` thuộc DB, số mục/ngày đúng khoảng, không kết thúc sau 21:30.
+- **Trạng thái:** Chưa đạt; giữ `[ ]` cho đến khi kiểm chứng R1/R7 trên eval dữ liệu thật và tất cả kiểm thử hồi quy/property qua. V1 có lỗi ngày, thiếu trưa và underfill; xem `docs/reports/phase-2a-fix-report.md`.
 
 ### [x] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
 - **Tham chiếu:** `docs/07` mục 15

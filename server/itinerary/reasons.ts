@@ -1,29 +1,54 @@
 import type { Slot, TripInput } from '@shared/schemas'
 import type { ScoredCandidate } from './types'
 
-const reasonByInterest: Readonly<Record<string, string>> = {
-  heritage: 'Bạn thích di sản, nên ghé {name} để có thêm thời gian tìm hiểu các công trình xưa.',
-  history: 'Bạn quan tâm lịch sử, {name} là một điểm dừng phù hợp trong lịch trình.',
-  spiritual: 'Bạn thích không gian tâm linh, {name} có thể là điểm dừng nhẹ nhàng.',
-  cuisine: 'Bạn thích ẩm thực Huế, bữa ăn tại {name} là một lựa chọn hợp gu.',
-  river: 'Bạn thích cảnh sông nước, {name} hợp làm điểm dừng ngắm cảnh.',
-  photography: 'Bạn thích chụp ảnh, {name} là một điểm dừng để khám phá khung cảnh.',
-  nature: 'Bạn thích thiên nhiên, {name} giúp lịch trình có thêm khoảng thư giãn.',
-  cafe: 'Bạn thích cà phê, {name} là nơi phù hợp để nghỉ chân.',
-  'local-life': 'Bạn muốn khám phá đời sống địa phương, {name} là một lựa chọn phù hợp.',
-  shopping: 'Bạn muốn dành thời gian mua sắm, {name} có thể là điểm dừng trong ngày.',
+const categoryReasons: Readonly<Record<ScoredCandidate['place']['category'], readonly string[]>> = {
+  heritage: [
+    'Bạn có thể dành thời gian khám phá {name}.',
+    '{name} là một điểm dừng thuộc nhóm di sản trong lịch trình.',
+    'Bạn có thể ghé {name} như một điểm tham quan di sản.',
+  ],
+  food: [
+    'Bạn có thể dùng bữa tại {name}.',
+    '{name} là một điểm dừng ăn uống trong lịch trình.',
+    'Bạn có thể dành một bữa ăn tại {name}.',
+  ],
+  cafe: [
+    'Bạn có thể nghỉ chân tại quán cà phê {name}.',
+    '{name} là một điểm dừng cà phê trong lịch trình.',
+    'Bạn có thể dành thời gian thư giãn ở {name}.',
+  ],
+  sightseeing: [
+    'Bạn có thể dành thời gian tham quan {name}.',
+    '{name} là một điểm ngắm cảnh trong lịch trình.',
+    'Bạn có thể ghé {name} như một điểm tham quan.',
+  ],
+  shopping: [
+    'Bạn có thể dành thời gian mua sắm tại {name}.',
+    '{name} là một điểm dừng mua sắm trong lịch trình.',
+    'Bạn có thể ghé {name} trong lúc tìm mua quà.',
+  ],
 }
 
-export function buildReason(candidate: ScoredCandidate, input: TripInput, slot: Slot): string {
+const tagLabel: Readonly<Record<string, string>> = {
+  heritage: 'di sản', history: 'lịch sử', spiritual: 'không gian tâm linh', river: 'cảnh sông nước',
+  cuisine: 'ẩm thực', cafe: 'cà phê', photography: 'chụp ảnh', nature: 'thiên nhiên',
+  'local-life': 'đời sống địa phương', shopping: 'mua sắm',
+}
+
+export function buildReason(candidate: ScoredCandidate, input: TripInput, _slot: Slot, variantIndex = 0): string {
   const place = candidate.place
-  if (input.companion === 'family_kids' && place.suitableFor.includes('family_kids')) {
-    return 'Địa điểm này được đánh dấu phù hợp khi đi cùng trẻ nhỏ.'
+  const variants = categoryReasons[place.category]
+  const categoryReason = variants[Math.abs(variantIndex) % variants.length].replace('{name}', place.name)
+  if (input.companion === 'family_kids' && place.suitableFor.includes('family_kids') && variantIndex % 3 === 2) {
+    return `${categoryReason} Dữ liệu đánh dấu nơi này phù hợp với gia đình có trẻ nhỏ.`
   }
-  if (slot === 'noon' && place.category === 'food') {
-    return reasonByInterest.cuisine.replace('{name}', place.name)
+
+  // Category wording is primary; a matching tag is only a secondary, data-backed note.
+  if (variantIndex % 4 === 3) {
+    const matched = input.interests
+      .map((interest) => place.tags.find((tag) => tag.slug === interest))
+      .find((tag): tag is NonNullable<typeof tag> => tag !== undefined)
+    if (matched) return `${categoryReason} Bạn cũng quan tâm ${tagLabel[matched.slug] ?? matched.name}.`
   }
-  const matched = input.interests.find((interest) => place.tags.some((tag) => tag.slug === interest) && reasonByInterest[interest])
-  if (matched) return reasonByInterest[matched].replace('{name}', place.name)
-  if (place.bestTime.includes(slot)) return `${place.name} phù hợp với khung ${slot === 'evening' ? 'buổi tối' : slot === 'afternoon' ? 'buổi chiều' : slot === 'noon' ? 'buổi trưa' : 'buổi sáng'}.`
-  return `${place.name} được chọn để lịch trình có thêm trải nghiệm đa dạng.`
+  return categoryReason
 }

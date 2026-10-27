@@ -3,6 +3,7 @@ import { estimateTravel } from '../../shared/itinerary/travel'
 import { ITINERARY_CONFIG } from '../../shared/itinerary/config'
 import { isOpenAt } from '../../shared/itinerary/openHours'
 import { haversine } from '../../shared/itinerary/geo'
+import { dateAtOffset } from '../../shared/itinerary/calendar'
 import type { Coordinates } from '../../shared/itinerary/geo'
 import type { ScoredCandidate } from './types'
 
@@ -44,9 +45,7 @@ function toTime(value: number): string {
 
 function dayDate(startDate: string | null, dayIndex: number): string | null {
   if (!startDate) return null
-  const date = new Date(`${startDate}T00:00:00.000Z`)
-  date.setUTCDate(date.getUTCDate() + dayIndex - 1)
-  return date.toISOString().slice(0, 10)
+  return dateAtOffset(startDate, dayIndex - 1)
 }
 
 function dayStart(input: TripInput): number {

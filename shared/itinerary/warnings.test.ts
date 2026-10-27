@@ -31,6 +31,17 @@ describe('computeWarnings', () => {
     expect(computeWarnings(trip([item()])).map(({ code }) => code)).not.toContain('MISSING_HOURS')
   })
 
+  it('deduplicates MISSING_HOURS by place and retains one item id', () => {
+    const repeatedPlace = place({ openTime: null, closeTime: null })
+    const warnings = computeWarnings(trip([
+      item({ id: 'item-1', place: repeatedPlace }),
+      item({ id: 'item-2', place: repeatedPlace, placeId: repeatedPlace.id, position: 1, slot: 'afternoon' }),
+    ]))
+    const missingHours = warnings.filter(({ code }) => code === 'MISSING_HOURS')
+    expect(missingHours).toHaveLength(1)
+    expect(missingHours[0].itemId).toBe('item-1')
+  })
+
   it('warns for an overlong leg using distance and travel time, but not a short leg', () => {
     const long = item({ travelDistanceM: 12_000, travelMinFromPrev: 40 })
     expect(computeWarnings(trip([long], { start: { label: 'start', lat: 16.46, lng: 107.59 } })).map(({ code }) => code)).toContain('TOO_FAR')

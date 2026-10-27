@@ -2,6 +2,7 @@ import type { Category, Companion, Pace, Transport, Warning } from '@shared/sche
 import { estimateTravel } from './travel'
 import { ITINERARY_CONFIG } from './config'
 import { isOpenAt } from './openHours'
+import { dateAtOffset, isoWeekday } from './calendar'
 
 type WarningPlace = {
   id: string
@@ -13,7 +14,6 @@ type WarningPlace = {
   closeTime?: string | null
   closedDays?: number[]
 }
-
 type WarningItem = {
   id: string
   placeId: string
@@ -39,10 +39,7 @@ export type WarningTrip = {
 
 function dateForDay(startDate: string | null, dayIndex: number): string | null {
   if (!startDate) return null
-  const value = new Date(`${startDate}T00:00:00.000Z`)
-  if (Number.isNaN(value.valueOf())) return null
-  value.setUTCDate(value.getUTCDate() + dayIndex - 1)
-  return value.toISOString().slice(0, 10)
+  try { return dateAtOffset(startDate, dayIndex - 1) } catch { return null }
 }
 
 function minutes(value: string | null): number | null {
@@ -67,6 +64,7 @@ function warning(code: Warning['code'], itemId: string | null, dayIndex: number,
 /** Pure warning calculation shared by server and future itinerary editing UI. */
 export function computeWarnings(trip: WarningTrip): Warning[] {
   const warnings: Warning[] = []
+  const missingHoursPlaceIds = new Set<string>()
   for (const day of trip.days) {
     const date = day.date ?? dateForDay(trip.startDate, day.dayIndex)
     const ordered = [...day.items].sort((a, b) => a.position - b.position)
@@ -83,10 +81,12 @@ export function computeWarnings(trip: WarningTrip): Warning[] {
       if (place?.status === 'archived') {
         warnings.push(warning('PLACE_ARCHIVED', item.id, day.dayIndex, 'Địa điểm này đã được gỡ khỏi danh sách hiện tại.'))
       }
-      if (place && (place.openTime == null || place.closeTime == null)) {
+      if (place && (place.openTime == null || place.closeTime == null) && !missingHoursPlaceIds.has(item.placeId)) {
         warnings.push(warning('MISSING_HOURS', item.id, day.dayIndex, 'Chưa có giờ mở cửa để kiểm tra.'))
+        missingHoursPlaceIds.add(item.placeId)
       }
-      const closedOnDay = Boolean(date && place?.closedDays?.includes(isoWeekday(date)))
+      const weekday = date ? isoWeekday(date) : null
+      const closedOnDay = Boolean(weekday !== null && place?.closedDays?.includes(weekday))
       if (closedOnDay) {
         warnings.push(warning('CLOSED_ON_DAY', item.id, day.dayIndex, 'Địa điểm có thể đóng cửa trong ngày đã chọn.'))
       } else if (place && item.startTime && isOpenAt({
@@ -123,9 +123,4 @@ export function computeWarnings(trip: WarningTrip): Warning[] {
     }
   }
   return warnings
-}
-
-function isoWeekday(date: string): number {
-  const value = new Date(`${date}T00:00:00.000Z`)
-  return value.getUTCDay() || 7
 }
