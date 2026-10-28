@@ -1,6 +1,7 @@
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { TripEditorPage } from './TripEditorPage'
 import type { TripDraft } from '@shared/schemas'
@@ -130,15 +131,20 @@ function renderTripEditor(initialEntries = ['/trip/draft?day=1']) {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const root = createRoot(container)
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  })
 
   act(() => {
     root.render(
-      <MemoryRouter initialEntries={initialEntries}>
-        <Routes>
-          <Route path="/trip/draft" element={<TripEditorPage />} />
-          <Route path="/plan/new" element={<div>Plan New Page</div>} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Routes>
+            <Route path="/trip/draft" element={<TripEditorPage />} />
+            <Route path="/plan/new" element={<div>Plan New Page</div>} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     )
   })
 
@@ -348,5 +354,37 @@ describe('TripEditorPage', () => {
     // Now Day 2 is active and contains Đại Nội Huế
     expect(mounted.container.textContent).toContain('Hành trình Ngày 2')
     expect(mounted.container.textContent).toContain('Đại Nội Huế')
+  })
+
+  it('opens alternatives sheet when clicking Thay thế', () => {
+    const draft = makeMockDraft()
+    localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
+
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    const replaceBtns = Array.from(mounted.container.querySelectorAll('button')).filter((b) => b.textContent?.includes('Thay thế'))
+    expect(replaceBtns.length).toBeGreaterThan(0)
+
+    act(() => {
+      replaceBtns[0].dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    expect(mounted.container.textContent).toContain('Gợi ý thay thế cho')
+  })
+
+  it('opens add place sheet when clicking Thêm địa điểm', () => {
+    const draft = makeMockDraft()
+    localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
+
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    const addBtn = Array.from(mounted.container.querySelectorAll('button')).find((b) => b.textContent?.includes('Thêm địa điểm'))
+    expect(addBtn).toBeDefined()
+
+    act(() => {
+      addBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    expect(mounted.container.textContent).toContain('Thêm địa điểm vào ngày 1')
   })
 })

@@ -5,6 +5,8 @@ import {
   paginatedPlacesSchema,
   placeDetailResponseSchema,
   placeMetaSchema,
+  alternativesResponseSchema,
+  type AlternativesRequest,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import type { z } from 'zod'
@@ -69,6 +71,17 @@ export function generateTripApi(
   signal?: AbortSignal
 ) {
   return apiRequest('trips/generate', generateTripResponseSchema, {
+    method: 'POST',
+    body: request,
+    signal,
+  })
+}
+
+export function fetchAlternativesApi(
+  request: AlternativesRequest,
+  signal?: AbortSignal
+) {
+  return apiRequest('trips/alternatives', alternativesResponseSchema, {
     method: 'POST',
     body: request,
     signal,

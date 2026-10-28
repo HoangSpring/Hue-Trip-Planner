@@ -73,6 +73,49 @@ export const generateTripResponseSchema = z.object({
   }),
 }).strict()
 
+export const alternativesRequestSchema = z.object({
+  placeId: uuidSchema,
+  slot: slotSchema,
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  excludePlaceIds: z.array(uuidSchema).default([]),
+  limit: z.number().int().min(1).max(20).default(5),
+  input: tripInputSchema.optional(),
+}).strict()
+
+export const alternativeItemSchema = z.object({
+  place: placeSummarySchema,
+  distanceM: z.number().nonnegative(),
+  reasonTag: z.string(),
+}).strict()
+
+export const alternativesResponseSchema = z.object({
+  items: z.array(alternativeItemSchema),
+}).strict()
+
+export const lockedItemSchema = z.object({
+  placeId: uuidSchema,
+  slot: slotSchema,
+}).strict()
+
+export const regenerateDayRequestSchema = z.object({
+  input: tripInputSchema,
+  dayIndex: z.number().int().min(1).max(5),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  lockedItems: z.array(lockedItemSchema).default([]),
+  excludePlaceIds: z.array(uuidSchema).default([]),
+}).strict()
+
+export const regenerateDayResponseSchema = z.object({
+  day: tripDaySchema,
+  warnings: z.array(warningSchema),
+  notices: z.array(noticeSchema),
+  generation: z.object({
+    by: generatedBySchema,
+    model: z.string().nullable(),
+    durationMs: z.number(),
+  }),
+}).strict()
+
 export type TripItem = z.infer<typeof tripItemSchema>
 export type TripDay = z.infer<typeof tripDaySchema>
 export type Trip = z.infer<typeof tripSchema>
@@ -80,4 +123,9 @@ export type TripDraft = z.infer<typeof tripDraftSchema>
 export type Warning = z.infer<typeof warningSchema>
 export type Notice = z.infer<typeof noticeSchema>
 export type GenerateTripResponse = z.infer<typeof generateTripResponseSchema>
+export type AlternativesRequest = z.infer<typeof alternativesRequestSchema>
+export type AlternativeItem = z.infer<typeof alternativeItemSchema>
+export type AlternativesResponse = z.infer<typeof alternativesResponseSchema>
+export type RegenerateDayRequest = z.infer<typeof regenerateDayRequestSchema>
+export type RegenerateDayResponse = z.infer<typeof regenerateDayResponseSchema>
 
