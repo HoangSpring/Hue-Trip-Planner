@@ -62,9 +62,22 @@ export const warningSchema = z.object({
 
 export const noticeSchema = z.object({ code: noticeCodeSchema, message: z.string() })
 
+export const generateTripResponseSchema = z.object({
+  draft: tripDraftSchema,
+  warnings: z.array(warningSchema),
+  notices: z.array(noticeSchema),
+  generation: z.object({
+    by: generatedBySchema,
+    model: z.string().nullable(),
+    durationMs: z.number(),
+  }),
+}).strict()
+
 export type TripItem = z.infer<typeof tripItemSchema>
 export type TripDay = z.infer<typeof tripDaySchema>
 export type Trip = z.infer<typeof tripSchema>
 export type TripDraft = z.infer<typeof tripDraftSchema>
 export type Warning = z.infer<typeof warningSchema>
 export type Notice = z.infer<typeof noticeSchema>
+export type GenerateTripResponse = z.infer<typeof generateTripResponseSchema>
+

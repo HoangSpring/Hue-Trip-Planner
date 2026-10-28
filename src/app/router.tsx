@@ -25,6 +25,9 @@ const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const MapPage = lazy(() => import('@/features/map/MapPage'))
 const PlacePage = lazy(() => import('@/features/place/PlacePage'))
 const HomePage = lazy(() => import('@/features/home/HomePage'))
+const TripWizardPage = lazy(() => import('@/features/trip-wizard/TripWizardPage'))
+const GeneratingPage = lazy(() => import('@/features/trip-wizard/GeneratingPage'))
+const DraftInspectionPage = lazy(() => import('@/features/trip-editor/DraftInspectionPage'))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -61,11 +64,11 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       ] : []),
     ] },
     { element: <FlowLayout />, children: [
-      { path: paths.planNew, element: page(vi.pages.plan) },
-      { path: paths.planGenerating, element: <RequireWizardDraft />, children: [{ index: true, element: page(vi.pages.generating, true) }] },
+      { path: paths.planNew, element: <Suspense fallback={loading}><TripWizardPage /></Suspense> },
+      { path: paths.planGenerating, element: <RequireWizardDraft />, children: [{ index: true, element: <Suspense fallback={loading}><GeneratingPage /></Suspense> }] },
     ] },
     { element: <TripLayout />, children: [
-      { path: paths.tripDraft, element: <RequireTripDraft />, children: [{ index: true, element: page(vi.pages.draft, true) }] },
+      { path: paths.tripDraft, element: <RequireTripDraft />, children: [{ index: true, element: <Suspense fallback={loading}><DraftInspectionPage /></Suspense> }] },
       { path: paths.tripPattern, element: <RequireAuth />, children: [{ index: true, element: <TripIdPage /> }] },
       { path: paths.sharedTripPattern, element: page(vi.pages.sharedTrip, true) },
     ] },
