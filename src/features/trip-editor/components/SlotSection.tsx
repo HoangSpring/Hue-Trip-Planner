@@ -21,6 +21,7 @@ interface SlotSectionProps {
   onOpenAlternatives?: (item: TripItem) => void
   onUpdateItemTimes?: (itemId: string, startTime: string | null, durationMin: number | null) => void
   onUpdateNote?: (itemId: string, note: string | null) => void
+  onDropOnItem?: (sourceItemId: string, targetItemId: string) => void
 }
 
 const slotIcons: Record<Slot, string> = {
@@ -48,6 +49,7 @@ export function SlotSection({
   onOpenAlternatives,
   onUpdateItemTimes,
   onUpdateNote,
+  onDropOnItem,
 }: SlotSectionProps) {
   if (items.length === 0) {
     return null
@@ -115,6 +117,7 @@ export function SlotSection({
                 onOpenAlternatives={onOpenAlternatives}
                 onUpdateItemTimes={onUpdateItemTimes}
                 onUpdateNote={onUpdateNote}
+                onDropOnItem={onDropOnItem}
               />
             </div>
           )

@@ -23,6 +23,7 @@ interface TimelineItemProps {
   onOpenAlternatives?: (item: TripItem) => void
   onUpdateItemTimes?: (itemId: string, startTime: string | null, durationMin: number | null) => void
   onUpdateNote?: (itemId: string, note: string | null) => void
+  onDropOnItem?: (sourceItemId: string, targetItemId: string) => void
 }
 
 function calculateEndTime(startTime: string | null, durationMin: number | null): string | null {
@@ -53,6 +54,7 @@ export function TimelineItem({
   onOpenAlternatives,
   onUpdateItemTimes,
   onUpdateNote,
+  onDropOnItem,
 }: TimelineItemProps) {
   const [isEditingTimes, setIsEditingTimes] = useState(false)
   const [isEditingNote, setIsEditingNote] = useState(false)
@@ -93,6 +95,17 @@ export function TimelineItem({
     <div
       id={`item-${item.id}`}
       onClick={() => onSelect(item.id)}
+      onDragOver={(e) => {
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'move'
+      }}
+      onDrop={(e) => {
+        e.preventDefault()
+        const sourceId = e.dataTransfer.getData('text/plain')
+        if (sourceId && sourceId !== item.id) {
+          onDropOnItem?.(sourceId, item.id)
+        }
+      }}
       className={`group relative rounded-2xl bg-surface border transition-all ${
         isSelected
           ? 'border-primary ring-2 ring-primary/20 shadow-md'
@@ -172,6 +185,23 @@ export function TimelineItem({
                       </svg>
                     )}
                   </button>
+                )}
+
+                {/* Drag handle for desktop */}
+                {onDropOnItem && (
+                  <div
+                    draggable={true}
+                    onDragStart={(e) => {
+                      e.dataTransfer.setData('text/plain', item.id)
+                      e.dataTransfer.effectAllowed = 'move'
+                    }}
+                    className="hidden sm:flex size-7 items-center justify-center rounded-lg text-ink-muted hover:text-ink hover:bg-surface-high cursor-grab active:cursor-grabbing transition-colors"
+                    title="Kéo thả để đổi thứ tự"
+                  >
+                    <svg className="size-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M7 2a2 2 0 10.001 4.001A2 2 0 007 2zm0 6a2 2 0 10.001 4.001A2 2 0 007 8zm0 6a2 2 0 10.001 4.001A2 2 0 007 14zm6-12a2 2 0 10.001 4.001A2 2 0 0013 2zm0 6a2 2 0 10.001 4.001A2 2 0 0013 8zm0 6a2 2 0 10.001 4.001A2 2 0 0013 14z" />
+                    </svg>
+                  </div>
                 )}
 
                 {/* Move Up */}

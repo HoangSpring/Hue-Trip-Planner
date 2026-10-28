@@ -240,6 +240,22 @@ export function TripEditorPage() {
     })
   }, [])
 
+  const handleDropOnItem = useCallback(
+    (sourceItemId: string, targetItemId: string) => {
+      const currentDay = state.trip?.days.find((d) => d.dayIndex === state.activeDayIndex)
+      if (!currentDay) return
+      const fromIdx = currentDay.items.findIndex((it) => it.id === sourceItemId)
+      const toIdx = currentDay.items.findIndex((it) => it.id === targetItemId)
+      if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+        dispatch({
+          type: 'MOVE_ITEM_POSITION',
+          payload: { dayIndex: state.activeDayIndex, fromIndex: fromIdx, toIndex: toIdx },
+        })
+      }
+    },
+    [state.trip?.days, state.activeDayIndex]
+  )
+
   // If no draft is available, show empty trip fallback
   if (!hasValidDraft || !state.trip) {
     return (
@@ -468,6 +484,7 @@ export function TripEditorPage() {
                     onDelete={handleDeleteItem}
                     onUpdateItemTimes={handleUpdateItemTimes}
                     onUpdateNote={handleUpdateNote}
+                    onDropOnItem={handleDropOnItem}
                   />
                 )
               })}
