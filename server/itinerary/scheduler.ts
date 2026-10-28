@@ -19,6 +19,8 @@ export type ScheduleRequest = {
   candidate: ScoredCandidate
   slot: Slot
   alternatives?: readonly ScoredCandidate[]
+  /** Locked itinerary items stay in their requested slot, even when bestTime differs. */
+  locked?: boolean
 }
 
 export type ScheduledPlace = {
@@ -54,7 +56,8 @@ function dayStart(input: TripInput): number {
     : ITINERARY_CONFIG.dayStart.default)
 }
 
-function slotChoices(candidate: ScoredCandidate, preferred: Slot): Slot[] {
+function slotChoices(candidate: ScoredCandidate, preferred: Slot, locked: boolean): Slot[] {
+  if (locked) return [preferred]
   const preferredIndex = slotOrder.indexOf(preferred)
   const bestTime = candidate.place.bestTime
   const allowed = bestTime.length ? slotOrder.filter((slot) => bestTime.includes(slot)) : [...slotOrder]
@@ -131,6 +134,7 @@ export function scheduleDay(
     const pending = requests.filter((request) => request.slot === slot && !usedIds.has(request.candidate.place.id))
     while (pending.length) {
       const sortedByProximity = [...pending].sort((a, b) => {
+        if (a.locked !== b.locked) return a.locked ? -1 : 1
         const aDistance = previous ? haversine(previous, a.candidate.place) : 0
         const bDistance = previous ? haversine(previous, b.candidate.place) : 0
         return aDistance - bDistance || b.candidate.score - a.candidate.score || a.candidate.place.slug.localeCompare(b.candidate.place.slug, 'en')
@@ -140,7 +144,7 @@ export function scheduleDay(
       for (const request of sortedByProximity) {
         for (const candidate of requestCandidates(request)) {
           if (usedIds.has(candidate.place.id)) continue
-          const choices = slotChoices(candidate, request.slot)
+          const choices = slotChoices(candidate, request.slot, request.locked === true)
           for (const choice of choices) {
             selected = scheduleCandidate(candidate, choice, cursor, previous, options.input.start, date, scheduled.length === 0, options.input)
             if (selected) break

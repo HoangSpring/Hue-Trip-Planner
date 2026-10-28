@@ -227,11 +227,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `alternatives.ts` + `POST /api/trips/alternatives`; bottom sheet "Gợi ý thay thế" và "Thêm địa điểm" (tìm kiếm, chọn khung giờ, trạng thái "Đã thêm").
 - **Hoàn thành khi:** test: không trả chính nó, không trả địa điểm trong `excludePlaceIds`, tôn trọng giờ mở cửa; giao diện có trạng thái rỗng.
 
-### [ ] T-028 · Tạo lại một ngày (dự phòng) · `M`
+### [x] T-028 · Tạo lại một ngày (dự phòng) · `M`
 - **Tham chiếu:** `docs/07` mục 13; `docs/06` mục 6.2; `docs/03` FL-04.6
 - **Dep:** T-020, T-026
 - **Làm:** `regenerateDay` (dùng dự phòng ở giai đoạn này) + `POST /api/trips/regenerate-day`; hộp thoại khóa mục; thay nội dung một ngày, có hoàn tác.
 - **Hoàn thành khi:** các ngày khác không đổi; không tạo trùng địa điểm với ngày khác; mục khóa giữ nguyên slot.
+- Đã kiểm tra: API giữ slot khóa kể cả khi `best_time` khác, tôn trọng danh sách địa điểm ngày khác; reducer chỉ thay ngày chọn và hoàn tác được. T-020 vẫn còn đánh dấu chưa đạt riêng theo báo cáo chất lượng fallback.
 
 > ✅ **Cổng kiểm tra M2 (quan trọng):** người dùng **khách** đi trọn luồng Landing → Wizard → Lịch trình → Chỉnh sửa **không cần AI và không cần đăng nhập**. Chủ dự án chạy bộ **10 đầu vào mẫu** (`docs/07` mục 17.4) và chấm chất lượng thuật toán dự phòng. Đây là mốc đầu tiên đáng để cho người thật dùng thử.
 

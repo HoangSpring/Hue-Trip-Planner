@@ -7,6 +7,8 @@ import {
   placeMetaSchema,
   alternativesResponseSchema,
   type AlternativesRequest,
+  regenerateDayResponseSchema,
+  type RegenerateDayRequest,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import type { z } from 'zod'
@@ -82,6 +84,17 @@ export function fetchAlternativesApi(
   signal?: AbortSignal
 ) {
   return apiRequest('trips/alternatives', alternativesResponseSchema, {
+    method: 'POST',
+    body: request,
+    signal,
+  })
+}
+
+export function regenerateDayApi(
+  request: RegenerateDayRequest,
+  signal?: AbortSignal
+) {
+  return apiRequest('trips/regenerate-day', regenerateDayResponseSchema, {
     method: 'POST',
     body: request,
     signal,

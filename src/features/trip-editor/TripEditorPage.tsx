@@ -17,6 +17,7 @@ import { SlotSection } from './components/SlotSection'
 import { LoginPromptModal } from './components/LoginPromptModal'
 import { AlternativesSheet } from './components/AlternativesSheet'
 import { AddPlaceSheet } from './components/AddPlaceSheet'
+import { RegenerateDayDialog } from './components/RegenerateDayDialog'
 
 const emptyTrip: TripDraft = {
   clientDraftId: '00000000-0000-0000-0000-000000000000',
@@ -70,10 +71,11 @@ export function TripEditorPage() {
   const [isMobileMapOpen, setIsMobileMapOpen] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
 
-  // Sheet states for T-027
+  // Sheet states for T-027 and T-028
   const [selectedAlternativeItem, setSelectedAlternativeItem] = useState<TripItem | null>(null)
   const [isAlternativesSheetOpen, setIsAlternativesSheetOpen] = useState(false)
   const [isAddPlaceSheetOpen, setIsAddPlaceSheetOpen] = useState(false)
+  const [isRegenerateDialogOpen, setIsRegenerateDialogOpen] = useState(false)
 
   const allExistingPlaceIds = useMemo(() => {
     if (!state.trip) return new Set<string>()
@@ -320,6 +322,37 @@ export function TripEditorPage() {
       }, 5000)
     },
     [state.activeDayIndex]
+  )
+
+  const handleQuickLockAll = useCallback(() => {
+    const currentDay = state.trip?.days.find((d) => d.dayIndex === state.activeDayIndex)
+    if (!currentDay) return
+    const allLocked = currentDay.items.every((it) => it.isLocked)
+    for (const it of currentDay.items) {
+      if (allLocked && it.isLocked) {
+        dispatch({ type: 'TOGGLE_LOCK', payload: { itemId: it.id } })
+      } else if (!allLocked && !it.isLocked) {
+        dispatch({ type: 'TOGGLE_LOCK', payload: { itemId: it.id } })
+      }
+    }
+  }, [state.trip?.days, state.activeDayIndex])
+
+  const handleRegenerateSuccess = useCallback(
+    (dayIndex: number, newItems: TripItem[]) => {
+      dispatch({
+        type: 'REPLACE_DAY',
+        payload: { dayIndex, items: newItems },
+      })
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+      setToast({
+        message: `Đã tạo lại Ngày ${dayIndex}`,
+        visible: true,
+      })
+      toastTimerRef.current = setTimeout(() => {
+        setToast((prev) => (prev ? { ...prev, visible: false } : null))
+      }, 5000)
+    },
+    []
   )
 
   // If no draft is available, show empty trip fallback
@@ -574,6 +607,7 @@ export function TripEditorPage() {
             </button>
             <button
               type="button"
+              onClick={() => setIsRegenerateDialogOpen(true)}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-primary-tint/30 hover:bg-primary-tint/50 border border-primary/30 px-5 py-2.5 text-xs font-semibold text-primary shadow-xs transition-colors"
             >
               <span>✨</span>
@@ -735,6 +769,22 @@ export function TripEditorPage() {
         onClose={() => setIsAddPlaceSheetOpen(false)}
         onAddPlace={handleAddPlace}
       />
+
+      {/* Regenerate Day Dialog */}
+      {activeDay && (
+        <RegenerateDayDialog
+          isOpen={isRegenerateDialogOpen}
+          day={activeDay}
+          tripInput={state.trip.input}
+          excludePlaceIds={Array.from(allExistingPlaceIds).filter(
+            (id) => !activeDay.items.some((it) => it.placeId === id)
+          )}
+          onClose={() => setIsRegenerateDialogOpen(false)}
+          onToggleLockItem={handleToggleLock}
+          onQuickLockAll={handleQuickLockAll}
+          onRegenerateSuccess={handleRegenerateSuccess}
+        />
+      )}
     </div>
   )
 }
