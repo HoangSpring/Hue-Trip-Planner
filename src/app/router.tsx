@@ -27,7 +27,7 @@ const PlacePage = lazy(() => import('@/features/place/PlacePage'))
 const HomePage = lazy(() => import('@/features/home/HomePage'))
 const TripWizardPage = lazy(() => import('@/features/trip-wizard/TripWizardPage'))
 const GeneratingPage = lazy(() => import('@/features/trip-wizard/GeneratingPage'))
-const DraftInspectionPage = lazy(() => import('@/features/trip-editor/DraftInspectionPage'))
+const TripEditorPage = lazy(() => import('@/features/trip-editor/TripEditorPage').then(module => ({ default: module.TripEditorPage })))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
@@ -68,7 +68,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.planGenerating, element: <RequireWizardDraft />, children: [{ index: true, element: <Suspense fallback={loading}><GeneratingPage /></Suspense> }] },
     ] },
     { element: <TripLayout />, children: [
-      { path: paths.tripDraft, element: <RequireTripDraft />, children: [{ index: true, element: <Suspense fallback={loading}><DraftInspectionPage /></Suspense> }] },
+      { path: paths.tripDraft, element: <RequireTripDraft />, children: [{ index: true, element: <Suspense fallback={loading}><TripEditorPage /></Suspense> }] },
       { path: paths.tripPattern, element: <RequireAuth />, children: [{ index: true, element: <TripIdPage /> }] },
       { path: paths.sharedTripPattern, element: page(vi.pages.sharedTrip, true) },
     ] },
