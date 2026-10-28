@@ -166,13 +166,13 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 2 — Lịch trình không cần AI (M2)
 
-### [ ] T-018 · Pipeline phần dữ liệu: ứng viên, chấm điểm, nhóm ứng viên · `M`
+### [x] T-018 · Pipeline phần dữ liệu: ứng viên, chấm điểm, nhóm ứng viên · `M`
 - **Tham chiếu:** `docs/07` mục 4, 5, 6
 - **Dep:** T-009, T-012
 - **Làm:** `candidates.ts` (tải, lọc cứng, nới lỏng + `Notice`), `scoring.ts` (công thức có trọng số ở `config.ts`), `pool.ts`; interface `PlacesRepo`.
 - **Hoàn thành khi:** test theo `docs/07` mục 17.2 (Chấm điểm, Lọc & nới lỏng, Pool); hòa điểm theo `slug`; `NO_CANDIDATES` khi không đủ.
 
-### [ ] T-019 · Bộ xếp giờ (scheduler) · `M`
+### [x] T-019 · Bộ xếp giờ (scheduler) · `M`
 - **Tham chiếu:** `docs/07` mục 7, 9.1
 - **Dep:** T-009, T-018
 - **Làm:** `scheduler.ts`: giờ bắt đầu ngày, đồng bộ khung giờ, dời đến giờ mở cửa, không quá 21:30, xử lý mục không xếp được (hoán khung/thay thế/bỏ), tối ưu thứ tự trong khung (láng giềng gần nhất).
@@ -183,14 +183,15 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-018, T-019
 - **Làm:** `fallback.ts`, `reasons.ts`; hàm `generateTrip` chạy **chỉ bằng dự phòng** (cờ `LLM_ENABLED=false` mặc định ở giai đoạn này) trả `TripDraft` + `Warning` + `Notice`.
 - **Hoàn thành khi:** golden test (cùng đầu vào → cùng kết quả); thỏa R1–R8 trên ≥ 10 đầu vào; property test (`docs/07` mục 17.3): không trùng địa điểm, mọi `placeId` thuộc DB, số mục/ngày đúng khoảng, không kết thúc sau 21:30.
+- **Trạng thái:** Chưa đạt; giữ `[ ]` cho đến khi kiểm chứng R1/R7 trên eval dữ liệu thật và tất cả kiểm thử hồi quy/property qua. V1 có lỗi ngày, thiếu trưa và underfill; xem `docs/reports/phase-2a-fix-report.md`.
 
-### [ ] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
+### [x] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
 - **Tham chiếu:** `docs/07` mục 15
 - **Dep:** T-009
 - **Làm:** `shared/itinerary/warnings.ts` đủ các mã; tính lại di chuyển khi thay đổi thứ tự.
 - **Hoàn thành khi:** mỗi mã cảnh báo có test dương tính và âm tính.
 
-### [ ] T-022 · API `POST /api/trips/generate` (chạy dự phòng) + giới hạn tần suất · `M`
+### [x] T-022 · API `POST /api/trips/generate` (chạy dự phòng) + giới hạn tần suất · `M`
 - **Tham chiếu:** `docs/06` mục 2.8, 6.1; `docs/07` mục 16
 - **Dep:** T-020, T-021, T-005
 - **Làm:** endpoint `optionalAuth`; kiểm tra `TripInput`; giới hạn tần suất (băm `client_key` bằng `RATE_LIMIT_SALT`); ghi `generation_events`; hỗ trợ `AbortSignal`; `422 NO_CANDIDATES`; hydrate `place` trong kết quả.

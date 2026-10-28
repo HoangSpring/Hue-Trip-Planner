@@ -172,6 +172,13 @@ Biến có tiền tố `VITE_` sẽ lộ ra trình duyệt. Chỉ đặt giá tr
 5. Chạy `typecheck`, `lint`, `test`.
 6. Tóm tắt cuối task: đã làm gì, file nào thay đổi, điều gì chưa làm/còn nghi ngờ.
 7. Khi xong một phase (hoặc phải dừng giữa chừng): viết báo cáo `docs/reports/phase-N-report.md` theo mẫu `docs/reports/_template.md`, dán đầu ra thật của các lệnh kiểm tra. Báo cáo là nơi ghi kết quả; **không** ghi báo cáo vào `README.md`.
+### Lỗi môi trường (KHÔNG phải lỗi dự án)
+
+Các lỗi do sandbox/quyền hệ thống: `EPERM`, `Access is denied`, `ERR_PNPM_STORE_DIR_OPEN_OPERATION_LOCK`,
+`spawn EPERM`, lỗi ghi ngoài workspace.
+Khi gặp: không dừng công việc; thử chạy lại ngoài sandbox nếu công cụ cho phép; KHÔNG chạy `pnpm install`
+nếu package.json và lockfile không đổi (chỉ cần typecheck, lint, test, build). Chỉ DỪNG khi lệnh kiểm tra
+thất bại vì MÃ. Báo cáo phải phân biệt "lỗi môi trường" và "lỗi mã".
 
 ## 12. Câu hỏi còn mở
 

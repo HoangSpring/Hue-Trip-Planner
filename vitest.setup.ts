@@ -6,12 +6,26 @@ class RouterTestRequest {
   readonly signal: AbortSignal | null
   readonly method: string
   readonly headers: Headers
+  private readonly bodyText: string
 
   constructor(input: string | URL, init: RequestInit = {}) {
     this.url = String(input)
     this.signal = init.signal ?? null
     this.method = init.method ?? 'GET'
     this.headers = new Headers(init.headers)
+    this.bodyText = typeof init.body === 'string' ? init.body : ''
+  }
+
+  async text(): Promise<string> {
+    return this.bodyText
+  }
+
+  async json(): Promise<unknown> {
+    return JSON.parse(this.bodyText) as unknown
+  }
+
+  clone(): RouterTestRequest {
+    return new RouterTestRequest(this.url, { method: this.method, headers: this.headers, body: this.bodyText, signal: this.signal ?? undefined })
   }
 }
 

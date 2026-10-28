@@ -16,3 +16,12 @@ export function createUserSupabaseClient(accessToken: string) {
     auth: { persistSession: false, autoRefreshToken: false },
   })
 }
+
+export function createServiceRoleSupabaseClient() {
+  const { url } = requireSupabasePublicConfig()
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceRoleKey) throw new Error('Thiếu cấu hình service role của Supabase.')
+  return createClient<Database>(url, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  })
+}

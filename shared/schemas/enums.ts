@@ -13,7 +13,7 @@ export const warningCodeSchema = z.enum([
   'CLOSED_ON_DAY', 'CLOSED_AT_TIME', 'MISSING_HOURS', 'TOO_FAR',
   'TOO_MANY_ITEMS', 'TIME_OVERLAP', 'PLACE_ARCHIVED', 'LUNCH_MISSING',
 ])
-export const noticeCodeSchema = z.enum(['FALLBACK_USED', 'FEW_CANDIDATES', 'FILTER_RELAXED', 'LLM_DISABLED'])
+export const noticeCodeSchema = z.enum(['FALLBACK_USED', 'FEW_CANDIDATES', 'FILTER_RELAXED', 'LLM_DISABLED', 'LUNCH_MISSING'])
 
 export type Category = z.infer<typeof categorySchema>
 export type PlaceStatus = z.infer<typeof placeStatusSchema>

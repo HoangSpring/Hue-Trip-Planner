@@ -1,5 +1,6 @@
 import {
   apiErrorSchema,
+  generateTripResponseSchema,
   mapPlacesSchema,
   paginatedPlacesSchema,
   placeDetailResponseSchema,
@@ -29,7 +30,7 @@ export async function apiRequest<T>(path: string, schema: z.ZodType<T>, options:
   const payload: unknown = await response.json()
   if (!response.ok) {
     const parsedError = apiErrorSchema.safeParse(payload)
-    if (parsedError.success) throw new ApiRequestError(response.status, parsedError.data)
+    if (parsedError.success) throw new ApiRequestError(response.status, parsedError.data, response.headers)
     throw new Error(vi.system.serviceConnectionError)
   }
   return schema.parse(payload)
@@ -63,9 +64,25 @@ export function getPlaceBySlug(slug: string) {
   return apiRequest(`places/${encodeURIComponent(slug)}`, placeDetailResponseSchema)
 }
 
+export function generateTripApi(
+  request: { input: import('@shared/schemas').TripInput; clientDraftId?: string },
+  signal?: AbortSignal
+) {
+  return apiRequest('trips/generate', generateTripResponseSchema, {
+    method: 'POST',
+    body: request,
+    signal,
+  })
+}
+
 export class ApiRequestError extends Error {
-  constructor(readonly status: number, readonly payload: z.infer<typeof apiErrorSchema>) {
+  constructor(
+    readonly status: number,
+    readonly payload: z.infer<typeof apiErrorSchema>,
+    readonly headers?: Headers
+  ) {
     super(payload.error.message)
     this.name = 'ApiRequestError'
   }
 }
+

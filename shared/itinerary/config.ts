@@ -1,6 +1,7 @@
 // Shared itinerary defaults. Tune thresholds only with the evaluation in docs/07.
 export const ITINERARY_CONFIG = {
   weights: { interest: 0.5, companion: 0.15, budget: 0.1, verified: 0.1, featured: 0.05, completeness: 0.1 },
+  scoring: { categoryPreferenceBonus: 0.2, sensitiveWalkingPenalty: 0.5 },
   radiusKm: { default: 40, relaxed: 60 },
   poolSize: { max: 60, min: 12, perItemFactor: 3, maxCategoryShare: 0.5 },
   itemsPerDay: { relaxed: [3, 4], moderate: [4, 5], packed: [6, 7], reduceForSensitiveBy: 1, floor: 3 },
