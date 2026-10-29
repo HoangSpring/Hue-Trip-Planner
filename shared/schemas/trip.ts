@@ -3,6 +3,11 @@ import { addedBySchema, generatedBySchema, slotSchema, warningCodeSchema, notice
 import { placeSummarySchema, uuidSchema } from './place'
 import { tripInputSchema } from './tripInput'
 
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine((value) => {
+  const parsed = new Date(`${value}T00:00:00.000Z`)
+  return !Number.isNaN(parsed.valueOf()) && parsed.toISOString().slice(0, 10) === value
+}, 'Ngày không hợp lệ')
+
 export const tripItemSchema = z.object({
   id: uuidSchema,
   placeId: uuidSchema,
@@ -22,7 +27,7 @@ export const tripItemSchema = z.object({
 export const tripDaySchema = z.object({
   id: uuidSchema,
   dayIndex: z.number().int().min(1).max(5),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  date: isoDateSchema.nullable(),
   note: z.string().nullable(),
   items: z.array(tripItemSchema).max(8),
 }).strict()
@@ -31,7 +36,7 @@ export const tripSchema = z.object({
   id: uuidSchema,
   clientDraftId: uuidSchema.nullable(),
   title: z.string().min(1).max(100),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  startDate: isoDateSchema.nullable(),
   numDays: z.number().int().min(1).max(5),
   input: tripInputSchema,
   generatedBy: generatedBySchema,
@@ -48,6 +53,51 @@ export const tripDraftSchema = tripSchema.omit({ id: true, isShared: true, share
   clientDraftId: uuidSchema,
 })
 
+const tripWriteDaySchema = tripDaySchema.extend({
+  note: z.string().max(300).nullable(),
+  items: z.array(tripItemSchema).max(8),
+}).strict()
+
+export const tripCreateRequestSchema = tripDraftSchema.superRefine((trip, context) => {
+  if (trip.days.length !== trip.numDays) context.addIssue({ code: 'custom', path: ['days'], message: 'Số ngày không khớp numDays.' })
+  trip.days.forEach((day, dayIndex) => {
+    if (day.dayIndex !== dayIndex + 1) context.addIssue({ code: 'custom', path: ['days', dayIndex, 'dayIndex'], message: 'Ngày phải liên tục từ 1.' })
+    day.items.forEach((item, itemIndex) => {
+      if (item.position !== itemIndex) context.addIssue({ code: 'custom', path: ['days', dayIndex, 'items', itemIndex, 'position'], message: 'Vị trí phải liên tục từ 0.' })
+    })
+  })
+})
+
+export const tripReplaceRequestSchema = z.object({
+  expectedUpdatedAt: z.string().datetime(),
+  title: z.string().min(1).max(100),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
+  days: z.array(tripWriteDaySchema).max(5),
+}).strict().superRefine((trip, context) => {
+  const indexes = trip.days.map((day) => day.dayIndex)
+  if (indexes.some((index, i) => index !== i + 1)) context.addIssue({ code: 'custom', path: ['days'], message: 'Ngày phải liên tục từ 1.' })
+  trip.days.forEach((day, dayIndex) => day.items.forEach((item, itemIndex) => {
+    if (item.position !== itemIndex) context.addIssue({ code: 'custom', path: ['days', dayIndex, 'items', itemIndex, 'position'], message: 'Vị trí phải liên tục từ 0.' })
+  }))
+})
+
+export const tripPatchRequestSchema = z.object({
+  title: z.string().min(1).max(100).optional(),
+  startDate: isoDateSchema.nullable().optional(),
+}).strict().refine((value) => Object.keys(value).length > 0, 'Cần có ít nhất một trường cần cập nhật.')
+
+export const tripListItemSchema = z.object({
+  id: uuidSchema,
+  title: z.string(),
+  numDays: z.number().int().min(1).max(5),
+  startDate: isoDateSchema.nullable(),
+  isShared: z.boolean(),
+  coverImageUrl: z.string().url().nullable(),
+  updatedAt: z.string().datetime(),
+}).strict()
+
+export const tripListResponseSchema = z.object({ items: z.array(tripListItemSchema) }).strict()
+
 export const generateTripRequestSchema = z.object({
   input: tripInputSchema,
   clientDraftId: uuidSchema.optional(),
@@ -59,6 +109,7 @@ export const warningSchema = z.object({
   dayIndex: z.number().int().min(1).max(5),
   message: z.string(),
 })
+export const tripReplaceResponseSchema = z.object({ trip: tripSchema, warnings: z.array(warningSchema) }).strict()
 
 export const noticeSchema = z.object({ code: noticeCodeSchema, message: z.string() })
 
@@ -134,6 +185,9 @@ export type TripItem = z.infer<typeof tripItemSchema>
 export type TripDay = z.infer<typeof tripDaySchema>
 export type Trip = z.infer<typeof tripSchema>
 export type TripDraft = z.infer<typeof tripDraftSchema>
+export type TripCreateRequest = z.infer<typeof tripCreateRequestSchema>
+export type TripReplaceRequest = z.infer<typeof tripReplaceRequestSchema>
+export type TripPatchRequest = z.infer<typeof tripPatchRequestSchema>
 export type Warning = z.infer<typeof warningSchema>
 export type Notice = z.infer<typeof noticeSchema>
 export type GenerateTripResponse = z.infer<typeof generateTripResponseSchema>

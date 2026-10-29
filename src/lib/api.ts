@@ -9,9 +9,15 @@ import {
   type AlternativesRequest,
   regenerateDayResponseSchema,
   type RegenerateDayRequest,
+  tripSchema,
+  tripListResponseSchema,
+  tripReplaceResponseSchema,
+  type TripCreateRequest,
+  type TripPatchRequest,
+  type TripReplaceRequest,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
-import type { z } from 'zod'
+import { z } from 'zod'
 import { vi } from './strings/vi'
 
 type ApiRequestOptions = Omit<RequestInit, 'body'> & {
@@ -31,7 +37,7 @@ export async function apiRequest<T>(path: string, schema: z.ZodType<T>, options:
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
   })
 
-  const payload: unknown = await response.json()
+  const payload: unknown = response.status === 204 ? undefined : await response.json()
   if (!response.ok) {
     const parsedError = apiErrorSchema.safeParse(payload)
     if (parsedError.success) throw new ApiRequestError(response.status, parsedError.data, response.headers)
@@ -99,6 +105,34 @@ export function regenerateDayApi(
     body: request,
     signal,
   })
+}
+
+export function getMyTripsApi(accessToken: string) {
+  return apiRequest('trips', tripListResponseSchema, { accessToken })
+}
+
+export function getTripApi(id: string, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}`, tripSchema, { accessToken })
+}
+
+export function createTripApi(draft: TripCreateRequest, accessToken: string) {
+  return apiRequest('trips', tripSchema, { method: 'POST', body: draft, accessToken })
+}
+
+export function replaceTripApi(id: string, body: TripReplaceRequest, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}`, tripReplaceResponseSchema, { method: 'PUT', body, accessToken })
+}
+
+export function patchTripApi(id: string, body: TripPatchRequest, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}`, tripSchema, { method: 'PATCH', body, accessToken })
+}
+
+export function deleteTripApi(id: string, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}`, z.void(), { method: 'DELETE', accessToken })
+}
+
+export function duplicateTripApi(id: string, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}/duplicate`, tripSchema, { method: 'POST', accessToken })
 }
 
 export class ApiRequestError extends Error {

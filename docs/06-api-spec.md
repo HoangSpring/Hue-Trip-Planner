@@ -481,15 +481,18 @@ Body: `{ "verified": true }`. Ghi `verified_by`, `verified_at`, `last_verified_a
 Các hàm được chia theo task để migration theo đúng thứ tự:
 
 - Migration 8, task T-012: `nearby_places`.
-- Migration 9, task T-034: `save_trip` và `create_trip_from_payload`.
+- Migration 9, task T-003: thêm telemetry nullable vào `generation_events` (đã áp dụng remote).
+- Migration 10, task T-034: `save_trip` và `create_trip_from_payload`.
 
 | Hàm | Mục đích |
 |---|---|
 | `nearby_places(p_lat float8, p_lng float8, p_limit int, p_exclude uuid[])` | Migration 8 · T-012. Trả địa điểm published theo khoảng cách (Haversine), giới hạn 1–20 (mặc định 5), dùng cho `nearby` và thay thế. |
-| `save_trip(p_trip_id uuid, p_payload jsonb, p_expected_updated_at timestamptz)` | Migration 9 · T-034. Trong một transaction: khóa dòng `trips`, kiểm tra phiên bản, upsert `trip_days`, upsert/xóa `trip_items`, cập nhật `updated_at`. `SECURITY INVOKER` để RLS vẫn áp dụng |
-| `create_trip_from_payload(p_payload jsonb)` | Migration 9 · T-034. Tạo mới `trips` + ngày + mục; xử lý idempotent theo `(user_id, client_draft_id)` |
+| `save_trip(p_trip_id uuid, p_payload jsonb, p_expected_updated_at timestamptz)` | Migration 10 · T-034. Trong một transaction: `FOR UPDATE` trip, so khớp phiên bản (lệch → SQLSTATE `PT409`, message `TRIP_VERSION_CONFLICT`), upsert ngày/mục theo id, xóa phần bị bỏ, cập nhật `updated_at`. Không cho đổi `num_days`. `SECURITY INVOKER` để RLS vẫn áp dụng |
+| `create_trip_from_payload(p_payload jsonb)` | Migration 10 · T-034. Tạo `trips` + ngày + mục trong transaction; chống trùng `(user_id, client_draft_id)`; `MAX_TRIPS_PER_USER` mặc định 50 (DB setting `app.max_trips_per_user`, API env `MAX_TRIPS_PER_USER`). `SECURITY INVOKER` và `auth.uid()` bắt buộc |
 
 > Lỗi phiên bản ném `exception` có mã riêng để server ánh xạ sang `409 CONFLICT`.
+
+`POST /api/trips` trả `201` khi tạo mới và `200` kèm bản ghi cũ khi `clientDraftId` đã tồn tại. `PUT /api/trips/:id` trả `{trip,warnings}`; xung đột `409` có `error.details.current`. Các route `/api/trips*` yêu cầu `requireAuth`, luôn dùng client Supabase có JWT người dùng (không dùng service role) và trả `Cache-Control: private, no-store`. Địa điểm archived chỉ được hydrate nếu đã có trong trip của chính người dùng; không được thêm địa điểm archived mới.
 
 ## 11. Chỗ được dùng `service role`
 

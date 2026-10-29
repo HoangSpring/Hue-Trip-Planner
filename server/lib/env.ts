@@ -16,6 +16,7 @@ export const envSchema = z.object({
   RATE_LIMIT_GUEST_GENERATE_PER_DAY: z.coerce.number().int().positive().default(6),
   RATE_LIMIT_USER_GENERATE_PER_HOUR: z.coerce.number().int().positive().default(10),
   RATE_LIMIT_USER_GENERATE_PER_DAY: z.coerce.number().int().positive().default(30),
+  MAX_TRIPS_PER_USER: z.coerce.number().int().positive().default(50),
   APP_BASE_URL: optionalUrl,
 })
 

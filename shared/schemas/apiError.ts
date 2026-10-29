@@ -10,7 +10,10 @@ export const apiErrorSchema = z.object({
   error: z.object({
     code: apiErrorCodeSchema,
     message: z.string(),
-    details: z.array(z.object({ path: z.string(), message: z.string() })).optional(),
+    details: z.union([
+      z.array(z.object({ path: z.string(), message: z.string() })),
+      z.object({ current: z.unknown() }).strict(),
+    ]).optional(),
     requestId: z.string(),
   }).strict(),
 }).strict()

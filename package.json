@@ -18,6 +18,7 @@
     "db:types": "supabase gen types typescript --linked --schema public > src/types/supabase.ts",
     "db:test:rls": "supabase test db --local supabase/tests",
     "smoke:api": "tsx scripts/smokeApi.ts",
+    "smoke:trips": "tsx scripts/smokeTrips.ts",
     "eval:itinerary": "tsx scripts/evalItinerary.ts"
   },
   "dependencies": {

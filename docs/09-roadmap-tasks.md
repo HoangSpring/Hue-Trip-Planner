@@ -282,11 +282,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** migration 10: `save_trip`, `create_trip_from_payload` (idempotent theo `(user_id, client_draft_id)`); bảo đảm `SECURITY INVOKER`, giữ RLS. Migration 8 `nearby_places` thuộc T-012; migration 9 là telemetry `generation_events` đã áp dụng. Migration 10 đã tạo trên nhánh T-034 nhưng chưa áp dụng; chỉ tick sau khi chủ dự án áp dụng và smoke qua.
 - **Hoàn thành khi:** test: lưu hai lần cùng `clientDraftId` chỉ tạo một bản ghi; `p_expected_updated_at` lệch → lỗi phiên bản; user B không ghi được vào chuyến đi của A.
 
-### [ ] T-035 · API chuyến đi của người dùng · `L`
+### [x] T-035 · API chuyến đi của người dùng · `L`
 - **Tham chiếu:** `docs/06` mục 7
 - **Dep:** T-034, T-005
 - **Làm:** `GET/POST /api/trips`, `GET/PUT/PATCH/DELETE /api/trips/:id`, `POST /:id/duplicate`; kiểm tra quy tắc (không trùng địa điểm, số ngày/mục, làm sạch chuỗi, tính lại di chuyển); `409 CONFLICT`; `MAX_TRIPS_PER_USER`.
 - **Hoàn thành khi:** toàn bộ test `docs/06` mục 15 cho nhóm này; cách ly dữ liệu giữa hai user; địa điểm `archived` vẫn hiển thị trong chuyến đi cũ.
+- **Ghi chú:** route/service/schema, client API và test bằng Supabase giả đã đạt. Smoke với Auth/DB thật chờ chủ dự án áp dụng migration 10; `pnpm smoke:trips` chưa chạy.
 
 ### [ ] T-036 · Lưu chuyến đi từ trình chỉnh sửa (chế độ đã lưu) · `L`
 - **Tham chiếu:** `docs/03` FL-02, FL-04; `docs/04` (trang `/trip/:id`)

@@ -44,7 +44,7 @@ export function mapPlaceSummary(row: PlaceRow, tags: PlaceTag[] = []): PlaceSumm
     imageSourceUrl: row.image_source_url,
     tags,
     verified: row.verified,
-    status: row.status === 'published' ? 'published' : undefined,
+    status: row.status === 'published' || row.status === 'archived' ? row.status : undefined,
   })
 }
 

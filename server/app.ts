@@ -11,6 +11,7 @@ import { createPublicPlaceRoutes } from './routes/publicPlaces'
 import { createGenerateTripRoutes } from './routes/generateTrip'
 import { createAlternativesRoute } from './routes/alternatives'
 import { createRegenerateDayRoute } from './routes/regenerateDay'
+import { createTripRoutes } from './routes/trips'
 
 export const app = new Hono<ApiEnv>()
 
@@ -23,6 +24,7 @@ app.route('/api', createPublicPlaceRoutes())
 app.route('/api', createGenerateTripRoutes())
 app.route('/api', createAlternativesRoute())
 app.route('/api', createRegenerateDayRoute())
+app.route('/api', createTripRoutes())
 
 app.get('/api/me', requireAuth, async (context) => {
   const user = context.get('user')
