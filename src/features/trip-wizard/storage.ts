@@ -12,6 +12,7 @@ import {
 
 export const WIZARD_DRAFT_KEY = 'wizard_draft_v1'
 export const TRIP_DRAFT_KEY = 'trip_draft_v1'
+export const TRIP_SAVE_PENDING_KEY = 'trip_save_pending_v1'
 
 export interface TripWizardFormValues {
   numDays: number
@@ -160,6 +161,18 @@ export function clearStoredTripDraft(): void {
   } catch {
     // Ignore error
   }
+}
+
+export function hasPendingTripSave(): boolean {
+  try { return localStorage.getItem(TRIP_SAVE_PENDING_KEY) === 'true' } catch { return false }
+}
+
+export function markTripSavePending(): void {
+  try { localStorage.setItem(TRIP_SAVE_PENDING_KEY, 'true') } catch { /* Keep the trip draft as the durable copy. */ }
+}
+
+export function clearPendingTripSave(): void {
+  try { localStorage.removeItem(TRIP_SAVE_PENDING_KEY) } catch { /* Ignore restricted storage. */ }
 }
 
 export const NOTICES_KEY = 'trip_notices_v1'

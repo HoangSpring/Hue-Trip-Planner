@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
-import { readStoredTripDraft, writeStoredTripDraft, readStoredNotices } from '@/features/trip-wizard/storage'
-import type { Notice, PlaceMapItemDto, Slot, TripDraft, PlaceSummary, TripItem } from '@shared/schemas'
+import { readStoredTripDraft, writeStoredTripDraft, readStoredNotices, clearStoredTripDraft, hasPendingTripSave, clearPendingTripSave, markTripSavePending } from '@/features/trip-wizard/storage'
+import type { Notice, PlaceMapItemDto, Slot, TripDraft, PlaceSummary, TripItem, Trip } from '@shared/schemas'
 import { placeMapItemSchema } from '@shared/schemas/placeApi'
+import { ApiRequestError, createTripApi, getTripApi, replaceTripApi } from '@/lib/api'
+import { tripCreateRequestSchema } from '@shared/schemas'
+import { useSession } from '@/features/auth/hooks/useSession'
+import { NotFoundPage } from '@/features/static/NotFoundPage'
+import { brand } from '@/lib/brand'
 import { MapView } from '@/features/map/MapView'
 import {
   createInitialEditorState,
@@ -42,20 +48,53 @@ const emptyTrip: TripDraft = {
   days: [],
 }
 
-export function TripEditorPage() {
+function tripToDraft(trip: Trip): TripDraft {
+  return {
+    clientDraftId: trip.clientDraftId ?? crypto.randomUUID(),
+    title: trip.title,
+    startDate: trip.startDate,
+    numDays: trip.numDays,
+    input: trip.input,
+    generatedBy: trip.generatedBy,
+    llmModel: trip.llmModel,
+    start: trip.start,
+    days: trip.days,
+  }
+}
+
+function savedPayloadSignature(trip: TripDraft): string {
+  return JSON.stringify({ title: trip.title, startDate: trip.startDate, days: trip.days })
+}
+
+export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?: string } = {}) {
+  const params = useParams()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const savedTripId = propSavedTripId ?? params.id
+  const savedMode = Boolean(savedTripId)
+  const auth = useSession()
+  const savedTripQuery = useQuery({
+    queryKey: ['trip', savedTripId],
+    queryFn: () => {
+      if (!savedTripId || !auth.session) throw new Error('Phiên đăng nhập không còn hiệu lực.')
+      return getTripApi(savedTripId, auth.session.access_token)
+    },
+    enabled: savedMode && Boolean(auth.session),
+    retry: false,
+  })
   const [searchParams, setSearchParams] = useSearchParams()
 
   // Read initial stored trip draft
   const initialDraft = useMemo(() => {
-    return readStoredTripDraft()
-  }, [])
+    return savedMode ? null : readStoredTripDraft()
+  }, [savedMode])
 
   const [notices] = useState<Notice[]>(() => readStoredNotices())
 
   const dayParam = Number(searchParams.get('day'))
   const initialDayIndex = dayParam >= 1 ? dayParam : 1
 
-  const hasValidDraft = Boolean(initialDraft)
+  const hasValidDraft = savedMode || Boolean(initialDraft)
 
   const [state, dispatch] = useReducer(
     tripEditorReducer,
@@ -69,7 +108,9 @@ export function TripEditorPage() {
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [titleInput, setTitleInput] = useState(state.trip?.title ?? '')
   const [isMobileMapOpen, setIsMobileMapOpen] = useState(false)
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [conflictOpen, setConflictOpen] = useState(false)
+  const [saveErrorBanner, setSaveErrorBanner] = useState(() => !savedMode && hasPendingTripSave())
 
   // Sheet states for T-027 and T-028
   const [selectedAlternativeItem, setSelectedAlternativeItem] = useState<TripItem | null>(null)
@@ -87,6 +128,46 @@ export function TripEditorPage() {
   const toastTimerRef = useRef<NodeJS.Timeout | null>(null)
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null)
   const isFirstRender = useRef(true)
+  const hydratedTripIdRef = useRef<string | null>(null)
+  const savedUpdatedAtRef = useRef<string | null>(null)
+  const savedSignatureRef = useRef<string | null>(null)
+  const lastPersistedTripRef = useRef<TripDraft | null>(null)
+  const saveInFlightRef = useRef(false)
+  const latestTripRef = useRef(state.trip)
+  latestTripRef.current = state.trip
+
+  useEffect(() => {
+    const previousTitle = document.title
+    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]')
+    const createdRobots = !robots
+    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.append(robots) }
+    const previousRobots = robots.content
+    document.title = `${savedMode ? vi.pages.trip : vi.pages.draft} · ${brand.name}`
+    robots.content = 'noindex,follow'
+    return () => {
+      document.title = previousTitle
+      if (createdRobots) robots?.remove()
+      else if (previousRobots) robots!.content = previousRobots
+      else robots?.removeAttribute('content')
+    }
+  }, [savedMode])
+
+  useEffect(() => {
+    const navState = location.state as { savedFromGeneration?: boolean } | null
+    if (!navState?.savedFromGeneration) return
+    setToast({ message: vi.tripEditor.savedFromGenerationToast, visible: true })
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null })
+  }, [location.pathname, location.search, location.state, navigate])
+
+  useEffect(() => {
+    if (!savedMode || !savedTripId || !savedTripQuery.data || hydratedTripIdRef.current === savedTripId) return
+    const draft = tripToDraft(savedTripQuery.data)
+    hydratedTripIdRef.current = savedTripId
+    savedUpdatedAtRef.current = savedTripQuery.data.updatedAt
+    savedSignatureRef.current = null
+    dispatch({ type: 'SET_TRIP', payload: draft })
+    setTitleInput(draft.title)
+  }, [savedMode, savedTripId, savedTripQuery.data])
 
   // Sync state.activeDayIndex and searchParams ?day=
   useEffect(() => {
@@ -104,27 +185,71 @@ export function TripEditorPage() {
     }
   }, [searchParams, state.selectedItemId])
 
-  // Debounced auto-save ~800ms
+  // Guest drafts persist locally; saved trips use optimistic state and a debounced PUT.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      return
+    if (!state.trip) return
+    if (!savedMode) {
+      if (isFirstRender.current) { isFirstRender.current = false; return }
+      setSaveStatus('saving')
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
+      autoSaveTimerRef.current = setTimeout(() => {
+        writeStoredTripDraft(state.trip)
+        setSaveStatus('saved')
+      }, 800)
+      return () => { if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current) }
     }
 
-    if (!state.trip) return
+    if (!savedTripId || hydratedTripIdRef.current !== savedTripId || !auth.session || conflictOpen) return
+    const signature = savedPayloadSignature(state.trip)
+    if (savedSignatureRef.current === null) {
+      savedSignatureRef.current = signature
+      lastPersistedTripRef.current = state.trip
+      return
+    }
+    if (signature === savedSignatureRef.current) return
 
     setSaveStatus('saving')
     if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
-
-    autoSaveTimerRef.current = setTimeout(() => {
-      writeStoredTripDraft(state.trip)
-      setSaveStatus('saved')
-    }, 800)
+    const accessToken = auth.session.access_token
+    const runSave = () => {
+      if (saveInFlightRef.current) {
+        autoSaveTimerRef.current = setTimeout(runSave, 800)
+        return
+      }
+      const snapshot = latestTripRef.current
+      if (savedPayloadSignature(snapshot) === savedSignatureRef.current) { setSaveStatus('saved'); return }
+      const updatedAt = savedUpdatedAtRef.current
+      if (!updatedAt) { setSaveStatus('error'); return }
+      saveInFlightRef.current = true
+      void replaceTripApi(savedTripId, {
+        expectedUpdatedAt: updatedAt,
+        title: snapshot.title,
+        startDate: snapshot.startDate,
+        days: snapshot.days,
+      }, accessToken).then((response) => {
+        savedUpdatedAtRef.current = response.trip.updatedAt
+        savedSignatureRef.current = savedPayloadSignature(snapshot)
+        lastPersistedTripRef.current = snapshot
+        setSaveStatus('saved')
+      }).catch((error: unknown) => {
+        if (error instanceof ApiRequestError && error.status === 409) {
+          setConflictOpen(true)
+          setSaveStatus('error')
+          return
+        }
+        if (lastPersistedTripRef.current) {
+          dispatch({ type: 'SET_TRIP', payload: lastPersistedTripRef.current })
+          setTitleInput(lastPersistedTripRef.current.title)
+        }
+        setSaveStatus('error')
+      }).finally(() => { saveInFlightRef.current = false })
+    }
+    autoSaveTimerRef.current = setTimeout(runSave, 800)
 
     return () => {
       if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
     }
-  }, [state.trip])
+  }, [state.trip, savedMode, savedTripId, auth.session, conflictOpen])
 
   const handleSelectDay = useCallback(
     (dayIndex: number) => {
@@ -355,21 +480,42 @@ export function TripEditorPage() {
     []
   )
 
-  // If no draft is available, show empty trip fallback
-  if (!hasValidDraft || !state.trip) {
-    return (
-      <div className="mx-auto max-w-content px-4 py-16 text-center">
-        <h2 className="font-serif text-2xl font-bold text-ink">{vi.tripEditor.emptyTripTitle}</h2>
-        <p className="mt-2 text-sm text-ink-muted">{vi.tripEditor.emptyTripBody}</p>
-        <Link
-          to={paths.planNew}
-          className="mt-6 inline-flex items-center justify-center rounded-control bg-primary px-6 py-2.5 font-semibold text-white shadow-sm hover:bg-primary-hover transition-colors"
-        >
-          {vi.tripEditor.createTripBtn}
-        </Link>
-      </div>
-    )
-  }
+  const handleSaveTrip = useCallback(async () => {
+    if (savedMode) return
+    if (!auth.session) {
+      setLoginActionName(vi.tripEditor.saveAction)
+      setLoginModalOpen(true)
+      return
+    }
+    const parsed = tripCreateRequestSchema.safeParse(state.trip)
+    if (!parsed.success) { setSaveStatus('error'); setSaveErrorBanner(true); return }
+    setSaveStatus('saving')
+    try {
+      const saved = await createTripApi(parsed.data, auth.session.access_token)
+      clearStoredTripDraft()
+      clearPendingTripSave()
+      navigate(paths.trip(saved.id), { replace: true })
+    } catch {
+      writeStoredTripDraft(state.trip)
+      markTripSavePending()
+      setSaveErrorBanner(true)
+      setSaveStatus('error')
+    }
+  }, [auth.session, navigate, savedMode, state.trip])
+
+  const reloadSavedTrip = useCallback(async () => {
+    if (!savedTripId || !auth.session) return
+    const result = await savedTripQuery.refetch()
+    if (!result.data) return
+    const draft = tripToDraft(result.data)
+    savedUpdatedAtRef.current = result.data.updatedAt
+    savedSignatureRef.current = null
+    lastPersistedTripRef.current = null
+    dispatch({ type: 'SET_TRIP', payload: draft })
+    setTitleInput(draft.title)
+    setSaveStatus('saved')
+    setConflictOpen(false)
+  }, [auth.session, savedTripId, savedTripQuery])
 
   const activeDay =
     state.trip.days.find((d) => d.dayIndex === state.activeDayIndex) ?? state.trip.days[0]
@@ -412,29 +558,44 @@ export function TripEditorPage() {
     return { distanceM: distM, timeMin }
   }, [activeDay])
 
+  if (savedMode && auth.status === 'loading') return <p role="status" className="p-12 text-center text-ink-muted">{vi.system.loading}</p>
+  if (savedMode && savedTripQuery.isPending) return <p role="status" className="p-12 text-center text-ink-muted">{vi.tripEditor.loadingSaved}</p>
+  if (savedMode && savedTripQuery.isError) {
+    if (savedTripQuery.error instanceof ApiRequestError && savedTripQuery.error.status === 404) return <NotFoundPage />
+    return <div className="mx-auto max-w-xl px-4 py-16 text-center" role="alert"><p className="font-semibold">{vi.tripEditor.loadSavedError}</p><button className="mt-4 rounded-control bg-primary px-5 py-3 font-semibold text-white" onClick={() => void savedTripQuery.refetch()}>{vi.system.retry}</button></div>
+  }
+  if (savedMode && (!savedTripQuery.data || hydratedTripIdRef.current !== savedTripId)) return <p role="status" className="p-12 text-center text-ink-muted">{vi.tripEditor.loadingSaved}</p>
+  if (!hasValidDraft) return <div className="mx-auto max-w-content px-4 py-16 text-center"><h2 className="font-serif text-2xl font-bold text-ink">{vi.tripEditor.emptyTripTitle}</h2><p className="mt-2 text-sm text-ink-muted">{vi.tripEditor.emptyTripBody}</p><Link to={paths.planNew} className="mt-6 inline-flex items-center justify-center rounded-control bg-primary px-6 py-2.5 font-semibold text-white shadow-sm hover:bg-primary-hover transition-colors">{vi.tripEditor.createTripBtn}</Link></div>
+
   const slotsOrder: Slot[] = ['morning', 'noon', 'afternoon', 'evening']
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      {/* Guest Banner */}
-      <GuestBanner />
+      {/* Account/save banner */}
+      {!savedMode && !auth.isAuthenticated && <GuestBanner />}
+      {!savedMode && auth.isAuthenticated && saveErrorBanner && <div className="mb-6 flex flex-col gap-3 rounded-control border border-warning/30 bg-warning/5 p-4 text-sm sm:flex-row sm:items-center sm:justify-between" role="alert">
+        <p>{vi.tripEditor.saveFailedBanner}</p>
+        <button className="min-h-11 shrink-0 rounded-control bg-primary px-4 font-semibold text-white" onClick={() => void handleSaveTrip()}>{vi.tripEditor.retrySave}</button>
+      </div>}
 
       {/* Generation Notices Banner */}
-      <NoticesBanner notices={notices} />
+      {!savedMode && <NoticesBanner notices={notices} />}
 
       {/* Trip Header */}
       <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 rounded-2xl bg-surface p-5 sm:p-6 shadow-sm border border-line">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 text-xs">
             <span className="font-semibold uppercase tracking-wider text-primary">
-              {vi.tripEditor.draftBadge}
+              {savedMode ? vi.tripEditor.savedBadge : vi.tripEditor.draftBadge}
             </span>
             <span className="text-line-dark">•</span>
             <span className="text-ink-muted">
               {saveStatus === 'saving'
-                ? vi.tripEditor.savingDraft
+                ? savedMode ? vi.tripEditor.savingSaved : vi.tripEditor.savingDraft
                 : saveStatus === 'saved'
-                ? vi.tripEditor.savedDraft
+                ? savedMode ? vi.tripEditor.savedSaved : vi.tripEditor.savedDraft
+                : saveStatus === 'error'
+                ? vi.tripEditor.saveFailed
                 : ''}
             </span>
           </div>
@@ -509,18 +670,15 @@ export function TripEditorPage() {
           </div>
         </div>
 
-        {/* Action buttons: Lưu & Chia sẻ (show login prompt for guests) */}
+        {/* Save draft or share; saved trips auto-save after every edit. */}
         <div className="flex shrink-0 items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-line">
-          <button
+          {!savedMode && <button
             type="button"
-            onClick={() => {
-              setLoginActionName('Lưu lịch trình')
-              setLoginModalOpen(true)
-            }}
+            onClick={() => void handleSaveTrip()}
             className="rounded-control bg-surface-high hover:bg-surface-high/80 border border-line px-4 py-2 text-xs font-semibold text-ink transition-colors"
           >
             Lưu
-          </button>
+          </button>}
           <button
             type="button"
             onClick={() => {
@@ -741,6 +899,16 @@ export function TripEditorPage() {
         onClose={() => setLoginModalOpen(false)}
         actionLabel={loginActionName}
       />
+
+      {conflictOpen && <div className="fixed inset-0 z-50 grid place-items-center bg-ink/50 p-4" role="presentation">
+        <section className="w-full max-w-md rounded-card border border-line bg-surface p-6 shadow-card" role="alertdialog" aria-modal="true" aria-labelledby="trip-conflict-title">
+          <h2 id="trip-conflict-title" className="font-serif text-xl font-semibold">{vi.tripEditor.conflictTitle}</h2>
+          <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            <button className="min-h-11 rounded-control border border-line px-4 font-semibold" onClick={() => setConflictOpen(false)}>{vi.tripEditor.conflictKeep}</button>
+            <button className="min-h-11 rounded-control bg-primary px-4 font-semibold text-white" onClick={() => void reloadSavedTrip()}>{vi.tripEditor.conflictReload}</button>
+          </div>
+        </section>
+      </div>}
 
       {/* Alternatives Sheet */}
       <AlternativesSheet

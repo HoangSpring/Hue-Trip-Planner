@@ -2,6 +2,8 @@ import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi as vitestVi } from 'vitest'
+import type { Session, SupabaseClient } from '@supabase/supabase-js'
+import { AuthProvider } from '@/app/authState'
 import { GeneratingPage } from './GeneratingPage'
 import {
   writeStoredWizardDraft,
@@ -9,6 +11,8 @@ import {
   readStoredTripDraft,
   readStoredWizardDraft,
   readStoredNotices,
+  hasPendingTripSave,
+  clearPendingTripSave,
 } from './storage'
 import * as apiModule from '@/lib/api'
 import { ApiRequestError } from '@/lib/api'
@@ -62,20 +66,34 @@ const mockSuccessResponse: GenerateTripResponse = {
   generation: { by: 'fallback', model: null, durationMs: 150 },
 }
 
-function renderGenerating() {
+const testSession = { access_token: 'test-token', user: { id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' } } as Session
+function authClient(): SupabaseClient {
+  return { auth: {
+    onAuthStateChange(callback: (event: string, session: Session | null) => void) {
+      callback('INITIAL_SESSION', testSession)
+      return { data: { subscription: { unsubscribe: vitestVi.fn() } } }
+    },
+    getSession: async () => ({ data: { session: testSession }, error: null }),
+  } } as unknown as SupabaseClient
+}
+
+function renderGenerating(authenticated = false) {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const root = createRoot(container)
 
   act(() => {
     root.render(
+      <AuthProvider client={authenticated ? authClient() : null}>
       <MemoryRouter initialEntries={['/plan/generating']}>
         <Routes>
           <Route path="/plan/generating" element={<GeneratingPage />} />
           <Route path="/plan/new" element={<div data-testid="plan-new-screen">Plan New Screen</div>} />
           <Route path="/trip/draft" element={<div data-testid="trip-draft-screen">Trip Draft Screen</div>} />
+          <Route path="/trip/:id" element={<div data-testid="saved-trip-screen">Saved Trip Screen</div>} />
         </Routes>
       </MemoryRouter>
+      </AuthProvider>
     )
   })
 
@@ -92,6 +110,7 @@ describe('GeneratingPage (F-06, FL-01, FL-02)', () => {
   beforeEach(() => {
     localStorage.clear()
     clearStoredWizardDraft()
+    clearPendingTripSave()
     vitestVi.restoreAllMocks()
   })
 
@@ -144,6 +163,31 @@ describe('GeneratingPage (F-06, FL-01, FL-02)', () => {
     const notices = readStoredNotices()
     expect(notices).toHaveLength(1)
     expect(notices[0].code).toBe('FALLBACK_USED')
+    unmount()
+  })
+
+  it('saves a generated trip immediately for an authenticated user', async () => {
+    writeStoredWizardDraft({ step: 6, values: { numDays: 2, startDate: '2026-11-01', companion: 'couple', groupSize: 2, interests: ['heritage'], pace: 'moderate', budget: 'mid', transport: 'motorbike', start: null, notes: '' }, input: validTripInput })
+    vitestVi.spyOn(apiModule, 'generateTripApi').mockResolvedValue(mockSuccessResponse)
+    const saveSpy = vitestVi.spyOn(apiModule, 'createTripApi').mockResolvedValue({ id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' } as never)
+    const { container, unmount } = renderGenerating(true)
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 80)) })
+    expect(saveSpy).toHaveBeenCalledTimes(1)
+    expect(container.querySelector('[data-testid="saved-trip-screen"]')).not.toBeNull()
+    expect(readStoredTripDraft()).toBeNull()
+    expect(readStoredWizardDraft()).toBeNull()
+    unmount()
+  })
+
+  it('keeps the generated draft and marks save retry when immediate save fails', async () => {
+    writeStoredWizardDraft({ step: 6, values: { numDays: 2, startDate: '2026-11-01', companion: 'couple', groupSize: 2, interests: ['heritage'], pace: 'moderate', budget: 'mid', transport: 'motorbike', start: null, notes: '' }, input: validTripInput })
+    vitestVi.spyOn(apiModule, 'generateTripApi').mockResolvedValue(mockSuccessResponse)
+    vitestVi.spyOn(apiModule, 'createTripApi').mockRejectedValue(new TypeError('network error'))
+    const { container, unmount } = renderGenerating(true)
+    await act(async () => { await new Promise((resolve) => setTimeout(resolve, 80)) })
+    expect(container.querySelector('[data-testid="trip-draft-screen"]')).not.toBeNull()
+    expect(readStoredTripDraft()?.clientDraftId).toBe(mockSuccessResponse.draft.clientDraftId)
+    expect(hasPendingTripSave()).toBe(true)
     unmount()
   })
 

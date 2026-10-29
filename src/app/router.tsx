@@ -40,7 +40,9 @@ const page = (title: string, noindex = false) => <Suspense fallback={loading}><P
 
 function TripIdPage() {
   const { id = '' } = useParams()
-  return uuidSchema.safeParse(id).success ? page(vi.pages.trip, true) : <NotFoundPage />
+  return uuidSchema.safeParse(id).success
+    ? <Suspense fallback={loading}><TripEditorPage savedTripId={id} /></Suspense>
+    : <NotFoundPage />
 }
 
 export const routePaths = [

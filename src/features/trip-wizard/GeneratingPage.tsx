@@ -3,14 +3,20 @@ import { useNavigate } from 'react-router-dom'
 import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
 import { generateTripApi, ApiRequestError } from '@/lib/api'
+import { createTripApi } from '@/lib/api'
 import { Button } from '@/components/ui/Button'
+import { useSession } from '@/features/auth/hooks/useSession'
+import { tripCreateRequestSchema } from '@shared/schemas'
 import {
   readStoredWizardDraft,
   formValuesToTripInput,
   writeStoredTripDraft,
+  clearStoredTripDraft,
   clearStoredWizardDraft,
   writeStoredNotices,
   isLocalStorageAvailable,
+  markTripSavePending,
+  clearPendingTripSave,
 } from './storage'
 import type { TripInput } from '@shared/schemas'
 
@@ -19,6 +25,7 @@ type StageStatus = 'pending' | 'processing' | 'done'
 
 export function GeneratingPage() {
   const navigate = useNavigate()
+  const auth = useSession()
   const [currentStageIndex, setCurrentStageIndex] = useState(0)
   const [errorState, setErrorState] = useState<{
     code: 'RATE_LIMITED' | 'NO_CANDIDATES' | 'NETWORK' | 'GENERIC'
@@ -96,6 +103,21 @@ export function GeneratingPage() {
       // Clear wizard draft now that generation succeeded
       clearStoredWizardDraft()
 
+      if (auth.session) {
+        try {
+          const createRequest = tripCreateRequestSchema.parse(response.draft)
+          const savedTrip = await createTripApi(createRequest, auth.session.access_token)
+          clearStoredTripDraft()
+          clearPendingTripSave()
+          navigate(paths.trip(savedTrip.id), { replace: true, state: { savedFromGeneration: true } })
+          return
+        } catch {
+          markTripSavePending()
+          navigate(paths.tripDraft, { replace: true })
+          return
+        }
+      }
+
       // Replace navigation to /trip/draft so Back button does not return to generating
       navigate(paths.tripDraft, { replace: true })
     } catch (err: unknown) {
@@ -152,7 +174,7 @@ export function GeneratingPage() {
         body: err instanceof Error ? err.message : vi.generating.errors.genericErrorBody,
       })
     }
-  }, [navigate])
+  }, [auth.session, navigate])
 
   useEffect(() => {
     isMountedRef.current = true

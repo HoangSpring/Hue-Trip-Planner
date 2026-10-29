@@ -2,7 +2,9 @@ import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Session, SupabaseClient } from '@supabase/supabase-js'
+import { AuthProvider } from '@/app/authState'
 import { TripEditorPage } from './TripEditorPage'
 import type { TripDraft } from '@shared/schemas'
 
@@ -127,7 +129,20 @@ function makeMockDraft(): TripDraft {
   }
 }
 
-function renderTripEditor(initialEntries = ['/trip/draft?day=1']) {
+const savedTripId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
+const userSession = { access_token: 'test-token', user: { id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' } } as Session
+
+function mockAuthClient(session: Session): SupabaseClient {
+  return { auth: {
+    onAuthStateChange(callback: (event: string, session: Session | null) => void) {
+      callback('INITIAL_SESSION', session)
+      return { data: { subscription: { unsubscribe: vi.fn() } } }
+    },
+    getSession: async () => ({ data: { session }, error: null }),
+  } } as unknown as SupabaseClient
+}
+
+function renderTripEditor(initialEntries = ['/trip/draft?day=1'], authenticated = false) {
   const container = document.createElement('div')
   document.body.appendChild(container)
   const root = createRoot(container)
@@ -138,12 +153,15 @@ function renderTripEditor(initialEntries = ['/trip/draft?day=1']) {
   act(() => {
     root.render(
       <QueryClientProvider client={queryClient}>
+        <AuthProvider client={authenticated ? mockAuthClient(userSession) : null}>
         <MemoryRouter initialEntries={initialEntries}>
           <Routes>
             <Route path="/trip/draft" element={<TripEditorPage />} />
+            <Route path="/trip/:id" element={<TripEditorPage />} />
             <Route path="/plan/new" element={<div>Plan New Page</div>} />
           </Routes>
         </MemoryRouter>
+        </AuthProvider>
       </QueryClientProvider>
     )
   })
@@ -169,6 +187,7 @@ describe('TripEditorPage', () => {
       mounted.unmount()
       mounted = null
     }
+    vi.unstubAllGlobals()
   })
 
   it('renders empty trip message when no trip draft in localStorage', () => {
@@ -404,4 +423,115 @@ describe('TripEditorPage', () => {
 
     expect(mounted.container.textContent).toContain('Thêm địa điểm vào ngày 1')
   })
+
+  it('loads an owned saved trip and autosaves a title edit after the debounce', async () => {
+    const draft = makeMockDraft()
+    const trip = {
+      ...draft,
+      id: savedTripId,
+      isShared: false,
+      shareToken: null,
+      createdAt: '2026-10-29T00:00:00.000Z',
+      updatedAt: '2026-10-29T00:00:00.000Z',
+    }
+    let persistedTrip = trip
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      const body = init?.body ? JSON.parse(String(init.body)) as { title?: string } : null
+      if (init?.method === 'PUT') persistedTrip = { ...persistedTrip, title: body?.title ?? persistedTrip.title, updatedAt: '2026-10-29T00:00:01.000Z' }
+      return {
+        ok: true,
+        status: 200,
+        headers: new Headers(),
+        json: async () => init?.method === 'PUT' ? { trip: persistedTrip, warnings: [] } : persistedTrip,
+      } as Response
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    mounted = renderTripEditor([`/trip/${savedTripId}`], true)
+
+    for (let attempt = 0; attempt < 60 && !mounted.container.textContent?.includes(draft.title); attempt += 1) {
+      await act(async () => new Promise((resolve) => window.setTimeout(resolve, 25)))
+    }
+    expect(mounted.container.textContent).toContain(draft.title)
+    expect(mounted.container.textContent).toContain('Lịch trình đã lưu')
+
+    const editButton = mounted.container.querySelector<HTMLButtonElement>(`button[title="Chỉnh sửa tên chuyến đi"]`)
+    await act(async () => editButton?.click())
+    const titleInput = mounted.container.querySelector<HTMLInputElement>('input[type="text"]')
+    expect(titleInput).not.toBeNull()
+    if (!titleInput) return
+    await act(async () => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+      setter?.call(titleInput, 'Chuyến đi đã đổi tên')
+      titleInput.dispatchEvent(new Event('input', { bubbles: true }))
+      titleInput.dispatchEvent(new Event('change', { bubbles: true }))
+      titleInput.form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+    })
+    for (let attempt = 0; attempt < 60 && !fetchMock.mock.calls.some(([, init]) => init?.method === 'PUT'); attempt += 1) {
+      await act(async () => new Promise((resolve) => window.setTimeout(resolve, 30)))
+    }
+    const putCall = fetchMock.mock.calls.find(([, init]) => init?.method === 'PUT')
+    expect(putCall).toBeDefined()
+    expect(JSON.parse(String(putCall?.[1]?.body))).toMatchObject({ title: 'Chuyến đi đã đổi tên' })
+    mounted.unmount()
+    mounted = renderTripEditor([`/trip/${savedTripId}`], true)
+    await waitForSavedTrip(mounted.container, 'Chuyến đi đã đổi tên')
+  }, 10000)
+
+  it('shows the conflict prompt when the saved trip changed in another tab', async () => {
+    const draft = makeMockDraft()
+    const trip = { ...draft, id: savedTripId, isShared: false, shareToken: null, createdAt: '2026-10-29T00:00:00.000Z', updatedAt: '2026-10-29T00:00:00.000Z' }
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => init?.method === 'PUT'
+      ? { ok: false, status: 409, headers: new Headers(), json: async () => ({ error: { code: 'CONFLICT', message: 'Conflict', requestId: 'test' } }) } as Response
+      : { ok: true, status: 200, headers: new Headers(), json: async () => trip } as Response)
+    vi.stubGlobal('fetch', fetchMock)
+    mounted = renderTripEditor([`/trip/${savedTripId}`], true)
+    await waitForSavedTrip(mounted.container, draft.title)
+    await editSavedTripTitle(mounted.container, 'Tên mới')
+    await waitForText(mounted.container, 'Lịch trình đã thay đổi ở nơi khác. Tải lại?')
+    expect(mounted.container.textContent).toContain('Tải bản mới')
+  }, 10000)
+
+  it('rolls an optimistic title change back after a network failure', async () => {
+    const draft = makeMockDraft()
+    const trip = { ...draft, id: savedTripId, isShared: false, shareToken: null, createdAt: '2026-10-29T00:00:00.000Z', updatedAt: '2026-10-29T00:00:00.000Z' }
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, init?: RequestInit) => {
+      if (init?.method === 'PUT') throw new TypeError('fetch failed')
+      return { ok: true, status: 200, headers: new Headers(), json: async () => trip } as Response
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    mounted = renderTripEditor([`/trip/${savedTripId}`], true)
+    await waitForSavedTrip(mounted.container, draft.title)
+    await editSavedTripTitle(mounted.container, 'Tên chưa lưu')
+    await waitForText(mounted.container, 'Lưu lỗi')
+    expect(mounted.container.querySelector('h1')?.textContent).toBe(draft.title)
+  }, 10000)
 })
+
+async function waitForSavedTrip(container: HTMLElement, title: string) {
+  for (let attempt = 0; attempt < 60 && !container.textContent?.includes(title); attempt += 1) {
+    await act(async () => new Promise((resolve) => window.setTimeout(resolve, 25)))
+  }
+  expect(container.textContent).toContain(title)
+}
+
+async function waitForText(container: HTMLElement, text: string) {
+  for (let attempt = 0; attempt < 80 && !container.textContent?.includes(text); attempt += 1) {
+    await act(async () => new Promise((resolve) => window.setTimeout(resolve, 25)))
+  }
+  expect(container.textContent).toContain(text)
+}
+
+async function editSavedTripTitle(container: HTMLElement, title: string) {
+  const editButton = container.querySelector<HTMLButtonElement>('button[title="Chỉnh sửa tên chuyến đi"]')
+  await act(async () => editButton?.click())
+  const titleInput = container.querySelector<HTMLInputElement>('input[type="text"]')
+  expect(titleInput).not.toBeNull()
+  if (!titleInput) return
+  await act(async () => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+    setter?.call(titleInput, title)
+    titleInput.dispatchEvent(new Event('input', { bubbles: true }))
+    titleInput.dispatchEvent(new Event('change', { bubbles: true }))
+    titleInput.form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }))
+  })
+}

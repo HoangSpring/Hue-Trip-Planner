@@ -289,11 +289,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** toàn bộ test `docs/06` mục 15 cho nhóm này; cách ly dữ liệu giữa hai user; địa điểm `archived` vẫn hiển thị trong chuyến đi cũ.
 - **Ghi chú:** route/service/schema, client API và test bằng Supabase giả đã đạt. Smoke với Auth/DB thật chờ chủ dự án áp dụng migration 10; `pnpm smoke:trips` chưa chạy.
 
-### [ ] T-036 · Lưu chuyến đi từ trình chỉnh sửa (chế độ đã lưu) · `L`
+### [x] T-036 · Lưu chuyến đi từ trình chỉnh sửa (chế độ đã lưu) · `L`
 - **Tham chiếu:** `docs/03` FL-02, FL-04; `docs/04` (trang `/trip/:id`)
 - **Dep:** T-035, T-026, T-008
 - **Làm:** `TripEditorPage` chế độ `saved`: tải từ API, **tự động lưu** (debounce ~800 ms) qua `PUT`, chỉ báo "Đang lưu / Đã lưu", xử lý `409` ("Tải lại?"), cập nhật lạc quan + hoàn lại khi lỗi; `/plan/generating` lưu ngay khi đã đăng nhập (FL-02) và xử lý lưu lỗi (giữ nháp, banner "Lưu lại").
 - **Hoàn thành khi:** AC F-07 phần lưu đạt; tải lại trang giữ nguyên thay đổi; người không phải chủ nhận 404.
+- **Ghi chú:** đã kiểm thử tải lại trip đã lưu, autosave debounce, xung đột 409 và rollback khi lỗi mạng; API tiếp tục dùng JWT để RLS trả 404 cho trip không thuộc người dùng.
 
 ### [x] T-037 · Trang Đăng nhập/Đăng ký/Quên mật khẩu (F-08) · `M`
 - **Tham chiếu:** `docs/02` F-08; `docs/03` FL-03; `docs/08` S14
