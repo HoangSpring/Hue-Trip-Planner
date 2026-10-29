@@ -4,20 +4,20 @@ export type FakeLlmScenario =
   | 'valid' | 'unknown_id' | 'duplicate_id' | 'missing_day' | 'no_lunch' | 'invalid_slot'
   | 'invalid_json' | 'timeout' | 'too_long' | 'url_html_reason' | 'extra_field'
 
-type Candidate = { id?: string; category?: string; mealType?: string[]; bestTime?: string[] }
+type Candidate = { i?: string; c?: string; m?: string[]; b?: string[] }
 
 function completionFor(userText: string, scenario: FakeLlmScenario): LlmCompletion {
-  let user: { trip?: { numDays?: number }; candidates?: Candidate[] } = {}
+  let user: { trip?: { n?: number }; candidates?: Candidate[] } = {}
   try {
     user = JSON.parse(userText) as typeof user
   } catch {
     // This fake returns a deliberately malformed result when its input isn't JSON.
   }
-  const numDays = Math.max(1, Math.min(5, user.trip?.numDays ?? 1))
+  const numDays = Math.max(1, Math.min(5, user.trip?.n ?? 1))
   const candidates = user.candidates ?? []
-  const availableIds = candidates.map(({ id }) => id).filter((id): id is string => typeof id === 'string')
-  const lunchId = candidates.find(({ category, mealType }) => category === 'food' && (!mealType?.length || mealType.includes('lunch')))?.id
-  const nonFoodId = availableIds.find((id) => candidates.find((candidate) => candidate.id === id)?.category !== 'food')
+  const availableIds = candidates.map(({ i }) => i).filter((id): id is string => typeof id === 'string')
+  const lunchId = candidates.find(({ c, m }) => c === 'food' && (!m?.length || m.includes('lunch')))?.i
+  const nonFoodId = availableIds.find((id) => candidates.find((candidate) => candidate.i === id)?.c !== 'food')
   const days = Array.from({ length: numDays }, (_, index) => ({
     dayIndex: index + 1,
     items: [

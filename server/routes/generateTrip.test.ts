@@ -11,6 +11,10 @@ import { FixturePlacesRepo } from '../itinerary/placesRepo'
 import type { CandidateRecord } from '../itinerary/types'
 import { createGenerateTripRoutes } from './generateTrip'
 import type { GenerationEvent, GenerationStore } from '../itinerary/generationStore'
+import { FakeLlmClient } from '../llm/fake'
+import type { FakeLlmScenario } from '../llm/fake'
+import type { LlmClient } from '../llm/client'
+import { GeminiApiError } from '../llm/providers/gemini'
 
 const fixturePlaces = placeDetailSchema.array().parse(JSON.parse(readFileSync(resolve('tests/fixtures/places.sample.json'), 'utf8')))
 const fixtureRecords: CandidateRecord[] = fixturePlaces.map((place) => ({
@@ -27,12 +31,13 @@ const fixedNow = new Date('2026-10-26T02:00:00.000Z')
 
 class FakeGenerationStore implements GenerationStore {
   readonly recorded: GenerationEvent[] = []
-  constructor(readonly recent: string[] = []) {}
+  constructor(readonly recent: string[] = [], readonly recentCalls: string[] = []) {}
   async listRecent() { return this.recent }
+  async listRecentLlmCalls() { return this.recentCalls }
   async record(event: GenerationEvent) { this.recorded.push(event) }
 }
 
-function appFor(options: { records?: CandidateRecord[]; store?: FakeGenerationStore; auth?: MiddlewareHandler<ApiEnv> } = {}) {
+function appFor(options: { records?: CandidateRecord[]; store?: FakeGenerationStore; auth?: MiddlewareHandler<ApiEnv>; llm?: LlmClient; enabled?: boolean; callCap?: number } = {}) {
   const store = options.store ?? new FakeGenerationStore()
   const app = new Hono<ApiEnv>()
   app.use('*', requestIdMiddleware)
@@ -41,15 +46,19 @@ function appFor(options: { records?: CandidateRecord[]; store?: FakeGenerationSt
     createPlacesRepo: () => new FixturePlacesRepo(options.records ?? fixtureRecords),
     createGenerationStore: () => store,
     validateInterests: async () => true,
+    createLlmClient: () => options.llm ?? new FakeLlmClient('valid'),
+    llmEnabled: options.enabled ?? false,
+    llmDailyCallCap: options.callCap ?? 20,
+    logTelemetry: () => undefined,
     now: () => new Date(fixedNow),
     rateLimitSalt: 'test-only-salt',
   }))
   return { app, store }
 }
 
-async function post(app: Hono<ApiEnv>, body: unknown) {
+async function post(app: Hono<ApiEnv>, body: unknown, signal?: AbortSignal) {
   return app.fetch(new Request('http://localhost/api/trips/generate', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'fixture-test' }, body: JSON.stringify(body),
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'fixture-test' }, body: JSON.stringify(body), signal,
   }))
 }
 
@@ -118,5 +127,67 @@ describe('POST /api/trips/generate', () => {
     expect(response.status).toBe(200)
     expect(store.recorded[0].userId).toBeNull()
     expect(store.recorded[0].isGuest).toBe(true)
+  })
+
+  it('uses LLM when enabled, records attempt and aggregate telemetry without notes', async () => {
+    const { app, store } = appFor({ enabled: true })
+    const response = await post(app, requestBody)
+    const body = await response.json()
+    expect(response.status).toBe(200)
+    expect(body.generation.by).toBe('llm')
+    expect(store.recorded.filter(({ llmCallEvent }) => llmCallEvent)).toHaveLength(1)
+    expect(store.recorded.some(({ status, generatedBy }) => status === 'success' && generatedBy === 'llm')).toBe(true)
+    expect(JSON.stringify(store.recorded)).not.toContain(requestBody.input.notes)
+  })
+
+  it.each([
+    ['timeout', new FakeLlmClient('timeout', 5), 'timeout'],
+    ['invalid JSON', new FakeLlmClient('invalid_json'), 'invalid_json'],
+    ['quota', { completeJson: async () => { throw new GeminiApiError('quota', 429) } }, 'quota'],
+  ] as const)('returns a valid 200 fallback for provider %s', async (_label, llm, reason) => {
+    const { app, store } = appFor({ enabled: true, llm })
+    const response = await post(app, requestBody)
+    const body = await response.json()
+    expect(response.status).toBe(200)
+    expect(body.generation.by).toBe('fallback')
+    expect(store.recorded.some((event) => event.fallbackReason === reason)).toBe(true)
+    expect(body.notices.map((notice: { code: string }) => notice.code)).toContain('FALLBACK_USED')
+  })
+
+  it.each(['unknown_id', 'duplicate_id', 'missing_day', 'no_lunch', 'invalid_slot', 'url_html_reason'] as const)(
+    'returns 200 and validates %s model output', async (scenario: FakeLlmScenario) => {
+      const { app } = appFor({ enabled: true, llm: new FakeLlmClient(scenario) })
+      const response = await post(app, requestBody)
+      const body = await response.json() as { draft: { days: Array<{ items: Array<{ placeId: string; reason: string }> }> } }
+      expect(response.status).toBe(200)
+      const items = body.draft.days.flatMap((day: { items: Array<{ placeId: string; reason: string }> }) => day.items)
+      expect(new Set(items.map(({ placeId }) => placeId)).size).toBe(items.length)
+      expect(items.every(({ placeId }) => fixtureRecords.some(({ place }) => place.id === placeId && place.status === 'published'))).toBe(true)
+      expect(items.every(({ reason }) => !/(https?:\/\/|<[^>]*>|[#>*_~`])/i.test(reason))).toBe(true)
+    },
+  )
+
+  it('enforces the LLM daily call cap in API and returns a valid fallback', async () => {
+    const { app, store } = appFor({ enabled: true, callCap: 0 })
+    const response = await post(app, requestBody)
+    const body = await response.json()
+    expect(response.status).toBe(200)
+    expect(body.generation.by).toBe('fallback')
+    expect(store.recorded.some((event) => event.fallbackReason === 'cap_reached')).toBe(true)
+    expect(store.recorded.filter(({ llmCallEvent }) => llmCallEvent)).toHaveLength(0)
+  })
+
+  it('stops the model request when the client aborts and finalizes with fallback', async () => {
+    const controller = new AbortController()
+    const llm: LlmClient = { completeJson: async ({ signal }) => new Promise((_resolve, reject) => {
+      signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')), { once: true })
+    }) }
+    const { app } = appFor({ enabled: true, llm })
+    const pending = post(app, requestBody, controller.signal)
+    setTimeout(() => controller.abort(), 5)
+    const response = await pending
+    const body = await response.json()
+    expect(response.status).toBe(200)
+    expect(body.generation.by).toBe('fallback')
   })
 })

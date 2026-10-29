@@ -255,9 +255,10 @@ Thông điệp người dùng là **một đối tượng JSON** có cấu trúc
 }
 ```
 
-- `summary` = `short_description` (cắt tối đa 160 ký tự). Tọa độ làm tròn 4 chữ số thập phân.
+- `summary`/`s` = `short_description` (cắt tối đa 120 ký tự). Tọa độ làm tròn 4 chữ số thập phân trong `xy`.
 - `userNotes` (nếu có) đã được **làm sạch** (mục 12) và nằm trong một trường riêng, **không** nối vào hướng dẫn hệ thống.
-- Ước lượng kích thước: ~60 token mỗi ứng viên → nhóm 40 điểm ≈ 2 400 token + prompt hệ thống ≈ 900 token.
+- Ứng viên dùng key ngắn (`i,n,c,a,xy,t,b,m,v,p,o,z,d,q,s`) và bỏ giá trị rỗng; `userNotes` chỉ có khi còn nội dung sau làm sạch. Tăng `PROMPT_VERSION` khi đổi biểu diễn.
+- Đo trước khi rút gọn: 9 444 token input / 40 ứng viên = 236,1 token/ứng viên, gồm cả phần prompt cố định. Bản compact đặt mục tiêu ≤150 token/ứng viên theo cùng phép chia và báo số đo eval mới; chủ dự án cần chấm chất lượng.
 
 ### 8.3 System prompt (mẫu)
 
@@ -518,7 +519,7 @@ computeWarnings(trip: { days: TripDay[]; transport; startDate }): Warning[]
 
 ## 16. Quan sát, chi phí
 
-Mỗi lần sinh ghi `generation_events` (xem `docs/05`): `status`, `generated_by`, `llm_model`, `input_tokens`, `output_tokens`, `duration_ms`, `error_code`. Provider cũng đọc `total_thought_tokens` từ phản hồi và báo riêng trong ping; không cộng trùng vào `output_tokens`. Thêm vào log ứng dụng (không chứa nội dung người dùng): `PROMPT_VERSION`, `poolSize`, `repairs`, `coverage`, `fallbackReason` (`llm_disabled` | `cap_reached` | `timeout` | `invalid_json` | `low_coverage` | `llm_error`).
+Mỗi lần sinh ghi `generation_events` (xem `docs/05`): `status`, `generated_by`, `llm_model`, `input_tokens`, `output_tokens`, `duration_ms`, `error_code`. Ghi một hàng cho từng lần gọi LLM (kể cả thất bại/lần sửa) với `error_code` có tiền tố `LLM_CALL:` để cầu chì đếm đúng số lần; hàng tổng kết yêu cầu được tách khỏi hàng attempt. Thinking token hiện ghi trong telemetry an toàn vì schema DB chưa có cột. Thêm vào log ứng dụng (không chứa nội dung người dùng): `PROMPT_VERSION`, `poolSize`, `repairs`, `coverage`, `fallbackReason` (`llm_disabled` | `cap_reached` | `timeout` | `invalid_json` | `low_coverage` | `llm_error` | `quota`).
 
 **Chỉ số theo dõi hằng tuần:** tỷ lệ dùng dự phòng (mục tiêu < 10%), p50/p90 thời gian sinh (p90 ≤ 15s), số mục bị sửa trung bình/lần, chi phí token/lần, tỷ lệ người dùng xóa/thay điểm ngay sau khi sinh (chỉ báo chất lượng).
 

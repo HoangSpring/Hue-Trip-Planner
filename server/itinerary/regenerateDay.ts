@@ -16,6 +16,14 @@ import type { PlacesRepo } from './placesRepo'
 import { buildReason } from './reasons'
 import { scheduleDay, type ScheduleRequest } from './scheduler'
 import type { CandidateRecord, ScoredCandidate } from './types'
+import type { LlmClient } from '../llm/client'
+import { buildCandidatePool } from './pool'
+import { buildUserMessage, serializeUserMessage, SYSTEM_PROMPT } from './prompt'
+import { llmItinerarySchema } from '@shared/schemas/llmItinerary'
+import { validateLlmItinerary } from './validate'
+import type { LlmAttempt } from './pipeline'
+import { GeminiApiError } from '../llm/providers/gemini'
+import { PROMPT_VERSION } from './prompt'
 
 function stableUuid(seed: string | number, salt: string): string {
   const input = `${seed}:${salt}`
@@ -53,7 +61,15 @@ function slotsForPace(pace: 'relaxed' | 'moderate' | 'packed'): Slot[] {
 export async function regenerateDay(
   repo: PlacesRepo,
   req: RegenerateDayRequest,
-  options: { now: Date; seed?: string; signal?: AbortSignal }
+  options: {
+    now: Date; seed?: string; signal?: AbortSignal
+    llm?: {
+      client: LlmClient; enabled: boolean; dailyCallCount: number; dailyCallCap: number; timeoutMs: number
+      totalTimeoutMs?: number
+      onAttempt?: (attempt: LlmAttempt) => Promise<void>
+      onMetrics?: (metrics: { promptVersion: string; poolSize: number; repairs: number; coverage: number | null; fallbackReason: string | null; llmCalls: number; model: string | null; inputTokens: number; outputTokens: number; thinkingTokens: number }) => void
+    }
+  }
 ): Promise<RegenerateDayResponse> {
   const startTime = Date.now()
   const { input, dayIndex, date, lockedItems, excludePlaceIds } = req
@@ -114,6 +130,16 @@ export async function regenerateDay(
   const availablePool = selection.candidates.filter((c) => !usedIds.has(c.place.id))
 
   const selectedAdditional: ScheduleRequest[] = []
+  const llmReasons = new Map<string, string>()
+  let generatedBy: 'llm' | 'fallback' = 'fallback'
+  let llmModel: string | null = null
+  let fallbackReason: 'llm_disabled' | 'cap_reached' | 'timeout' | 'invalid_json' | 'low_coverage' | 'llm_error' | 'quota' | null = null
+  let llmCalls = 0
+  let repairs = 0
+  let coverage: number | null = null
+  let inputTokens = 0
+  let outputTokens = 0
+  let thinkingTokens = 0
 
   // Fill noon slot first if missing
   const notices: Notice[] = [
@@ -149,6 +175,120 @@ export async function regenerateDay(
     }
   }
 
+  if (!options.llm?.enabled) fallbackReason = 'llm_disabled'
+  else if (options.llm.dailyCallCount >= options.llm.dailyCallCap) fallbackReason = 'cap_reached'
+  else if (options.llm.enabled && availablePool.length === 0) fallbackReason = 'low_coverage'
+  if (options.llm?.enabled && options.llm.dailyCallCount < options.llm.dailyCallCap && availablePool.length > 0) {
+    const lockedCandidates: ScoredCandidate[] = lockedHydrated.map(({ record }) => ({
+      place: record.place, tagWeights: record.tagWeights, featured: record.featured, score: 1,
+    }))
+    const available = buildCandidatePool(availablePool, 1, targetCount)
+    const llmCandidates = [...available, ...lockedCandidates]
+    const dayInput = { ...input, numDays: 1, startDate: effectiveDate }
+    const message = {
+      ...buildUserMessage(dayInput, llmCandidates),
+      locked: lockedHydrated.map(({ record, slot }) => ({ placeId: record.place.id, slot })),
+    }
+    const started = Date.now()
+    let model: string | null = null
+    const complete = async (user: string) => {
+      const attemptStart = Date.now()
+      const remainingMs = (options.llm?.totalTimeoutMs ?? 15_000) - (Date.now() - started)
+      if (remainingMs <= 0) throw new DOMException('Pipeline timeout', 'TimeoutError')
+      llmCalls++
+      const controller = new AbortController()
+      const abortParent = () => controller.abort(options.signal?.reason)
+      if (options.signal?.aborted) abortParent()
+      else options.signal?.addEventListener('abort', abortParent, { once: true })
+      const timer = setTimeout(() => controller.abort(new DOMException('LLM timeout', 'TimeoutError')),
+        Math.min(options.llm?.timeoutMs ?? 12_000, remainingMs))
+      let error: unknown = null
+      let result: Awaited<ReturnType<LlmClient['completeJson']>> | null = null
+      try {
+        result = await options.llm!.client.completeJson({
+          system: `${SYSTEM_PROMPT} Locked items in the JSON locked block must remain at their exact slots.`,
+          user, schema: llmItinerarySchema, maxOutputTokens: ITINERARY_CONFIG.llm.maxOutputTokens, signal: controller.signal,
+        })
+        model = result.model
+        inputTokens += result.usage.inputTokens
+        outputTokens += result.usage.outputTokens
+        thinkingTokens += result.usage.thinkingTokens
+        return result
+      } catch (caught) {
+        error = caught
+        throw caught
+      } finally {
+        clearTimeout(timer)
+        options.signal?.removeEventListener('abort', abortParent)
+        await options.llm?.onAttempt?.({
+          result: error ? 'error' : 'success', model: result?.model ?? null,
+          inputTokens: result?.usage.inputTokens ?? 0, outputTokens: result?.usage.outputTokens ?? 0,
+          thinkingTokens: result?.usage.thinkingTokens ?? 0, durationMs: Date.now() - attemptStart,
+          errorCode: error instanceof Error ? error.name : null,
+        })
+      }
+    }
+    try {
+      let first: Awaited<ReturnType<LlmClient['completeJson']>>
+      try {
+        first = await complete(serializeUserMessage(message))
+      } catch (error) {
+        if (!(error instanceof GeminiApiError && error.kind === 'bad_json' &&
+          Date.now() - started < ITINERARY_CONFIG.llm.repairIfElapsedUnderMs &&
+          options.llm.dailyCallCount + llmCalls < options.llm.dailyCallCap)) throw error
+        repairs = 1
+        first = await complete(JSON.stringify({
+          task: 'The previous response was not valid JSON. Generate the requested itinerary again as strict JSON only.',
+          originalRequest: message,
+        }))
+      }
+      const validated = await validateLlmItinerary(first.json, {
+        input: dayInput,
+        candidates: llmCandidates,
+        startedAt: started,
+        now: Date.now,
+        repair: repairs > 0 ? undefined : async () => (await complete(JSON.stringify({
+          task: 'Repair the previous output as strict itinerary JSON. Keep locked item ids and slots.',
+          request: message,
+          previousOutput: first.json,
+        }))).json,
+      })
+      repairs = Math.max(repairs, validated.repairs)
+      coverage = validated.coverage
+      if (!validated.accepted) fallbackReason = validated.reason ?? 'low_coverage'
+      if (validated.accepted) {
+        const lockedIds = new Set(lockedCandidates.map(({ place }) => place.id))
+        const acceptedItems = validated.days[0]?.items.filter(({ placeId }) => !lockedIds.has(placeId)) ?? []
+        const maximumAdditional = Math.max(0, targetCount - lockedHydrated.length)
+        const trimmed = acceptedItems.filter(({ slot }) => slot === 'noon').concat(
+          acceptedItems.filter(({ slot }) => slot !== 'noon')
+            .sort((a, b) => b.candidate.score - a.candidate.score)
+            .slice(0, Math.max(0, maximumAdditional - acceptedItems.filter(({ slot }) => slot === 'noon').length)),
+        )
+        const hasLunch = hasNoonFood || trimmed.some(({ slot, candidate }) => slot === 'noon' && candidate.place.category === 'food')
+        const minCount = Math.max(ITINERARY_CONFIG.itemsPerDay.floor,
+          ITINERARY_CONFIG.itemsPerDay[input.pace][0] - (input.companion === 'seniors' || input.companion === 'family_kids' ? 1 : 0))
+        if (trimmed.length + lockedHydrated.length >= minCount && hasLunch) {
+          selectedAdditional.splice(0, selectedAdditional.length, ...trimmed.map((item) => ({ candidate: item.candidate, slot: item.slot })))
+          trimmed.forEach((item) => llmReasons.set(item.placeId, item.reason))
+          generatedBy = 'llm'
+          llmModel = model
+          fallbackReason = null
+          notices.splice(0, notices.length, ...selection.notices)
+        }
+      }
+    } catch (error) {
+      // Fail closed to the deterministic fallback; no provider response/error body is logged.
+      fallbackReason = error instanceof GeminiApiError && (error.kind === 'quota' || error.kind === 'quota_zero')
+        ? 'quota' : error instanceof GeminiApiError && error.kind === 'timeout' ||
+          error instanceof DOMException && (error.name === 'TimeoutError' || error.name === 'AbortError')
+          ? 'timeout' : 'llm_error'
+    }
+  }
+  if (fallbackReason === 'llm_disabled' && !notices.some(({ code }) => code === 'LLM_DISABLED')) {
+    notices.push({ code: 'LLM_DISABLED', message: 'AI đang tắt; ngày được tạo bằng phương án dự phòng.' })
+  }
+
   // Build scheduler requests
   const scheduleRequests: ScheduleRequest[] = [
     ...lockedHydrated.map((l) => ({
@@ -176,7 +316,7 @@ export async function regenerateDay(
     .map((entry) => entry.candidate.place.id))
   const dayItems: TripItem[] = scheduledResult.items.map((entry, index) => {
     const isLocked = lockedPlaceIdSet.has(entry.candidate.place.id)
-    const reason = buildReason(entry.candidate, input, entry.slot)
+    const reason = llmReasons.get(entry.candidate.place.id) ?? buildReason(entry.candidate, input, entry.slot)
 
     return {
       id: stableUuid(seed, `item-${index}`),
@@ -191,7 +331,7 @@ export async function regenerateDay(
       reason,
       note: null,
       isLocked,
-      addedBy: isLocked ? 'user' : 'fallback',
+      addedBy: isLocked ? 'user' : generatedBy === 'llm' ? 'ai' : 'fallback',
     }
   })
 
@@ -263,13 +403,18 @@ export async function regenerateDay(
 
   const durationMs = Date.now() - startTime
 
+  options.llm?.onMetrics?.({
+    promptVersion: PROMPT_VERSION, poolSize: availablePool.length, repairs, coverage, fallbackReason,
+    llmCalls, model: llmModel, inputTokens, outputTokens, thinkingTokens,
+  })
+
   return {
     day,
     warnings,
     notices,
     generation: {
-      by: 'fallback',
-      model: null,
+      by: generatedBy,
+      model: llmModel,
       durationMs,
     },
   }

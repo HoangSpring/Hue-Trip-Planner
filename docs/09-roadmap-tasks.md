@@ -264,6 +264,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-031, T-022
 - **Làm:** `pipeline.ts`: LLM → kiểm tra → dự phòng khi cần; `LLM_ENABLED`, `LLM_DAILY_CALL_CAP`; ghi `fallbackReason`, `repairs`, `coverage`, `PROMPT_VERSION`, token; `regenerateDay` dùng LLM trước, dự phòng sau; `notice FALLBACK_USED`.
 - **Hoàn thành khi:** test pipeline (LLM tắt/timeout/hỏng/`coverage` thấp → dự phòng, vẫn `200`); test an toàn với `notes` độc hại; p90 ≤ 15 giây trong thử nghiệm thực tế.
+- Đang làm trên `feat/T-032-llm-pipeline`: pipeline và regenerateDay đã nối LLM → validator → dự phòng; kiểm thử Fake đạt. Chưa tick: `generation_events` hiện chưa có cột `thinking_tokens`/metadata; không thêm migration theo yêu cầu, cần chốt cách lưu hoặc chấp nhận telemetry ứng dụng.
 
 ### [ ] T-033 · Đánh giá chất lượng và hiệu chỉnh · `M`
 - **Tham chiếu:** `docs/07` mục 17.4, 18

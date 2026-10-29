@@ -14,85 +14,9 @@ const candidates = places.slice(0, 2).map((place) => ({ place, score: 0.5, featu
 
 describe('LLM prompt contract', () => {
   it('has a versioned system prompt and snapshots the JSON user message', () => {
-    expect(PROMPT_VERSION).toBe('hue-itinerary-v1')
+    expect(PROMPT_VERSION).toBe('hue-itinerary-v2-compact')
     expect(SYSTEM_PROMPT).not.toContain(input.notes ?? '')
-    expect(serializeUserMessage(buildUserMessage(input, candidates))).toMatchInlineSnapshot(`
-      "{
-        "trip": {
-          "numDays": 1,
-          "dates": [
-            "2026-11-01"
-          ],
-          "companion": "couple",
-          "groupSize": 2,
-          "interests": [
-            "heritage",
-            "cuisine"
-          ],
-          "pace": "moderate",
-          "budget": "mid",
-          "transport": "motorbike",
-          "itemsPerDay": {
-            "min": 4,
-            "max": 5
-          },
-          "start": null
-        },
-        "slotRules": {
-          "morning": "08:00-11:30",
-          "noon": "ăn trưa 11:30-13:30, chỉ địa điểm ăn uống",
-          "afternoon": "13:30-17:30",
-          "evening": "17:30-21:00"
-        },
-        "candidates": [
-          {
-            "id": "00000000-0000-4000-8000-000000000001",
-            "name": "Địa điểm giả lập 01",
-            "category": "heritage",
-            "area": "Khu vực giả lập",
-            "lat": 16.451,
-            "lng": 107.561,
-            "tags": [
-              "sample"
-            ],
-            "bestTime": [
-              "morning",
-              "afternoon"
-            ],
-            "visitMin": 60,
-            "priceLevel": 1,
-            "openTime": "09:00",
-            "closeTime": "17:00",
-            "closedDays": [],
-            "verified": false,
-            "summary": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật."
-          },
-          {
-            "id": "00000000-0000-4000-8000-000000000002",
-            "name": "Địa điểm giả lập 02",
-            "category": "food",
-            "area": "Khu vực giả lập",
-            "lat": 16.452,
-            "lng": 107.562,
-            "tags": [
-              "sample"
-            ],
-            "bestTime": [
-              "morning",
-              "afternoon"
-            ],
-            "visitMin": 60,
-            "priceLevel": 1,
-            "openTime": "09:00",
-            "closeTime": "17:00",
-            "closedDays": [],
-            "verified": false,
-            "summary": "Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật."
-          }
-        ],
-        "userNotes": "Muốn dậy muộn"
-      }"
-    `)
+    expect(serializeUserMessage(buildUserMessage(input, candidates))).toMatchInlineSnapshot(`"{"trip":{"n":1,"dates":["2026-11-01"],"companion":"couple","groupSize":2,"interests":["heritage","cuisine"],"pace":"moderate","budget":"mid","transport":"motorbike","items":[4,5]},"slots":{"m":"08:00-11:30","n":"ăn trưa 11:30-13:30, food only","a":"13:30-17:30","e":"17:30-21:00"},"candidates":[{"i":"00000000-0000-4000-8000-000000000001","n":"Địa điểm giả lập 01","c":"heritage","a":"Khu vực giả lập","xy":[16.451,107.561],"t":["sample"],"b":["morning","afternoon"],"v":60,"p":1,"o":"09:00","z":"17:00","q":false,"s":"Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật."},{"i":"00000000-0000-4000-8000-000000000002","n":"Địa điểm giả lập 02","c":"food","a":"Khu vực giả lập","xy":[16.452,107.562],"t":["sample"],"b":["morning","afternoon"],"m":["lunch"],"v":60,"p":1,"o":"09:00","z":"17:00","q":false,"s":"Dữ liệu giả lập nội bộ, không phải thông tin địa điểm có thật."}],"userNotes":"Muốn dậy muộn"}"`)
   })
 
   it('sanitizes notes, removes control and markup, and caps at 300 characters', () => {
