@@ -5,7 +5,7 @@ import { uuidSchema } from './place'
 export const llmItineraryItemSchema = z.object({
   placeId: uuidSchema,
   slot: slotSchema,
-  reason: z.string().min(1).max(200),
+  reason: z.string().min(1).max(240),
 }).strict()
 
 export const llmItineraryDaySchema = z.object({

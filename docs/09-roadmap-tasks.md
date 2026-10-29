@@ -243,16 +243,17 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
 - **Tham chiếu:** `docs/07` mục 8.1, 17.1; `docs/06` mục 13
 - **Dep:** T-020, **chủ dự án đã chọn nhà cung cấp LLM**
+- **Trạng thái hiện tại:** interface và FakeLlmClient đã làm; provider thật và gọi thử đang chờ chủ dự án chọn nhà cung cấp/model (D-10) và cấu hình `LLM_API_KEY`, `LLM_MODEL`.
 - **Làm:** interface `LlmClient`; một provider thật (đọc `LLM_API_KEY`, `LLM_MODEL`); `FakeLlmClient` có các kịch bản lỗi (id sai, trùng, thiếu ngày, không có bữa trưa, JSON hỏng, timeout, quá dài, URL/HTML trong `reason`); ghi nhận token từ phản hồi.
 - **Hoàn thành khi:** gọi thử thành công ở môi trường phát triển; timeout hoạt động bằng `AbortSignal`; không log nội dung prompt/phản hồi.
 
-### [ ] T-030 · Prompt, làm sạch `notes`, schema đầu ra · `M`
+### [x] T-030 · Prompt, làm sạch `notes`, schema đầu ra · `M`
 - **Tham chiếu:** `docs/07` mục 8, 12
 - **Dep:** T-029
 - **Làm:** `prompt.ts` (system prompt có `PROMPT_VERSION`, user message là JSON), `sanitizeNotes`, `shared/schemas/llmItinerary.ts`, dữ liệu ứng viên rút gọn (tọa độ làm tròn, `summary` ≤ 160 ký tự).
 - **Hoàn thành khi:** snapshot test của user message; `notes` không bao giờ nối vào system prompt; test `sanitizeNotes`.
 
-### [ ] T-031 · Kiểm tra và sửa đầu ra LLM · `L`
+### [x] T-031 · Kiểm tra và sửa đầu ra LLM · `L`
 - **Tham chiếu:** `docs/07` mục 10
 - **Dep:** T-030, T-019
 - **Làm:** `validate.ts` thực hiện V1–V10; tính `coverage`; quyết định "đủ tốt" (≥ 0.7); lượt gọi sửa lỗi tối đa 1 lần (nếu < 8 giây); thứ tự trong khung.
