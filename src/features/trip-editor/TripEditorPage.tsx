@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
 import { readStoredTripDraft, writeStoredTripDraft, readStoredNotices } from '@/features/trip-wizard/storage'
-import type { Notice, PlaceMapItemDto, Slot, TripDraft } from '@shared/schemas'
+import type { Notice, PlaceMapItemDto, Slot, TripDraft, PlaceSummary, TripItem } from '@shared/schemas'
 import { placeMapItemSchema } from '@shared/schemas/placeApi'
 import { MapView } from '@/features/map/MapView'
 import {
@@ -15,6 +15,8 @@ import { NoticesBanner } from './components/NoticesBanner'
 import { DaySelector } from './components/DaySelector'
 import { SlotSection } from './components/SlotSection'
 import { LoginPromptModal } from './components/LoginPromptModal'
+import { AlternativesSheet } from './components/AlternativesSheet'
+import { AddPlaceSheet } from './components/AddPlaceSheet'
 
 const emptyTrip: TripDraft = {
   clientDraftId: '00000000-0000-0000-0000-000000000000',
@@ -67,6 +69,16 @@ export function TripEditorPage() {
   const [titleInput, setTitleInput] = useState(state.trip?.title ?? '')
   const [isMobileMapOpen, setIsMobileMapOpen] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle')
+
+  // Sheet states for T-027
+  const [selectedAlternativeItem, setSelectedAlternativeItem] = useState<TripItem | null>(null)
+  const [isAlternativesSheetOpen, setIsAlternativesSheetOpen] = useState(false)
+  const [isAddPlaceSheetOpen, setIsAddPlaceSheetOpen] = useState(false)
+
+  const allExistingPlaceIds = useMemo(() => {
+    if (!state.trip) return new Set<string>()
+    return new Set(state.trip.days.flatMap((d) => d.items.map((it) => it.placeId)))
+  }, [state.trip])
 
   // Toast for deleted item & undo
   const [toast, setToast] = useState<{ message: string; visible: boolean } | null>(null)
@@ -254,6 +266,60 @@ export function TripEditorPage() {
       }
     },
     [state.trip?.days, state.activeDayIndex]
+  )
+
+  const handleOpenAlternatives = useCallback((item: TripItem) => {
+    setSelectedAlternativeItem(item)
+    setIsAlternativesSheetOpen(true)
+  }, [])
+
+  const handleSelectAlternative = useCallback(
+    (item: TripItem, newPlace: PlaceSummary, reasonTag: string) => {
+      dispatch({
+        type: 'REPLACE_ITEM',
+        payload: {
+          itemId: item.id,
+          newPlace,
+          reason: `Gợi ý thay thế (${reasonTag}): ${newPlace.name}`,
+        },
+      })
+      setIsAlternativesSheetOpen(false)
+      setSelectedAlternativeItem(null)
+
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+      setToast({
+        message: `Đã đổi thành ${newPlace.name}`,
+        visible: true,
+      })
+      toastTimerRef.current = setTimeout(() => {
+        setToast((prev) => (prev ? { ...prev, visible: false } : null))
+      }, 5000)
+    },
+    []
+  )
+
+  const handleAddPlace = useCallback(
+    (place: PlaceSummary, slot: Slot) => {
+      dispatch({
+        type: 'ADD_ITEM',
+        payload: {
+          dayIndex: state.activeDayIndex,
+          slot,
+          place,
+        },
+      })
+      setIsAddPlaceSheetOpen(false)
+
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+      setToast({
+        message: `Đã thêm ${place.name}`,
+        visible: true,
+      })
+      toastTimerRef.current = setTimeout(() => {
+        setToast((prev) => (prev ? { ...prev, visible: false } : null))
+      }, 5000)
+    },
+    [state.activeDayIndex]
   )
 
   // If no draft is available, show empty trip fallback
@@ -485,6 +551,7 @@ export function TripEditorPage() {
                     onUpdateItemTimes={handleUpdateItemTimes}
                     onUpdateNote={handleUpdateNote}
                     onDropOnItem={handleDropOnItem}
+                    onOpenAlternatives={handleOpenAlternatives}
                   />
                 )
               })}
@@ -499,6 +566,7 @@ export function TripEditorPage() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-line">
             <button
               type="button"
+              onClick={() => setIsAddPlaceSheetOpen(true)}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-surface-high hover:bg-surface-high/80 border border-line px-5 py-2.5 text-xs font-semibold text-ink shadow-xs transition-colors"
             >
               <span>+</span>
@@ -638,6 +706,34 @@ export function TripEditorPage() {
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
         actionLabel={loginActionName}
+      />
+
+      {/* Alternatives Sheet */}
+      <AlternativesSheet
+        isOpen={isAlternativesSheetOpen}
+        targetItem={selectedAlternativeItem}
+        currentDate={activeDay?.date ?? null}
+        tripInput={state.trip.input}
+        excludePlaceIds={Array.from(allExistingPlaceIds)}
+        onClose={() => {
+          setIsAlternativesSheetOpen(false)
+          setSelectedAlternativeItem(null)
+        }}
+        onSelectAlternative={handleSelectAlternative}
+        onOpenSearchFallback={() => {
+          setIsAlternativesSheetOpen(false)
+          setSelectedAlternativeItem(null)
+          setIsAddPlaceSheetOpen(true)
+        }}
+      />
+
+      {/* Add Place Sheet */}
+      <AddPlaceSheet
+        isOpen={isAddPlaceSheetOpen}
+        dayIndex={state.activeDayIndex}
+        allExistingPlaceIds={allExistingPlaceIds}
+        onClose={() => setIsAddPlaceSheetOpen(false)}
+        onAddPlace={handleAddPlace}
       />
     </div>
   )

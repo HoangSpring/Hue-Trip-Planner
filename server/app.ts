@@ -9,6 +9,7 @@ import { profileSchema } from '@shared/schemas'
 import type { ApiEnv } from './types'
 import { createPublicPlaceRoutes } from './routes/publicPlaces'
 import { createGenerateTripRoutes } from './routes/generateTrip'
+import { createAlternativesRoute } from './routes/alternatives'
 
 export const app = new Hono<ApiEnv>()
 
@@ -19,6 +20,7 @@ app.notFound((context) => context.json({ error: { code: 'NOT_FOUND', message: 'K
 app.get('/api/health', publicCache, (context) => context.json({ status: 'ok' as const }))
 app.route('/api', createPublicPlaceRoutes())
 app.route('/api', createGenerateTripRoutes())
+app.route('/api', createAlternativesRoute())
 
 app.get('/api/me', requireAuth, async (context) => {
   const user = context.get('user')
