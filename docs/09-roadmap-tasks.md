@@ -197,31 +197,31 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** endpoint `optionalAuth`; kiểm tra `TripInput`; giới hạn tần suất (băm `client_key` bằng `RATE_LIMIT_SALT`); ghi `generation_events`; hỗ trợ `AbortSignal`; `422 NO_CANDIDATES`; hydrate `place` trong kết quả.
 - **Hoàn thành khi:** test theo `docs/06` mục 15 (400/422/429 kèm `Retry-After`); mọi `placeId` kết quả tồn tại và published; không log `notes`.
 
-### [ ] T-023 · Wizard `/plan/new` (F-05) · `L`
+### [x] T-023 · Wizard `/plan/new` (F-05) · `L`
 - **Tham chiếu:** `docs/02` F-05; `docs/03` FL-01; `docs/04` mục 4; `docs/08` S05–S10
 - **Dep:** T-007, T-013 (cho `/api/meta`), T-004
 - **Làm:** 6 bước, `step` trên URL, React Hook Form + Zod, tự lưu `wizard_draft_v1` (kiểm tra Zod khi đọc), bước tóm tắt có thể quay lại sửa; chọn điểm xuất phát (preset + ghim bản đồ).
 - **Hoàn thành khi:** đạt AC F-05; tải lại trang giữa chừng vẫn giữ dữ liệu; không cuộn ngang ở 360px; hộp "Tiếp tục / Làm lại".
 
-### [ ] T-024 · Màn hình `/plan/generating` và lưu nháp cục bộ · `M`
+### [x] T-024 · Màn hình `/plan/generating` và lưu nháp cục bộ · `M`
 - **Tham chiếu:** `docs/03` FL-01; `docs/04` mục 4; `docs/08` S11
 - **Dep:** T-022, T-023
 - **Làm:** gọi `generate` (hủy được), các trạng thái lỗi/429/mất mạng, ghi `trip_draft_v1` (kèm `clientDraftId`), điều hướng `replace` sang `/trip/draft`; xử lý localStorage không dùng được.
 - **Hoàn thành khi:** luồng wizard → sinh → mở `/trip/draft` chạy end-to-end với dự phòng; nút Back không quay lại màn hình chờ.
 
-### [ ] T-025 · Trình xem lịch trình (chế độ nháp) · `L`
+### [x] T-025 · Trình xem lịch trình (chế độ nháp) · `L`
 - **Tham chiếu:** `docs/02` F-07; `docs/03` FL-04.1; `docs/08` S12
 - **Dep:** T-017, T-024, T-021
 - **Làm:** `TripEditorPage` chế độ `draft`: tab ngày, timeline theo khung giờ, thẻ mục (lý do, di chuyển, cảnh báo), bản đồ đánh số theo ngày, ngăn xem nhanh; bố cục mobile/desktop; `day` và `item` trên URL.
 - **Hoàn thành khi:** hiển thị đúng lịch trình sinh ra; bản đồ đánh số đúng thứ tự; cảnh báo hiển thị không chặn.
 
-### [ ] T-026 · Chỉnh sửa lịch trình (cục bộ) · `L`
+### [x] T-026 · Chỉnh sửa lịch trình (cục bộ) · `L`
 - **Tham chiếu:** `docs/03` FL-04.2–4.7; `docs/07` mục 14, 15
 - **Dep:** T-025
 - **Làm:** quản lý state chỉnh sửa (reducer + hoàn tác ≥ 1 bước); đổi thứ tự/chuyển ngày (kéo thả desktop, nút lên/xuống mobile); xóa + hoàn tác; sửa tiêu đề/giờ/ghi chú; khóa mục; tính lại di chuyển và cảnh báo; ghi `trip_draft_v1` (debounce).
 - **Hoàn thành khi:** AC F-07 phần chỉnh sửa đạt trên nháp; test cho reducer (đổi thứ tự, xóa, hoàn tác, không trùng địa điểm).
 
-### [ ] T-027 · API gợi ý thay thế + sheet Thay thế/Thêm · `M`
+### [x] T-027 · API gợi ý thay thế + sheet Thay thế/Thêm · `M`
 - **Tham chiếu:** `docs/07` mục 14; `docs/06` mục 6.3; `docs/03` FL-04.4–4.5; `docs/08` S13
 - **Dep:** T-018, T-026
 - **Làm:** `alternatives.ts` + `POST /api/trips/alternatives`; bottom sheet "Gợi ý thay thế" và "Thêm địa điểm" (tìm kiếm, chọn khung giờ, trạng thái "Đã thêm").
