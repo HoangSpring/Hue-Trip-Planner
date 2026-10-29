@@ -42,8 +42,8 @@ describe('validateLlmItinerary V1-V10', () => {
   ])('repairs scenario %s into candidate-only scheduled days', async (scenario) => {
     const fake = new FakeLlmClient(scenario)
     const response = await fake.completeJson(clientArgs(JSON.stringify({
-      trip: { numDays: input.numDays },
-      candidates: records.map(({ place }) => ({ id: place.id, category: place.category, mealType: place.mealType })),
+      trip: { n: input.numDays },
+      candidates: records.map(({ place }) => ({ i: place.id, c: place.category, m: place.mealType })),
     })))
     const result = await validateLlmItinerary(response.json, { input, candidates: records })
     expect(result.accepted).toBe(true)
@@ -61,8 +61,8 @@ describe('validateLlmItinerary V1-V10', () => {
     'allows only one fast repair for invalid schema scenario %s', async (scenario) => {
       const fake = new FakeLlmClient(scenario)
       const bad = await fake.completeJson(clientArgs(JSON.stringify({
-        trip: { numDays: input.numDays },
-        candidates: records.map(({ place }) => ({ id: place.id, category: place.category, mealType: place.mealType })),
+        trip: { n: input.numDays },
+        candidates: records.map(({ place }) => ({ i: place.id, c: place.category, m: place.mealType })),
       })))
       let current = 100
       const result = await validateLlmItinerary(bad.json, {
@@ -97,7 +97,7 @@ describe('validateLlmItinerary V1-V10', () => {
 
   it('does not emit markup or links from the model reason', async () => {
     const client = new FakeLlmClient('url_html_reason')
-    const response = await client.completeJson(clientArgs(JSON.stringify({ trip: { numDays: 2 }, candidates: records.map(({ place }) => ({ id: place.id, category: place.category, mealType: place.mealType })) })))
+    const response = await client.completeJson(clientArgs(JSON.stringify({ trip: { n: 2 }, candidates: records.map(({ place }) => ({ i: place.id, c: place.category, m: place.mealType })) })))
     const result = await validateLlmItinerary(response.json, { input, candidates: records })
     expect(result.days.flatMap(({ items }) => items).every(({ reason }) => !/<|https?:\/\//i.test(reason))).toBe(true)
   })

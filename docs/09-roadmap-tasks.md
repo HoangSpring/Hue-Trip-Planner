@@ -271,6 +271,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-032, **chủ dự án tham gia chấm**
 - **Làm:** chạy bộ 10 đầu vào mẫu với dự phòng và với LLM; ghi kết quả `docs/eval/<ngày>-<PROMPT_VERSION>.md`; điều chỉnh trọng số, ngưỡng, prompt nếu cần.
 - **Hoàn thành khi:** có báo cáo so sánh; chủ dự án quyết định mặc định (LLM hay chỉ dự phòng cho khách).
+- Đã chạy ngày 2026-10-29 bằng 12 calls (10 mẫu + 2 ghi chú đối kháng), lưu `docs/eval/2026-10-29-llm-vs-fallback.md`. Chưa tick vì bảng chấm và quyết định mặc định còn chờ chủ dự án.
 
 > ✅ **Cổng kiểm tra M3:** lịch trình do LLM sinh vượt hoặc ngang dự phòng theo chấm điểm của chủ dự án; **không có** địa điểm bịa; tắt LLM bằng cờ vẫn chạy.
 

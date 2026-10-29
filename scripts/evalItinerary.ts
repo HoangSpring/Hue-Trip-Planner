@@ -161,6 +161,11 @@ function formatEvaluation(input: {
 }
 
 async function main(): Promise<void> {
+  if (process.argv.includes('--llm')) {
+    const { runLlmEvaluation } = await import('./evalItineraryLlm')
+    await runLlmEvaluation()
+    return
+  }
   const explain = process.argv.includes('--explain')
   loadLocalEnvironment()
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
