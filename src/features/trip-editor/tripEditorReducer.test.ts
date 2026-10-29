@@ -138,6 +138,26 @@ describe('tripEditorReducer', () => {
     expect(reverted.trip.days[0].items[0].isLocked).toBe(false)
   })
 
+  it('replaces only the selected day and restores it with undo', () => {
+    const state = createInitialEditorState(makeMockTrip())
+    const untouchedDay = state.trip.days[1]
+    const replacement = state.trip.days[0].items.slice(0, 1).map((item) => ({
+      ...item,
+      id: 'replacement-item',
+      placeId: mockPlaces[2].id,
+      place: mockPlaces[2],
+      position: 0,
+    }))
+    const replaced = tripEditorReducer(state, {
+      type: 'REPLACE_DAY',
+      payload: { dayIndex: 1, items: replacement },
+    })
+
+    expect(replaced.trip.days[0].items).toEqual(replacement)
+    expect(replaced.trip.days[1]).toEqual(untouchedDay)
+    expect(tripEditorReducer(replaced, { type: 'UNDO' }).trip.days).toEqual(state.trip.days)
+  })
+
   it('reorders item within day and maintains continuous positions', () => {
     const state = createInitialEditorState(makeMockTrip())
     const nextState = tripEditorReducer(state, {

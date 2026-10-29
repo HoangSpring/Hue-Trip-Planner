@@ -212,6 +212,23 @@ describe('TripEditorPage', () => {
     expect(mounted.container.textContent).toContain('Lăng Tự Đức')
   })
 
+  it('opens the regenerate-day dialog and can lock all stops before submitting', () => {
+    localStorage.setItem('trip_draft_v1', JSON.stringify(makeMockDraft()))
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    const trigger = Array.from(mounted.container.querySelectorAll('button'))
+      .find((button) => button.textContent?.includes('Tạo lại ngày này'))
+    expect(trigger).toBeDefined()
+    act(() => trigger?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+    expect(mounted.container.querySelector('[role="dialog"]')?.textContent).toContain('Điểm dừng hiện tại')
+
+    const lockAll = Array.from(mounted.container.querySelectorAll('[role="dialog"] button'))
+      .find((button) => button.textContent?.includes('Khóa nhanh tất cả'))
+    act(() => lockAll?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+    expect(mounted.container.querySelector('[role="dialog"]')?.textContent).toContain('Mở khóa tất cả')
+    expect(mounted.container.querySelector('[role="dialog"]')?.textContent).toContain('🔒 Đã khóa')
+  })
+
   it('allows inline editing of the trip title', () => {
     const draft = makeMockDraft()
     localStorage.setItem('trip_draft_v1', JSON.stringify(draft))

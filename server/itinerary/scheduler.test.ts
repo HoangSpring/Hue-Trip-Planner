@@ -31,6 +31,13 @@ describe('itinerary scheduler', () => {
     expect(result.items[0]?.startTime).toBe('10:00')
   })
 
+  it('keeps a locked stop in its requested slot even when best_time prefers another slot', () => {
+    const morningOnly = { ...candidates[0], place: { ...candidates[0].place, bestTime: ['morning' as const] } }
+    const result = scheduleDay([{ candidate: morningOnly, slot: 'afternoon', locked: true }], { input, dayIndex: 1 })
+    expect(result.items).toHaveLength(1)
+    expect(result.items[0]?.slot).toBe('afternoon')
+  })
+
   it('drops closed-day locations, schedules a different candidate, and keeps positions continuous', () => {
     const mondayClosed = { ...candidates[0], place: { ...candidates[0].place, closedDays: [1], openTime: '09:00', closeTime: '17:00' } }
     const open = { ...candidates[1], place: { ...candidates[1].place, closedDays: [], openTime: '09:00', closeTime: '17:00' } }

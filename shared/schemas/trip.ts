@@ -103,7 +103,21 @@ export const regenerateDayRequestSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
   lockedItems: z.array(lockedItemSchema).default([]),
   excludePlaceIds: z.array(uuidSchema).default([]),
-}).strict()
+}).strict().superRefine((request, context) => {
+  if (request.dayIndex > request.input.numDays) {
+    context.addIssue({ code: 'custom', path: ['dayIndex'], message: 'Ngày cần tạo lại nằm ngoài chuyến đi.' })
+  }
+  const lockedIds = request.lockedItems.map(({ placeId }) => placeId)
+  if (new Set(lockedIds).size !== lockedIds.length) {
+    context.addIssue({ code: 'custom', path: ['lockedItems'], message: 'Không thể khóa trùng một địa điểm.' })
+  }
+  if (new Set(request.excludePlaceIds).size !== request.excludePlaceIds.length) {
+    context.addIssue({ code: 'custom', path: ['excludePlaceIds'], message: 'Danh sách loại trừ có địa điểm trùng.' })
+  }
+  if (lockedIds.some((id) => request.excludePlaceIds.includes(id))) {
+    context.addIssue({ code: 'custom', path: ['lockedItems'], message: 'Địa điểm bị khóa không thể đồng thời nằm ở ngày khác.' })
+  }
+})
 
 export const regenerateDayResponseSchema = z.object({
   day: tripDaySchema,
