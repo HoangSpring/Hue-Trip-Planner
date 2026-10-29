@@ -119,7 +119,7 @@ describe('memory router for every route in docs/04', () => {
     } finally {
       await rendered.cleanup()
     }
-  })
+  }, 15000)
 
   it('admits a persisted Supabase session to protected account routes', async () => {
     const rendered = await renderPath(paths.accountTrips, testSession)

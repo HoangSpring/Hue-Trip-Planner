@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { paths } from '@/app/paths'
 import { getPublicMeta } from '@/lib/api'
@@ -38,10 +38,15 @@ const defaultInterestsList: InterestTagItem[] = [
 
 export function TripWizardPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const rawStep = Number(searchParams.get('step'))
   const currentStep = rawStep >= 1 && rawStep <= 6 ? rawStep : 1
+
+  const [redirectNotice, setRedirectNotice] = useState<string | null>(() => {
+    return (location.state as { notice?: string } | null)?.notice ?? null
+  })
 
   const [values, setValues] = useState<TripWizardFormValues>(() => {
     const existing = readStoredWizardDraft()
@@ -260,6 +265,23 @@ export function TripWizardPage() {
       {storageWarning && (
         <div className="mb-4 rounded-control bg-accent-tint/60 p-3 text-xs text-ink border border-accent/30" role="alert">
           {vi.generating.storageWarning}
+        </div>
+      )}
+
+      {/* Redirect Notice (e.g. from RequireTripDraft guard) */}
+      {redirectNotice && (
+        <div className="mb-4 flex items-center justify-between rounded-control border border-secondary/30 bg-secondary/10 px-4 py-3 text-sm text-secondary" role="status">
+          <div className="flex items-center gap-2">
+            <span aria-hidden="true">ℹ️</span>
+            <span>{redirectNotice}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRedirectNotice(null)}
+            className="text-xs font-semibold hover:underline"
+          >
+            Đóng
+          </button>
         </div>
       )}
 

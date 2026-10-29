@@ -17,5 +17,5 @@ export function RequireWizardDraft() {
 export function RequireTripDraft() {
   const draft = readStoredValue('trip_draft_v1')
   if (tripDraftSchema.safeParse(draft).success) return <Outlet />
-  return <Navigate to={`${paths.planNew}?notice=no-draft`} replace />
+  return <Navigate to={paths.planNew} state={{ notice: 'Chưa có lịch trình nào' }} replace />
 }
