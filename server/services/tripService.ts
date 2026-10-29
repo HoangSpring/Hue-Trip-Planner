@@ -14,7 +14,7 @@ import { computeWarnings } from '@shared/itinerary'
 import { AppError } from '../lib/errors'
 
 export type TripPlace = { id: string; status: 'published' | 'archived' | 'draft'; lat: number | null; lng: number | null }
-export type TripListRow = Pick<Trip, 'id' | 'title' | 'numDays' | 'startDate' | 'isShared' | 'updatedAt'> & { coverImageUrl: string | null }
+export type TripListRow = Pick<Trip, 'id' | 'title' | 'numDays' | 'startDate' | 'isShared' | 'updatedAt'> & { coverImageUrl: string | null; coverImageAlt: string | null; coverImageCredit: string | null; coverImageLicense: string | null; coverImageSourceUrl: string | null }
 
 export interface TripRepository {
   list(): Promise<Trip[]>
@@ -95,11 +95,18 @@ export class TripService {
 
   async list(): Promise<TripListRow[]> {
     const trips = await this.repository.list()
-    return trips.map((trip) => ({
+    return trips.map((trip) => {
+      const coverPlace = trip.days.flatMap((day) => day.items).find((item) => item.place?.coverImageUrl)?.place
+      return {
       id: trip.id, title: trip.title, numDays: trip.numDays, startDate: trip.startDate,
       isShared: trip.isShared, updatedAt: trip.updatedAt,
-      coverImageUrl: trip.days.flatMap((day) => day.items).find((item) => item.place?.coverImageUrl)?.place?.coverImageUrl ?? null,
-    }))
+      coverImageUrl: coverPlace?.coverImageUrl ?? null,
+      coverImageAlt: coverPlace?.coverImageAlt ?? null,
+      coverImageCredit: coverPlace?.imageCredit ?? null,
+      coverImageLicense: coverPlace?.imageLicense ?? null,
+      coverImageSourceUrl: coverPlace?.imageSourceUrl ?? null,
+    }
+    })
   }
 
   async get(id: string): Promise<Trip> {

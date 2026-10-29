@@ -76,6 +76,16 @@ export const vi = {
     unavailable: 'Dịch vụ đăng nhập chưa sẵn sàng. Bạn thử lại sau nhé.',
     resumeFailed: 'Chưa thể hoàn tất đồng bộ sau khi đăng nhập. Dữ liệu vẫn được giữ lại; bạn có thể thử lại.',
   },
+  account: {
+    tripsTitle: 'Chuyến đi của tôi', tripsIntro: 'Những lịch trình bạn đã lưu được sắp xếp theo lần cập nhật gần nhất.',
+    createTrip: 'Tạo chuyến đi mới', emptyTrips: 'Bạn chưa lưu chuyến đi nào.', openTrip: 'Mở lịch trình', rename: 'Đổi tên', duplicate: 'Nhân bản', remove: 'Xóa',
+    renameSave: 'Lưu tên', renameCancel: 'Hủy', deleteTitle: 'Xóa chuyến đi này?', deleteBody: 'Thao tác này không thể hoàn tác. Các ngày và điểm dừng của chuyến đi cũng sẽ bị xóa.', confirmDelete: 'Xóa chuyến đi',
+    profileTitle: 'Cài đặt tài khoản', profileIntro: 'Quản lý tên hiển thị và tài khoản của bạn.', displayName: 'Tên hiển thị', saveProfile: 'Lưu thay đổi', profileSaved: 'Đã cập nhật hồ sơ.',
+    dangerTitle: 'Xóa tài khoản', dangerBody: 'Tài khoản và dữ liệu chuyến đi liên quan sẽ bị xóa vĩnh viễn. Nhập XOA để xác nhận.', confirmWord: 'Nhập XOA để xác nhận', deleteAccount: 'Xóa tài khoản vĩnh viễn',
+    loading: 'Đang tải dữ liệu tài khoản…', loadFailed: 'Chưa thể tải dữ liệu. Bạn thử lại nhé.', actionFailed: 'Thao tác chưa hoàn tất. Bạn thử lại nhé.',
+    coverCredit: (credit: string, license: string) => `Ảnh: ${credit} · ${license}`,
+    days: (count: number) => `${count} ngày`, updated: (date: string) => `Cập nhật ${date}`,
+  },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
   explore: {
     eyebrow: 'Tạp chí khám phá Huế', title: 'Đi chậm, thấy nhiều hơn', intro: 'Tìm một góc di sản, một món ngon hay khoảng lặng bên dòng Hương theo nhịp riêng của bạn.',

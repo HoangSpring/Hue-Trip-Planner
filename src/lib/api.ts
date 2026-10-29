@@ -15,6 +15,9 @@ import {
   type TripCreateRequest,
   type TripPatchRequest,
   type TripReplaceRequest,
+  profileSchema,
+  profileUpdateSchema,
+  deleteAccountRequestSchema,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import { z } from 'zod'
@@ -109,6 +112,14 @@ export function regenerateDayApi(
 
 export function getMyTripsApi(accessToken: string) {
   return apiRequest('trips', tripListResponseSchema, { accessToken })
+}
+
+export function updateMyProfileApi(displayName: string, accessToken: string) {
+  return apiRequest('me', profileSchema, { method: 'PATCH', body: profileUpdateSchema.parse({ displayName }), accessToken })
+}
+
+export function deleteMyAccountApi(accessToken: string) {
+  return apiRequest('me', z.void(), { method: 'DELETE', body: deleteAccountRequestSchema.parse({ confirm: 'XOA' }), accessToken })
 }
 
 export function getTripApi(id: string, accessToken: string) {

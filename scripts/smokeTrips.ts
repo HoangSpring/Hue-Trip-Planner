@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js'
 import { itineraryEvalCases } from '../server/itinerary/evalCases'
 import { generateTrip } from '../server/itinerary/fallback'
 import { SupabasePlacesRepo } from '../server/itinerary/placesRepo'
+import type { TripDraft } from '../shared/schemas'
 
 type Check = { name: string; status: 'PASS' | 'FAIL' | 'SKIP'; details: string }
 type ApiResult = { status: number; body: unknown }
@@ -14,6 +15,8 @@ const checks: Check[] = []
 const createdIds: string[] = []
 let accessTokenA = ''
 let baseUrl = process.env.SMOKE_TRIPS_API_URL ?? 'http://127.0.0.1:8787'
+let deletionTestUserId: string | null = null
+let deletionTestUserDeleted = false
 
 function record(name: string, status: Check['status'], details: string): void { checks.push({ name, status, details }) }
 function jsonValue(value: unknown): Record<string, unknown> { return value as Record<string, unknown> }
@@ -52,6 +55,33 @@ async function login(email: string, password: string): Promise<string> {
   const { data, error } = await client.auth.signInWithPassword({ email, password })
   if (error || !data.session?.access_token) throw new Error('test_login_failed')
   return data.session.access_token
+}
+
+async function verifyAccountDeletion(draft: TripDraft): Promise<void> {
+  const { createServiceRoleSupabaseClient } = await import('../server/lib/supabase')
+  const url = process.env.SUPABASE_URL
+  const anonKey = process.env.SUPABASE_ANON_KEY
+  if (!url || !anonKey || !process.env.SUPABASE_SERVICE_ROLE_KEY) throw new Error('account_delete_smoke_config_missing')
+
+  const admin = createServiceRoleSupabaseClient()
+  const testEmail = `smoke-delete-${randomUUID()}@example.com`
+  const testPassword = randomUUID()
+  const created = await admin.auth.admin.createUser({ email: testEmail, password: testPassword, email_confirm: true })
+  if (created.error || !created.data.user) throw new Error('account_delete_test_user_create_failed')
+  deletionTestUserId = created.data.user.id
+  const anon = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } })
+  const signedIn = await anon.auth.signInWithPassword({ email: testEmail, password: testPassword })
+  if (signedIn.error || !signedIn.data.session?.access_token) throw new Error('account_delete_test_user_login_failed')
+  const testTrip = await request('/trips', 'POST', signedIn.data.session.access_token, draft)
+  if (testTrip.status !== 201) throw new Error('account_delete_test_trip_create_failed')
+
+  const response = await request('/me', 'DELETE', signedIn.data.session.access_token, { confirm: 'XOA' })
+  if (response.status !== 204) throw new Error('account_delete_api_failed')
+  const after = await admin.auth.admin.getUserById(deletionTestUserId)
+  if (!after.error || after.data.user) throw new Error('account_delete_user_still_exists')
+  const remainingTrips = await admin.from('trips').select('id').eq('user_id', deletionTestUserId)
+  if (remainingTrips.error || (remainingTrips.data?.length ?? 0) > 0) throw new Error('account_delete_cascade_failed')
+  deletionTestUserDeleted = true
 }
 
 async function request(path: string, method: string, token: string, body?: unknown): Promise<ApiResult> {
@@ -171,10 +201,24 @@ async function main(): Promise<void> {
       createdIds.splice(createdIds.indexOf(id), 1)
     }
     record('Dọn dữ liệu thử', 'PASS', 'Đã xóa toàn bộ trip được tạo bởi smoke.')
+
+    try {
+      await verifyAccountDeletion(generated.draft)
+      record('Xóa tài khoản thử riêng', 'PASS', 'Tài khoản smoke riêng và trip kiểm tra cascade đã được xóa; TEST_USER_A/B không bị tác động.')
+    } catch (error) {
+      const label = error instanceof Error ? error.message : 'unknown_error'
+      record('Xóa tài khoản thử riêng', 'FAIL', label)
+    }
   } catch (error) {
     const label = error instanceof Error ? error.message : 'unknown_error'
     record('Luồng smoke', 'FAIL', label)
   } finally {
+    if (deletionTestUserId && !deletionTestUserDeleted) {
+      try {
+        const { createServiceRoleSupabaseClient } = await import('../server/lib/supabase')
+        await createServiceRoleSupabaseClient().auth.admin.deleteUser(deletionTestUserId)
+      } catch { record('Dọn tài khoản smoke', 'FAIL', 'Không thể xác nhận tài khoản test đã được dọn.') }
+    }
     for (const id of createdIds) {
       try {
         const result = await request(`/trips/${id}`, 'DELETE', accessTokenA)

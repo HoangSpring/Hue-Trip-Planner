@@ -103,7 +103,7 @@ describe('trip account API', () => {
     const trip = await created.json() as Trip
     const mine = await app.request('/trips', { headers: { authorization: 'Bearer a' } })
     expect(mine.status).toBe(200)
-    expect(await mine.json()).toMatchObject({ items: [{ id: trip.id, coverImageUrl: null }] })
+    expect(await mine.json()).toMatchObject({ items: [{ id: trip.id, coverImageUrl: null, coverImageAlt: null, coverImageCredit: null, coverImageLicense: null, coverImageSourceUrl: null }] })
     expect((await app.request(`/trips/${trip.id}`, { headers: { authorization: 'Bearer b' } })).status).toBe(404)
     expect(repoA.trips.has(trip.id)).toBe(true)
   })

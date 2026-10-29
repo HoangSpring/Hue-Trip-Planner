@@ -310,11 +310,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** nháp không mất, không bị nhân đôi dù tải lại hoặc gọi hai lần; test e2e đăng nhập giữa luồng.
   - **Ghi chú:** guard và callback tiếp tục đồng bộ sau khi phiên Supabase sẵn sàng; POST idempotent theo `clientDraftId`, chỉ xóa nháp sau khi các hành động chờ hoàn tất. Lỗi giữ dữ liệu và hiện nút thử lại. Kiểm thử router dùng session/API giả; pending `save_place:<id>` gọi API client T-040 và được kiểm thử bằng service giả.
 
-### [ ] T-039 · Chuyến đi của tôi (F-09) và Cài đặt tài khoản · `M`
+### [x] T-039 · Chuyến đi của tôi (F-09) và Cài đặt tài khoản · `M`
 - **Tham chiếu:** `docs/02` F-09; `docs/06` mục 7.1, 8.4; `docs/08` S15, S16B
 - **Dep:** T-035, T-037
 - **Làm:** `/account/trips` (mở, đổi tên, nhân bản, xóa có xác nhận), `/account/settings` (đổi tên, đăng xuất, xóa tài khoản hai bước); `GET/PATCH/DELETE /api/me`.
 - **Hoàn thành khi:** đạt AC F-09; xóa tài khoản xóa sạch dữ liệu liên quan (kiểm tra cascade); nhân bản không kế thừa `share_token`.
+  - **Ghi chú:** danh sách, mở/đổi tên/nhân bản/xóa có xác nhận; cài đặt đổi tên và xóa tài khoản hai bước. Smoke chạy với tài khoản xóa dùng riêng và xác nhận trip cascade; không dùng TEST_USER_A/B cho thao tác xóa.
 
 ### [ ] T-040 · Địa điểm đã lưu (F-10) · `M`
 - **Tham chiếu:** `docs/02` F-10; `docs/06` mục 8.3; `docs/08` S16A

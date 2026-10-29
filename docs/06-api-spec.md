@@ -359,7 +359,7 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 ## 7. Chi tiết: chuyến đi của người dùng
 
 ### 7.1 `GET /api/trips`
-**Response 200:** `{ "items": [ { "id","title","numDays","startDate","isShared","coverImageUrl","updatedAt" } ] }` (mới cập nhật nhất lên đầu). `coverImageUrl` lấy từ địa điểm đầu tiên.
+**Response 200:** `{ "items": [ { "id","title","numDays","startDate","isShared","coverImageUrl","coverImageAlt","coverImageCredit","coverImageLicense","coverImageSourceUrl","updatedAt" } ] }` (mới cập nhật nhất lên đầu). Ảnh bìa lấy từ địa điểm đầu tiên có ảnh; metadata ghi công đi cùng để giao diện tuân thủ quy tắc ảnh.
 
 ### 7.2 `POST /api/trips`  (lưu từ bản nháp)
 

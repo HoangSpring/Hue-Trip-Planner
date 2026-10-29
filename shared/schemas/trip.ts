@@ -93,6 +93,10 @@ export const tripListItemSchema = z.object({
   startDate: isoDateSchema.nullable(),
   isShared: z.boolean(),
   coverImageUrl: z.string().url().nullable(),
+  coverImageAlt: z.string().nullable(),
+  coverImageCredit: z.string().nullable(),
+  coverImageLicense: z.string().nullable(),
+  coverImageSourceUrl: z.string().url().nullable(),
   updatedAt: z.string().datetime(),
 }).strict()
 

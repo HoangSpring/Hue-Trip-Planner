@@ -20,7 +20,8 @@ process.env.SUPABASE_URL ||= process.env.VITE_SUPABASE_URL
 process.env.SUPABASE_ANON_KEY ||= process.env.VITE_SUPABASE_ANON_KEY
 
 const { app } = await import('../server/app')
-const port = 8787
+const port = Number(process.env.DEV_API_PORT ?? 8787)
+if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('DEV_API_PORT must be a valid TCP port.')
 serve({ fetch: app.fetch, hostname: '127.0.0.1', port }, (info) => {
   console.info(`Local API listening at http://127.0.0.1:${info.port}`)
 })
