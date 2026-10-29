@@ -3,12 +3,13 @@ import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'reac
 import { useQuery } from '@tanstack/react-query'
 import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
-import { readStoredTripDraft, writeStoredTripDraft, readStoredNotices, clearStoredTripDraft, hasPendingTripSave, clearPendingTripSave, markTripSavePending } from '@/features/trip-wizard/storage'
+import { readStoredTripDraft, writeStoredTripDraft, readStoredNotices, hasPendingTripSave, markTripSavePending } from '@/features/trip-wizard/storage'
 import type { Notice, PlaceMapItemDto, Slot, TripDraft, PlaceSummary, TripItem, Trip } from '@shared/schemas'
 import { placeMapItemSchema } from '@shared/schemas/placeApi'
-import { ApiRequestError, createTripApi, getTripApi, replaceTripApi } from '@/lib/api'
+import { ApiRequestError, getTripApi, replaceTripApi } from '@/lib/api'
 import { tripCreateRequestSchema } from '@shared/schemas'
 import { useSession } from '@/features/auth/hooks/useSession'
+import { resumeAfterAuthentication } from '@/features/auth/authResume'
 import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { brand } from '@/lib/brand'
 import { MapView } from '@/features/map/MapView'
@@ -491,10 +492,8 @@ export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?:
     if (!parsed.success) { setSaveStatus('error'); setSaveErrorBanner(true); return }
     setSaveStatus('saving')
     try {
-      const saved = await createTripApi(parsed.data, auth.session.access_token)
-      clearStoredTripDraft()
-      clearPendingTripSave()
-      navigate(paths.trip(saved.id), { replace: true })
+      const destination = await resumeAfterAuthentication(auth.session.access_token, paths.tripDraft)
+      navigate(destination, { replace: true })
     } catch {
       writeStoredTripDraft(state.trip)
       markTripSavePending()

@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { paths, safeNextPath } from '@/app/paths'
 import { useSession } from '../hooks/useSession'
 import { AuthAlert, AuthPageFrame } from '../components/AuthPageFrame'
 import { supabaseClient } from '@/lib/supabase'
 import { vi } from '@/lib/strings/vi'
+import { clearAuthSyncNext, markAuthSyncPending, readStoredTripDraft, writeAuthSyncNext } from '@/features/trip-wizard/storage'
+import { resumeAfterAuthentication } from '../authResume'
 
 export default function AuthCallbackPage() {
   const [params] = useSearchParams()
@@ -13,9 +15,20 @@ export default function AuthCallbackPage() {
   const next = safeNextPath(params.get('next'))
   const callbackError = params.has('error') || params.has('error_description')
   const [failed, setFailed] = useState(callbackError || !supabaseClient)
+  const started = useRef(false)
 
   useEffect(() => {
-    if (session.status === 'authenticated') navigate(next, { replace: true })
+    if (session.status === 'authenticated' && session.session && !started.current) {
+      started.current = true
+      writeAuthSyncNext(next)
+      void resumeAfterAuthentication(session.session.access_token, next).then((destination) => {
+        clearAuthSyncNext()
+        navigate(destination, { replace: true })
+      }).catch(() => {
+        markAuthSyncPending()
+        navigate(readStoredTripDraft() ? paths.tripDraft : next, { replace: true })
+      })
+    }
     else if (session.status === 'anonymous') setFailed(true)
   }, [navigate, next, session.status])
 

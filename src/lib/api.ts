@@ -135,6 +135,10 @@ export function duplicateTripApi(id: string, accessToken: string) {
   return apiRequest(`trips/${encodeURIComponent(id)}/duplicate`, tripSchema, { method: 'POST', accessToken })
 }
 
+export function putSavedPlaceApi(placeId: string, accessToken: string) {
+  return apiRequest(`saved/${encodeURIComponent(placeId)}`, z.void(), { method: 'PUT', accessToken })
+}
+
 export class ApiRequestError extends Error {
   constructor(
     readonly status: number,

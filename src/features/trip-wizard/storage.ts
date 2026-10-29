@@ -13,6 +13,53 @@ import {
 export const WIZARD_DRAFT_KEY = 'wizard_draft_v1'
 export const TRIP_DRAFT_KEY = 'trip_draft_v1'
 export const TRIP_SAVE_PENDING_KEY = 'trip_save_pending_v1'
+export const PENDING_ACTION_KEY = 'pending_action'
+export const AUTH_SYNC_PENDING_KEY = 'auth_sync_pending_v1'
+export const AUTH_SYNC_NEXT_KEY = 'auth_sync_next_v1'
+
+export type PendingAction = { type: 'save_place'; placeId: string }
+
+const pendingActionSchema = z.string().regex(/^save_place:[0-9a-f-]{36}$/i)
+
+export function readPendingAction(): PendingAction | null {
+  try {
+    const raw = localStorage.getItem(PENDING_ACTION_KEY)
+    if (!raw || !pendingActionSchema.safeParse(raw).success) return null
+    return { type: 'save_place', placeId: raw.slice('save_place:'.length) }
+  } catch { return null }
+}
+
+export function writePendingAction(action: PendingAction): void {
+  try { localStorage.setItem(PENDING_ACTION_KEY, `${action.type}:${action.placeId}`) } catch { /* Retry remains possible from the originating flow. */ }
+}
+
+export function clearPendingAction(): void {
+  try { localStorage.removeItem(PENDING_ACTION_KEY) } catch { /* Ignore restricted storage. */ }
+}
+
+export function hasPendingAuthSync(): boolean {
+  try { return localStorage.getItem(AUTH_SYNC_PENDING_KEY) === 'true' } catch { return false }
+}
+
+export function markAuthSyncPending(): void {
+  try { localStorage.setItem(AUTH_SYNC_PENDING_KEY, 'true') } catch { /* Draft remains the durable copy. */ }
+}
+
+export function clearAuthSyncPending(): void {
+  try { localStorage.removeItem(AUTH_SYNC_PENDING_KEY) } catch { /* Ignore restricted storage. */ }
+}
+
+export function readAuthSyncNext(): string | null {
+  try { return localStorage.getItem(AUTH_SYNC_NEXT_KEY) } catch { return null }
+}
+
+export function writeAuthSyncNext(next: string): void {
+  try { localStorage.setItem(AUTH_SYNC_NEXT_KEY, next) } catch { /* Navigation still has its in-memory fallback. */ }
+}
+
+export function clearAuthSyncNext(): void {
+  try { localStorage.removeItem(AUTH_SYNC_NEXT_KEY) } catch { /* Ignore restricted storage. */ }
+}
 
 export interface TripWizardFormValues {
   numDays: number

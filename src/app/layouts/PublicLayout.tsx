@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet } from 'react-router-dom'
 import { BrandMark } from '@/components/BrandMark'
 import { paths } from '../paths'
 import { vi } from '@/lib/strings/vi'
+import { AuthResumeNotice } from '@/features/auth/components/AuthResumeNotice'
 
 const navClass = ({ isActive }: { isActive: boolean }) => `rounded-control px-3 py-2 text-sm ${isActive ? 'bg-primary-tint text-primary' : 'text-ink-muted hover:text-primary'}`
 
@@ -11,6 +12,7 @@ export function PublicLayout() {
       <BrandMark /><div className="hidden items-center gap-1 md:flex"><NavLink to={paths.explore} className={navClass}>{vi.navigation.explore}</NavLink><NavLink to={paths.map} className={navClass}>{vi.navigation.map}</NavLink><Link to={paths.planNew} className="rounded-control bg-primary px-4 py-3 text-sm font-semibold text-surface hover:bg-primary-hover">{vi.navigation.createTrip}</Link><NavLink to={paths.accountTrips} className={navClass}>{vi.navigation.myTrips}</NavLink><NavLink to={paths.login} className={navClass}>{vi.navigation.signIn}</NavLink></div>
       <Link className="min-h-11 rounded-control px-3 py-2 text-sm text-primary md:hidden" to={paths.login}>{vi.navigation.me}</Link>
     </nav></header>
+    <AuthResumeNotice />
     <main><Outlet /></main>
     <footer className="border-t border-line bg-surface px-4 py-6 text-center text-sm text-ink-muted"><div className="mx-auto flex max-w-content flex-wrap justify-center gap-5"><Link to={paths.about}>{vi.layout.about}</Link><Link to={paths.privacy}>{vi.layout.privacy}</Link><span>{vi.layout.osmCredit}</span></div></footer>
     <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-line bg-surface px-2 pb-[env(safe-area-inset-bottom)] pt-1 md:hidden" aria-label={vi.layout.mobileNavigation}>

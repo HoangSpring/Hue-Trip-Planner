@@ -303,11 +303,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** đạt AC F-08 (trừ đồng bộ nháp, làm ở T-038).
 - **Ghi chú:** đã có trang email/mật khẩu, xác nhận email, đặt lại mật khẩu, callback và kiểm thử next an toàn; Google không triển khai theo phạm vi yêu cầu.
 
-### [ ] T-038 · Đồng bộ nháp khi đăng nhập · `M`
+### [x] T-038 · Đồng bộ nháp khi đăng nhập · `M`
 - **Tham chiếu:** `docs/03` FL-03
 - **Dep:** T-035, T-037
 - **Làm:** sau đăng nhập: nếu có `trip_draft_v1` thì `POST /api/trips` (idempotent), xóa nháp, mở `/trip/:id`; xử lý `pending_action`; xử lý lỗi (giữ nháp + banner thử lại).
 - **Hoàn thành khi:** nháp không mất, không bị nhân đôi dù tải lại hoặc gọi hai lần; test e2e đăng nhập giữa luồng.
+  - **Ghi chú:** guard và callback tiếp tục đồng bộ sau khi phiên Supabase sẵn sàng; POST idempotent theo `clientDraftId`, chỉ xóa nháp sau khi các hành động chờ hoàn tất. Lỗi giữ dữ liệu và hiện nút thử lại. Kiểm thử router dùng session/API giả; pending `save_place:<id>` gọi API client T-040 và được kiểm thử bằng service giả.
 
 ### [ ] T-039 · Chuyến đi của tôi (F-09) và Cài đặt tài khoản · `M`
 - **Tham chiếu:** `docs/02` F-09; `docs/06` mục 7.1, 8.4; `docs/08` S15, S16B

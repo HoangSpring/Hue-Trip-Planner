@@ -6,6 +6,8 @@ import type { Session, SupabaseClient } from '@supabase/supabase-js'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createAppRoutes, routePaths } from './router'
 import { paths } from './paths'
+import { readStoredTripDraft, writeStoredTripDraft } from '@/features/trip-wizard/storage'
+import type { TripDraft } from '@shared/schemas'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
@@ -40,8 +42,17 @@ function profileResponse(role: 'user' | 'admin') {
   }
 }
 
-async function renderPath(path: string, session: Session | null = null, role: 'user' | 'admin' = 'user') {
-  if (session) {
+const syncDraft: TripDraft = {
+  clientDraftId: '00000000-0000-4000-8000-000000000001', title: 'Huế', startDate: '2026-11-01', numDays: 1,
+  generatedBy: 'fallback', llmModel: null, start: null,
+  input: { numDays: 1, startDate: '2026-11-01', companion: 'couple', groupSize: 2, interests: ['heritage', 'cuisine'], pace: 'moderate', budget: null, transport: null, start: null, notes: null },
+  days: [{ id: '00000000-0000-4000-8000-000000000010', dayIndex: 1, date: '2026-11-01', note: null, items: [] }],
+}
+
+async function renderPath(path: string, session: Session | null = null, role: 'user' | 'admin' = 'user', fetchImpl?: typeof fetch) {
+  if (fetchImpl) {
+    vi.stubGlobal('fetch', fetchImpl)
+  } else if (session) {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: true, status: 200, json: async () => profileResponse(role),
     }))
@@ -134,6 +145,25 @@ describe('memory router for every route in docs/04', () => {
     const rendered = await renderPath(`${paths.login}?next=%2Fexplore`, testSession)
     try {
       expect(rendered.router.state.location.pathname).toBe(paths.explore)
+    } finally {
+      await rendered.cleanup()
+    }
+  })
+
+  it('saves a guest trip draft once after a persisted login and opens its saved trip', async () => {
+    writeStoredTripDraft(syncDraft)
+    const trip = { ...syncDraft, id: 'c0000000-0000-4000-8000-000000000009', isShared: false, shareToken: null, createdAt: '2026-10-29T00:00:00.000Z', updatedAt: '2026-10-29T00:00:00.000Z' }
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 201, json: async () => trip })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const rendered = await renderPath(`${paths.login}?next=%2Fexplore`, testSession, 'user', fetchMock as typeof fetch)
+    try {
+      expect(rendered.router.state.location.pathname).toBe(paths.trip(trip.id))
+      expect(readStoredTripDraft()).toBeNull()
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+      const [url, options] = fetchMock.mock.calls[0] ?? []
+      expect(url).toBe('/api/trips')
+      expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer test-session-token')
     } finally {
       await rendered.cleanup()
     }

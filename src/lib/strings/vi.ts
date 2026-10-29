@@ -74,6 +74,7 @@ export const vi = {
     resetRequestFailed: 'Chưa thể gửi hướng dẫn lúc này. Bạn thử lại sau nhé.',
     resetPasswordFailed: 'Liên kết có thể đã hết hạn. Hãy yêu cầu gửi liên kết mới rồi thử lại.',
     unavailable: 'Dịch vụ đăng nhập chưa sẵn sàng. Bạn thử lại sau nhé.',
+    resumeFailed: 'Chưa thể hoàn tất đồng bộ sau khi đăng nhập. Dữ liệu vẫn được giữ lại; bạn có thể thử lại.',
   },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
   explore: {

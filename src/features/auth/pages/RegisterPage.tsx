@@ -34,7 +34,7 @@ export default function RegisterPage() {
         },
       })
       if (authError) setError(vi.auth.registrationFailed)
-      else if (data.session) navigate(next, { replace: true })
+      else if (data.session) navigate(`${paths.authCallback}?next=${encodeURIComponent(next)}`, { replace: true })
       else setConfirmationNeeded(true)
     } catch { setError(vi.auth.unavailable) } finally { setBusy(false) }
   }
