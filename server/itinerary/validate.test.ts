@@ -90,6 +90,24 @@ describe('validateLlmItinerary V1-V10', () => {
     expect(result.days.flatMap(({ items }) => items).some(({ placeId }) => placeId.endsWith('999999999999'))).toBe(false)
   })
 
+  it('does not retry the same scheduler-rejected candidate in the same slot', async () => {
+    const farLunchCandidates = records.map((candidate) => candidate.place.category === 'food'
+      ? { ...candidate, place: { ...candidate.place, lat: 16.45, lng: 120 } }
+      : candidate)
+    const morning = farLunchCandidates.find(({ place }) => place.category !== 'food')
+    const secondMorning = farLunchCandidates.find(({ place }) => place.category !== 'food' && place.id !== morning?.place.id)
+    expect(morning).toBeDefined()
+    expect(secondMorning).toBeDefined()
+    const result = await validateLlmItinerary({ days: [
+      { dayIndex: 1, items: [{ placeId: morning?.place.id, slot: 'morning', reason: 'Một điểm dừng phù hợp.' }] },
+      { dayIndex: 2, items: [{ placeId: secondMorning?.place.id, slot: 'morning', reason: 'Một điểm dừng khác.' }] },
+    ] }, { input, candidates: farLunchCandidates })
+    const rejectedLunches = result.issues.filter((issue) => issue.startsWith('unschedulable_item:') &&
+      farLunchCandidates.some(({ place }) => place.category === 'food' && issue.includes(place.id)))
+    expect(rejectedLunches.length).toBeLessThanOrEqual(farLunchCandidates.filter(({ place }) => place.category === 'food').length * input.numDays)
+    expect(new Set(rejectedLunches).size).toBe(rejectedLunches.length)
+  })
+
   it('rejects low coverage when no submitted candidates can complete the itinerary', async () => {
     const result = await validateLlmItinerary({ days: [{ dayIndex: 1, items: [{
       placeId: '00000000-0000-4000-8000-999999999999', slot: 'morning', reason: 'Một lựa chọn phù hợp.'

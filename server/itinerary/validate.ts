@@ -133,7 +133,7 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
       const removable = [...nonLunch].sort((a, b) => a.candidate.score - b.candidate.score || b.candidate.place.slug.localeCompare(a.candidate.place.slug, 'en'))
       while (items.length > maximum && removable.length) {
         const remove = removable.shift()
-        if (remove) { items.splice(items.indexOf(remove), 1); usedIds.delete(remove.placeId); issues.push(`trimmed:${dayIndex}`) }
+        if (remove) { items.splice(items.indexOf(remove), 1); usedIds.delete(remove.placeId); issues.push(`trimmed:${dayIndex}:${remove.placeId}`) }
       }
     }
     const rankedFill = [...options.candidates].sort((a, b) => b.score - a.score || a.place.slug.localeCompare(b.place.slug, 'en'))
@@ -161,6 +161,9 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
         { input: options.input, dayIndex })
     }
     let scheduled = scheduleCurrentDay()
+    // Do not refill a candidate into the exact slot the scheduler just rejected.
+    // Otherwise the V9 repair loop can retry the same impossible lunch/stop until its cap.
+    const rejectedSelections = new Set<string>()
     // V9/V10: repair only this day. Drop an unschedulable/farthest non-lunch stop,
     // then fill from the submitted pool by score; never expand beyond sent IDs.
     for (let attempt = 0; attempt < options.candidates.length && attempt < maximum + 3; attempt++) {
@@ -170,9 +173,11 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
         const index = items.findIndex(({ placeId }) => placeId === droppedId)
         if (index >= 0) {
           if (items[index]?.slot === 'noon') issues.push(`lunch_schedule_rejected:${dayIndex}`)
+          const dropped = items[index]
+          if (dropped) rejectedSelections.add(`${dropped.placeId}:${dropped.slot}`)
           items.splice(index, 1)
           usedIds.delete(droppedId)
-          issues.push(`unschedulable_item:${dayIndex}:${droppedId}`)
+          issues.push(`unschedulable_item:${dayIndex}:${droppedId}:slot=${dropped?.slot ?? 'unknown'}:duration=${dropped?.candidate.place.visitDurationMin ?? 'unknown'}`)
           removed = true
         }
       }
@@ -181,9 +186,10 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
         const removable = scheduled.items.filter(({ slot }) => slot !== 'noon')
           .sort((a, b) => b.travelDistanceM - a.travelDistanceM || a.candidate.score - b.candidate.score)[0]
         if (removable) {
+          rejectedSelections.add(`${removable.candidate.place.id}:${removable.slot}`)
           items.splice(items.findIndex(({ placeId }) => placeId === removable.candidate.place.id), 1)
           usedIds.delete(removable.candidate.place.id)
-          issues.push(`travel_limit_item:${dayIndex}:${removable.candidate.place.id}`)
+          issues.push(`travel_limit_item:${dayIndex}:${removable.candidate.place.id}:totalMin=${currentTravel}:legMin=${removable.travelMinFromPrev}:legMeters=${removable.travelDistanceM}`)
           removed = true
         }
       }
@@ -194,11 +200,14 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
 
       if (items.length < minimum) {
         const hasLunchNow = items.some(({ slot, candidate }) => slot === 'noon' && isLunch(candidate))
+        const slotForFill = (candidate: ScoredCandidate) => isLunch(candidate) ? 'noon' :
+          candidate.place.bestTime.find((value) => value !== 'noon') ?? 'morning'
         const fill = [...options.candidates].sort((a, b) => b.score - a.score || a.place.slug.localeCompare(b.place.slug, 'en'))
           .find((candidate) => !usedIds.has(candidate.place.id) && !items.some(({ placeId }) => placeId === candidate.place.id) &&
+            !rejectedSelections.has(`${candidate.place.id}:${slotForFill(candidate)}`) &&
             (hasLunchNow ? candidate.place.category !== 'food' : isLunch(candidate)))
         if (fill) {
-          const slot = isLunch(fill) ? 'noon' : fill.place.bestTime.find((value) => value !== 'noon') ?? 'morning'
+          const slot = slotForFill(fill)
           items.push({ placeId: fill.place.id, slot, reason: buildReason(fill, options.input, slot, dayIndex + items.length), candidate: fill })
           usedIds.add(fill.place.id)
           issues.push(`filled:${dayIndex}`)
