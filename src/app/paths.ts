@@ -14,6 +14,13 @@ export const paths = {
 } as const
 
 export function safeNextPath(next: string | null, fallback = paths.accountTrips): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('://') || next.includes('\\')) return fallback
-  return next
+  if (!next) return fallback
+  const candidate = next.trim()
+  if (!candidate.startsWith('/') || candidate.startsWith('//') || candidate.includes('://') || candidate.includes('\\') || /[\u0000-\u001f\u007f]/.test(candidate)) return fallback
+  try {
+    const resolved = new URL(candidate, 'https://internal.invalid')
+    return resolved.origin === 'https://internal.invalid' ? candidate : fallback
+  } catch {
+    return fallback
+  }
 }

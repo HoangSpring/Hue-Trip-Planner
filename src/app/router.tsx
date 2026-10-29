@@ -30,6 +30,11 @@ const GeneratingPage = lazy(() => import('@/features/trip-wizard/GeneratingPage'
 const TripEditorPage = lazy(() => import('@/features/trip-editor/TripEditorPage').then(module => ({ default: module.TripEditorPage })))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
+const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
+const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
+const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPasswordPage'))
+const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -74,12 +79,12 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
     ] },
     { element: <AuthLayout />, children: [
       { element: <RequireGuest />, children: [
-        { path: paths.login, element: page(vi.pages.login, true) },
-        { path: paths.register, element: page(vi.pages.register, true) },
-        { path: paths.forgotPassword, element: page(vi.pages.forgotPassword, true) },
+        { path: paths.login, element: <Suspense fallback={loading}><LoginPage /></Suspense> },
+        { path: paths.register, element: <Suspense fallback={loading}><RegisterPage /></Suspense> },
+        { path: paths.forgotPassword, element: <Suspense fallback={loading}><ForgotPasswordPage /></Suspense> },
       ] },
-      { path: paths.resetPassword, element: page(vi.pages.resetPassword, true) },
-      { path: paths.authCallback, element: page(vi.pages.authCallback, true) },
+      { path: paths.resetPassword, element: <Suspense fallback={loading}><ResetPasswordPage /></Suspense> },
+      { path: paths.authCallback, element: <Suspense fallback={loading}><AuthCallbackPage /></Suspense> },
     ] },
     { path: paths.account, element: <RequireAuth />, children: [{ element: <AccountLayout />, children: [
       { index: true, element: <Navigate to={paths.accountTrips} replace /> },

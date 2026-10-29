@@ -1,4 +1,5 @@
 export * from './apiError'
+export * from './auth'
 export * from './enums'
 export * from './place'
 export * from './placeApi'

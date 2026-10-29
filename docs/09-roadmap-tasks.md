@@ -295,11 +295,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `TripEditorPage` chế độ `saved`: tải từ API, **tự động lưu** (debounce ~800 ms) qua `PUT`, chỉ báo "Đang lưu / Đã lưu", xử lý `409` ("Tải lại?"), cập nhật lạc quan + hoàn lại khi lỗi; `/plan/generating` lưu ngay khi đã đăng nhập (FL-02) và xử lý lưu lỗi (giữ nháp, banner "Lưu lại").
 - **Hoàn thành khi:** AC F-07 phần lưu đạt; tải lại trang giữ nguyên thay đổi; người không phải chủ nhận 404.
 
-### [ ] T-037 · Trang Đăng nhập/Đăng ký/Quên mật khẩu (F-08) · `M`
+### [x] T-037 · Trang Đăng nhập/Đăng ký/Quên mật khẩu (F-08) · `M`
 - **Tham chiếu:** `docs/02` F-08; `docs/03` FL-03; `docs/08` S14
 - **Dep:** T-008, T-007
 - **Làm:** `/login`, `/register`, `/forgot-password`, `/reset-password`, `/auth/callback`; email + mật khẩu và Google (nếu đã chốt); giữ `next` an toàn; thông báo lỗi tiếng Việt, không tiết lộ email có tồn tại.
 - **Hoàn thành khi:** đạt AC F-08 (trừ đồng bộ nháp, làm ở T-038).
+- **Ghi chú:** đã có trang email/mật khẩu, xác nhận email, đặt lại mật khẩu, callback và kiểm thử next an toàn; Google không triển khai theo phạm vi yêu cầu.
 
 ### [ ] T-038 · Đồng bộ nháp khi đăng nhập · `M`
 - **Tham chiếu:** `docs/03` FL-03

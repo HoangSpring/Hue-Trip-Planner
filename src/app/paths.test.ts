@@ -17,8 +17,8 @@ describe('route paths', () => {
   it('allows only internal next paths', () => {
     expect(safeNextPath('/account/trips?tab=recent')).toBe('/account/trips?tab=recent')
     expect(safeNextPath(null)).toBe(paths.accountTrips)
-    expect(safeNextPath('//example.com')).toBe(paths.accountTrips)
-    expect(safeNextPath('/\\\\example.com')).toBe(paths.accountTrips)
-    expect(safeNextPath('/https://example.com')).toBe(paths.accountTrips)
+    for (const unsafe of ['//evil.com', 'https://evil.com', '/\\evil.com', String.raw`/\evil.com`, 'javascript:']) {
+      expect(safeNextPath(unsafe)).toBe(paths.accountTrips)
+    }
   })
 })
