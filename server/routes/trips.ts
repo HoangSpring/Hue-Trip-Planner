@@ -17,6 +17,8 @@ export type TripRouteDependencies = {
 }
 
 const routeError: ErrorHandler<ApiEnv> = (error, context) => {
+  console.error('--- RAW TRIP ROUTE ERROR ---', error) // <--- Thêm dòng này để in lỗi thật
+
   if (!(error instanceof AppError) && error instanceof TripRepositoryError) {
     if (error.code === 'PT404' || error.code === '42501') error = new AppError(404, 'NOT_FOUND', 'Không tìm thấy chuyến đi.')
     else if (error.code === 'PT401') error = new AppError(401, 'UNAUTHENTICATED', 'Vui lòng đăng nhập để tiếp tục.')

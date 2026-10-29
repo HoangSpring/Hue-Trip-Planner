@@ -113,7 +113,10 @@ async function main(): Promise<void> {
 
     const created = await request('/trips', 'POST', accessTokenA, generated.draft)
     const originalId = tripId(created)
-    if (created.status !== 201 || !originalId) throw new Error('trip_create_failed')
+    if (created.status !== 201 || !originalId) {
+      console.error('SERVER ERROR RESPONSE:', created.status, JSON.stringify(created.body, null, 2))
+      throw new Error('trip_create_failed')
+    }
     createdIds.push(originalId)
     record('A tạo trip', 'PASS', 'POST trả 201.')
 

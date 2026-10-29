@@ -17,44 +17,62 @@ export type Database = {
       generation_events: {
         Row: {
           client_key: string
+          coverage: number | null
           created_at: string
           duration_ms: number | null
           error_code: string | null
+          fallback_reason: string | null
           generated_by: string | null
           id: number
           input_tokens: number | null
           is_guest: boolean
           llm_model: string | null
           output_tokens: number | null
+          pool_size: number | null
+          prompt_version: string | null
+          repairs: number | null
           status: string
+          thinking_tokens: number | null
           user_id: string | null
         }
         Insert: {
           client_key: string
+          coverage?: number | null
           created_at?: string
           duration_ms?: number | null
           error_code?: string | null
+          fallback_reason?: string | null
           generated_by?: string | null
           id?: never
           input_tokens?: number | null
           is_guest: boolean
           llm_model?: string | null
           output_tokens?: number | null
+          pool_size?: number | null
+          prompt_version?: string | null
+          repairs?: number | null
           status: string
+          thinking_tokens?: number | null
           user_id?: string | null
         }
         Update: {
           client_key?: string
+          coverage?: number | null
           created_at?: string
           duration_ms?: number | null
           error_code?: string | null
+          fallback_reason?: string | null
           generated_by?: string | null
           id?: never
           input_tokens?: number | null
           is_guest?: boolean
           llm_model?: string | null
           output_tokens?: number | null
+          pool_size?: number | null
+          prompt_version?: string | null
+          repairs?: number | null
           status?: string
+          thinking_tokens?: number | null
           user_id?: string | null
         }
         Relationships: [
@@ -639,9 +657,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_trip_from_payload: { Args: { p_payload: Json }; Returns: Json }
       f_unaccent: { Args: { "": string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
-      create_trip_from_payload: { Args: { p_payload: Json }; Returns: Json }
       nearby_places: {
         Args: {
           p_exclude?: string[]
@@ -667,8 +685,35 @@ export type Database = {
         }[]
       }
       save_trip: {
-        Args: { p_expected_updated_at: string; p_payload: Json; p_trip_id: string }
-        Returns: Json
+        Args: {
+          p_expected_updated_at: string
+          p_payload: Json
+          p_trip_id: string
+        }
+        Returns: {
+          client_draft_id: string | null
+          created_at: string
+          generated_by: string
+          id: string
+          input: Json
+          is_shared: boolean
+          llm_model: string | null
+          num_days: number
+          share_token: string | null
+          start_date: string | null
+          start_label: string | null
+          start_lat: number | null
+          start_lng: number | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trips"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {

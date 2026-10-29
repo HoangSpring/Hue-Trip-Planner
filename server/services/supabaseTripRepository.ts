@@ -27,7 +27,7 @@ function assertNoError(error: { code: string; message: string } | null): void {
 }
 
 export class SupabaseTripRepository implements TripRepository {
-  constructor(private readonly client: SupabaseClient<Database>) {}
+  constructor(private readonly client: SupabaseClient<Database>) { }
 
   async list(): Promise<Trip[]> {
     const { data, error } = await this.client.from('trips').select('*').order('updated_at', { ascending: false })
@@ -128,8 +128,8 @@ function mapTrip(row: TripRow, days: Trip['days']): Trip {
     isShared: row.is_shared,
     shareToken: row.share_token,
     days,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    createdAt: row.created_at ? new Date(row.created_at).toISOString() : row.created_at,
+    updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : row.updated_at,
   })
 }
 

@@ -106,9 +106,12 @@ begin
   if not found then
     raise exception using errcode = 'PT404', message = 'TRIP_NOT_FOUND';
   end if;
-  if v_trip.updated_at <> p_expected_updated_at then
+  
+  -- So sánh thời gian theo mili-giây để tránh lệch micro-giây với JavaScript .toISOString()
+  if date_trunc('millisecond', v_trip.updated_at) <> date_trunc('millisecond', p_expected_updated_at) then
     raise exception using errcode = 'PT409', message = 'TRIP_VERSION_CONFLICT';
   end if;
+
   if (p_payload->>'numDays')::smallint <> v_trip.num_days then
     raise exception using errcode = 'PT422', message = 'TRIP_NUM_DAYS_IMMUTABLE';
   end if;
