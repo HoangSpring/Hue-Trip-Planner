@@ -641,6 +641,7 @@ export type Database = {
     Functions: {
       f_unaccent: { Args: { "": string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
+      create_trip_from_payload: { Args: { p_payload: Json }; Returns: Json }
       nearby_places: {
         Args: {
           p_exclude?: string[]
@@ -664,6 +665,10 @@ export type Database = {
           slug: string
           verified: boolean
         }[]
+      }
+      save_trip: {
+        Args: { p_expected_updated_at: string; p_payload: Json; p_trip_id: string }
+        Returns: Json
       }
     }
     Enums: {

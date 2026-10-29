@@ -71,15 +71,16 @@ erDiagram
 
 ```
 supabase/migrations/
-  20250101000001_extensions_and_helpers.sql
-  20250101000002_profiles.sql
-  20250101000003_places_and_tags.sql
-  20250101000004_trips.sql
-  20250101000005_saved_and_logs.sql
-  20250101000006_rls_policies.sql
-  20250101000007_storage.sql
+  20261024000001_extensions_and_helpers.sql
+  20261024000002_profiles.sql
+  20261024000003_places_and_tags.sql
+  20261024000004_trips.sql
+  20261024000005_saved_and_logs.sql
+  20261024000006_rls_policies.sql
+  20261024000007_storage.sql
   20261024000008_nearby_places.sql      # nearby_places (T-012; xem docs/06 mục 10)
-  20250101000009_trip_rpcs.sql          # save_trip, create_trip_from_payload (T-034; xem docs/06 mục 10)
+  20261029000009_generation_events_telemetry.sql # telemetry cho generation_events (đã áp dụng)
+  20261029000010_trip_rpcs.sql          # save_trip, create_trip_from_payload (T-034; xem docs/06 mục 10)
 supabase/seed/
   001_tags.sql
   002_start_points.sql
@@ -431,6 +432,8 @@ create trigger trg_trip_items_consistency
   for each row execute function public.check_trip_item_consistency();
 ```
 
+`create_trip_from_payload(jsonb)` và `save_trip(uuid,jsonb,timestamptz)` được tạo trong migration 10. Cả hai là `SECURITY INVOKER`, xác định người dùng qua `auth.uid()` và chịu các policy RLS ở mục 5.6. `create_trip_from_payload` chống trùng theo `(user_id, client_draft_id)` và giới hạn mặc định 50 chuyến/người; có thể cấu hình ở DB bằng `app.max_trips_per_user`. `save_trip` khóa trip bằng `FOR UPDATE`, phát SQLSTATE `PT409` (`TRIP_VERSION_CONFLICT`) khi phiên bản cũ, giữ nguyên `num_days`, đồng bộ days/items trong một transaction và đánh lại `position` do API đã kiểm tra. Không được áp dụng migration 10 trước khi chủ dự án review.
+
 > **Đổi thứ tự (`position`):** không đặt ràng buộc `unique (trip_day_id, position)` để việc hoán đổi không bị lỗi tạm thời. Khi lưu, backend ghi lại toàn bộ `position` của ngày trong **một transaction** (hàm RPC hoặc `upsert` hàng loạt), đánh số liên tục 0..n-1.
 
 ### 5.5 `..._saved_and_logs.sql`
@@ -500,6 +503,12 @@ create policy "profiles: admin sửa tất cả" on public.profiles
 -- places: công khai chỉ thấy published; admin thấy và ghi tất cả
 create policy "places: đọc published" on public.places
   for select using (status = 'published' or public.is_admin());
+-- Migration 10 bổ sung policy chỉ cho phép chủ trip đọc place archived đã có trong trip của mình.
+create policy "places: archived in owned trips" on public.places
+  for select using (status = 'archived' and exists (
+    select 1 from public.trip_items ti join public.trips t on t.id = ti.trip_id
+    where ti.place_id = places.id and t.user_id = auth.uid()
+  ));
 create policy "places: admin ghi" on public.places
   for all using (public.is_admin()) with check (public.is_admin());
 
@@ -564,6 +573,8 @@ create policy "audit: admin đọc" on public.place_audit_log
 ```
 
 > **Lưu ý bảo mật:** `service role` bỏ qua RLS, vì vậy mọi endpoint dùng nó phải **tự kiểm tra quyền** (xác thực JWT, kiểm tra `user_id`, kiểm tra admin) trước khi truy vấn. Khuyến nghị: với thao tác của người dùng thường, backend nên tạo Supabase client **kèm JWT của người dùng** để RLS vẫn có hiệu lực, và chỉ dùng service role cho các việc cần thiết (đọc theo `share_token`, ghi `generation_events`, `place_audit_log`, import).
+
+RPC lưu trip là `SECURITY INVOKER`; route T-035 luôn dùng client kèm JWT người gọi, không dùng service role. Policy archived ở migration 10 chỉ mở quyền đọc một địa điểm archived nếu nó đã nằm trong trip do chính người gọi sở hữu.
 
 ### 5.7 `..._storage.sql`
 

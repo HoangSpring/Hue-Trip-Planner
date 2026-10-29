@@ -1,0 +1,1 @@
+alter table public.generation_events  add column if not exists prompt_version text,  add column if not exists pool_size integer,  add column if not exists repairs integer,  add column if not exists coverage numeric(4,3),  add column if not exists fallback_reason text,  add column if not exists thinking_tokens integer;

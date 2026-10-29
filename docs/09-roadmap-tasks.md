@@ -279,7 +279,7 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-034 · Migration RPC lưu chuyến đi · `M`
 - **Tham chiếu:** `docs/06` mục 10; `docs/05` mục 5.4
 - **Dep:** T-003
-- **Làm:** migration 9: `save_trip`, `create_trip_from_payload` (idempotent theo `(user_id, client_draft_id)`); bảo đảm `SECURITY INVOKER`, giữ RLS. Migration 8 `nearby_places` thuộc T-012.
+- **Làm:** migration 10: `save_trip`, `create_trip_from_payload` (idempotent theo `(user_id, client_draft_id)`); bảo đảm `SECURITY INVOKER`, giữ RLS. Migration 8 `nearby_places` thuộc T-012; migration 9 là telemetry `generation_events` đã áp dụng. Migration 10 đã tạo trên nhánh T-034 nhưng chưa áp dụng; chỉ tick sau khi chủ dự án áp dụng và smoke qua.
 - **Hoàn thành khi:** test: lưu hai lần cùng `clientDraftId` chỉ tạo một bản ghi; `p_expected_updated_at` lệch → lỗi phiên bản; user B không ghi được vào chuyến đi của A.
 
 ### [ ] T-035 · API chuyến đi của người dùng · `L`
