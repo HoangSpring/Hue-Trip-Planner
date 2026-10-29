@@ -11,6 +11,7 @@ import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
 import './map.css'
+import { SavedPlaceButton } from '@/features/saved/SavedPlaceButton'
 
 type MapViewProps = {
   places: PlaceMapItemDto[]
@@ -120,6 +121,6 @@ export function MapView({
       </MapContainer>}
     </MapBoundary>
     <div className="pointer-events-none absolute bottom-0 right-0 z-[500] bg-white/90 px-2 py-1 text-[11px] leading-4 text-ink"><a className="pointer-events-auto underline" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">{vi.layout.osmCredit}</a></div>
-    {activeSelected && <aside className="absolute left-3 top-3 z-[500] max-w-[calc(100%-24px)] rounded-card border border-line bg-white p-3 shadow-card sm:left-auto sm:right-3 sm:w-64" aria-live="polite"><button onClick={handleClose} aria-label={vi.map.closeCard} className="float-right grid size-8 place-items-center rounded-full text-ink-muted">×</button><p className="pr-6 text-xs text-ink-muted">{categoryLabel[activeSelected.category]}</p><h3 className="mt-1 font-serif text-lg leading-6">{activeSelected.name}</h3><a href={paths.place(activeSelected.slug)} className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline underline-offset-4">{vi.map.details}</a></aside>}
+    {activeSelected && <aside className="absolute left-3 top-3 z-[500] max-w-[calc(100%-24px)] rounded-card border border-line bg-white p-3 shadow-card sm:left-auto sm:right-3 sm:w-64" aria-live="polite"><button onClick={handleClose} aria-label={vi.map.closeCard} className="float-right grid size-8 place-items-center rounded-full text-ink-muted">×</button><div className="flex items-start justify-between gap-2"><div><p className="pr-6 text-xs text-ink-muted">{categoryLabel[activeSelected.category]}</p><h3 className="mt-1 font-serif text-lg leading-6">{activeSelected.name}</h3></div><SavedPlaceButton place={activeSelected}/></div><a href={paths.place(activeSelected.slug)} className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline underline-offset-4">{vi.map.details}</a></aside>}
   </div>
 }

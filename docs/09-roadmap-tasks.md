@@ -317,11 +317,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** đạt AC F-09; xóa tài khoản xóa sạch dữ liệu liên quan (kiểm tra cascade); nhân bản không kế thừa `share_token`.
   - **Ghi chú:** danh sách, mở/đổi tên/nhân bản/xóa có xác nhận; cài đặt đổi tên và xóa tài khoản hai bước. Smoke chạy với tài khoản xóa dùng riêng và xác nhận trip cascade; không dùng TEST_USER_A/B cho thao tác xóa.
 
-### [ ] T-040 · Địa điểm đã lưu (F-10) · `M`
+### [x] T-040 · Địa điểm đã lưu (F-10) · `M`
 - **Tham chiếu:** `docs/02` F-10; `docs/06` mục 8.3; `docs/08` S16A
 - **Dep:** T-005, T-015, T-016, T-037
 - **Làm:** API `GET/PUT/DELETE /api/saved`; nút tim (optimistic + hoàn lại khi lỗi) ở thẻ, chi tiết, bản đồ; trang `/account/saved`; khách bấm tim → mời đăng nhập với `pending_action`; "Thêm vào chuyến đi" từ danh sách.
 - **Hoàn thành khi:** đạt AC F-10; trạng thái tim đồng nhất giữa các trang; hoàn thành nốt AC còn thiếu ở F-02 (khách bấm tim).
+  - **Ghi chú:** API dùng JWT người dùng/RLS, PUT/DELETE idempotent; thẻ, chi tiết, bản đồ và trang đã lưu chia sẻ cùng cache theo user. Khách ghi `pending_action` và chuyển tiếp sau đăng nhập; danh sách có lọc loại và thao tác thêm vào chuyến đi.
 
 ### [ ] T-041 · "Thêm vào chuyến đi" từ trang địa điểm · `S`
 - **Tham chiếu:** `docs/03` FL-04.5

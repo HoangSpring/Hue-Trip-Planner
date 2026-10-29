@@ -18,6 +18,8 @@ import {
   profileSchema,
   profileUpdateSchema,
   deleteAccountRequestSchema,
+  savedPlacesResponseSchema,
+  categorySchema,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import { z } from 'zod'
@@ -148,6 +150,15 @@ export function duplicateTripApi(id: string, accessToken: string) {
 
 export function putSavedPlaceApi(placeId: string, accessToken: string) {
   return apiRequest(`saved/${encodeURIComponent(placeId)}`, z.void(), { method: 'PUT', accessToken })
+}
+
+export function deleteSavedPlaceApi(placeId: string, accessToken: string) {
+  return apiRequest(`saved/${encodeURIComponent(placeId)}`, z.void(), { method: 'DELETE', accessToken })
+}
+
+export function getSavedPlacesApi(accessToken: string, category?: z.infer<typeof categorySchema>) {
+  const query = category ? `?category=${encodeURIComponent(category)}` : ''
+  return apiRequest(`saved${query}`, savedPlacesResponseSchema, { accessToken })
 }
 
 export class ApiRequestError extends Error {

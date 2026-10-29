@@ -143,6 +143,21 @@ async function main(): Promise<void> {
     const generated = await generateTrip(repo, itineraryEvalCases[0].input, { now: new Date(), seed: randomUUID(), clientDraftId: randomUUID() })
     record('Tạo fixture trip bằng fallback', 'PASS', `${generated.draft.days.length} ngày, chỉ dùng place published; không gọi endpoint generate.`)
 
+    const smokePlaceId = generated.draft.days.flatMap(day => day.items).at(0)?.placeId
+    if (!smokePlaceId) throw new Error('no_published_place_for_saved_smoke')
+    const savedOnce = await request(`/saved/${smokePlaceId}`, 'PUT', accessTokenA)
+    const savedTwice = await request(`/saved/${smokePlaceId}`, 'PUT', accessTokenA)
+    const savedList = await request('/saved', 'GET', accessTokenA)
+    const savedItems = jsonValue(savedList.body).items
+    if (savedOnce.status !== 204 || savedTwice.status !== 204 || !Array.isArray(savedItems) || !savedItems.some(item => jsonValue(item).id === smokePlaceId)) throw new Error('saved_place_put_failed')
+    record('Lưu địa điểm lặp lại', 'PASS', 'Hai PUT trả 204; địa điểm published xuất hiện một lần trong danh sách.')
+    const unsavedOnce = await request(`/saved/${smokePlaceId}`, 'DELETE', accessTokenA)
+    const unsavedTwice = await request(`/saved/${smokePlaceId}`, 'DELETE', accessTokenA)
+    const afterUnsave = await request('/saved', 'GET', accessTokenA)
+    const remainingSaved = jsonValue(afterUnsave.body).items
+    if (unsavedOnce.status !== 204 || unsavedTwice.status !== 204 || !Array.isArray(remainingSaved) || remainingSaved.some(item => jsonValue(item).id === smokePlaceId)) throw new Error('saved_place_delete_failed')
+    record('Bỏ lưu địa điểm lặp lại', 'PASS', 'Hai DELETE trả 204; địa điểm đã biến mất khỏi danh sách.')
+
     const created = await request('/trips', 'POST', accessTokenA, generated.draft)
     const originalId = tripId(created)
     if (created.status !== 201 || !originalId) {

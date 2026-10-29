@@ -10,6 +10,7 @@ import { ImageCredit } from '@/components/ui/ImageCredit'
 import { PlaceCard } from '@/components/ui/PlaceCard'
 import { MapView } from '@/features/map/MapView'
 import { PlacePhoto } from '@/components/ui/PlacePhoto'
+import { SavedPlaceButton } from '@/features/saved/SavedPlaceButton'
 
 export default function PlacePage() {
   const { slug = '' } = useParams()
@@ -38,7 +39,7 @@ export default function PlacePage() {
   const directionsUrl = `https://www.openstreetmap.org/directions?engine=fossgis_osrm_car&route=${place.lat}%2C${place.lng}%3B${place.lat}%2C${place.lng}`
   return <article className="mx-auto max-w-content px-4 pb-16 pt-8 md:px-8 md:pt-12">
     <nav className="text-sm text-ink-muted"><Link to={paths.explore} className="underline underline-offset-4">{vi.place.breadcrumb}</Link><span aria-hidden="true"> / </span>{vi.placeCategories[place.category]}</nav>
-    <header className="mt-4 max-w-4xl"><p className="text-xs font-semibold uppercase tracking-[.15em] text-secondary">{vi.placeCategories[place.category]}{place.area ? ` · ${place.area}` : ''}</p><h1 className="mt-2 text-4xl font-semibold leading-tight md:text-5xl">{place.name}</h1>{place.shortDescription && <p className="mt-4 text-lg leading-8 text-ink-muted">{place.shortDescription}</p>}</header>
+    <header className="mt-4 flex max-w-4xl items-start justify-between gap-4"><div><p className="text-xs font-semibold uppercase tracking-[.15em] text-secondary">{vi.placeCategories[place.category]}{place.area ? ` · ${place.area}` : ''}</p><h1 className="mt-2 text-4xl font-semibold leading-tight md:text-5xl">{place.name}</h1>{place.shortDescription && <p className="mt-4 text-lg leading-8 text-ink-muted">{place.shortDescription}</p>}</div><SavedPlaceButton place={place}/></header>
     {images.length > 0 ? <div className="mt-7 grid gap-3 md:grid-cols-[1.5fr_1fr]">{images.slice(0, 3).map((image, index) => <figure key={`${image.url}-${index}`} className={`overflow-hidden rounded-card border border-line bg-white ${index > 0 ? 'hidden md:block' : ''}`}><PlacePhoto src={image.url} alt={image.alt ?? place.name} loading={index ? 'lazy' : 'eager'} className={`aspect-[4/3] ${index === 0 ? 'md:aspect-[16/10]' : 'md:aspect-[16/9]'}`}/><ImageCredit credit={image.credit || null} license={image.license || null} sourceUrl={image.sourceUrl}/></figure>)}</div> : <figure className="mt-7 overflow-hidden rounded-card border border-line bg-white"><PlacePhoto src={null} alt={vi.place.placeholderAlt} className="aspect-[4/3] min-h-64"/><ImageCredit credit={null} license={null} placeholder/></figure>}
     <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,.9fr)]">
       <div className="space-y-8"><section><h2 className="font-serif text-2xl">{vi.place.introTitle}</h2>{place.description && <p className="mt-3 whitespace-pre-line text-base leading-7 text-ink-muted">{place.description}</p>}{place.address && <p className="mt-3 text-sm"><span className="font-semibold">{vi.place.address}: </span>{place.address}</p>}</section>

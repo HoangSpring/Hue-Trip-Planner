@@ -37,6 +37,7 @@ const ResetPasswordPage = lazy(() => import('@/features/auth/pages/ResetPassword
 const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPage'))
 const MyTripsPage = lazy(() => import('@/features/account/MyTripsPage'))
 const AccountSettingsPage = lazy(() => import('@/features/account/AccountSettingsPage'))
+const SavedPlacesPage = lazy(() => import('@/features/saved/SavedPlacesPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -93,7 +94,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
     { path: paths.account, element: <RequireAuth />, children: [{ element: <AccountLayout />, children: [
       { index: true, element: <Navigate to={paths.accountTrips} replace /> },
       { path: paths.accountTrips, element: <Suspense fallback={loading}><MyTripsPage /></Suspense> },
-      { path: paths.accountSaved, element: page(vi.pages.saved, true) },
+      { path: paths.accountSaved, element: <Suspense fallback={loading}><SavedPlacesPage /></Suspense> },
       { path: paths.accountSettings, element: <Suspense fallback={loading}><AccountSettingsPage /></Suspense> },
     ] }] },
     { path: paths.admin, element: <RequireAdmin />, children: [{ element: <AdminLayout />, children: [

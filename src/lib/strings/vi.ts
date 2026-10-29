@@ -86,6 +86,12 @@ export const vi = {
     coverCredit: (credit: string, license: string) => `Ảnh: ${credit} · ${license}`,
     days: (count: number) => `${count} ngày`, updated: (date: string) => `Cập nhật ${date}`,
   },
+  saved: {
+    loginTitle: 'Đăng nhập để lưu địa điểm',
+    loginBody: (name: string) => `Đăng nhập để lưu ${name} vào danh sách của bạn.`,
+    title: 'Địa điểm đã lưu', intro: 'Những nơi bạn muốn nhớ cho chuyến đi tới Huế.', empty: 'Bạn chưa lưu địa điểm nào.',
+    allCategories: 'Tất cả loại', filterLabel: 'Lọc theo loại', addToTrip: 'Thêm vào chuyến đi',
+  },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
   explore: {
     eyebrow: 'Tạp chí khám phá Huế', title: 'Đi chậm, thấy nhiều hơn', intro: 'Tìm một góc di sản, một món ngon hay khoảng lặng bên dòng Hương theo nhịp riêng của bạn.',
@@ -250,6 +256,8 @@ export const vi = {
     emptyTripBody: 'Bạn chưa có lịch trình nào đang hoạt động. Hãy tạo lịch trình mới để khám phá cố đô Huế nhé!',
     createTripBtn: 'Tạo lịch trình mới',
     dayTab: (index: number) => `Ngày ${index}`,
+    chooseTrip: 'Chọn chuyến đi', slotLabel: 'Khung giờ', alreadyAdded: 'Địa điểm này đã có trong chuyến đi.',
+    addPlaceLimit: 'Ngày này đã đủ 8 địa điểm.', noDraftForAdd: 'Bạn chưa có chuyến đi nháp. Hãy tạo một lịch trình trước nhé.',
     slots: {
       morning: 'Buổi sáng',
       noon: 'Buổi trưa',

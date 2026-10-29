@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { PlaceCard } from './PlaceCard'
 import { ImageCredit } from './ImageCredit'
 import { PlacePhoto } from './PlacePhoto'
@@ -18,7 +19,8 @@ describe('PlaceCard', () => {
   it('links to detail and uses internal placeholder for missing image', () => {
     const container = document.createElement('div')
     const root = createRoot(container)
-    act(() => root.render(<MemoryRouter><PlaceCard place={place}/></MemoryRouter>))
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    act(() => root.render(<QueryClientProvider client={queryClient}><MemoryRouter><PlaceCard place={place}/></MemoryRouter></QueryClientProvider>))
     expect(container.querySelector('a')?.getAttribute('href')).toBe('/place/sample-place')
     expect(container.textContent).toContain('Ảnh giữ chỗ minh họa · Không phải ảnh địa điểm')
     act(() => root.unmount())
