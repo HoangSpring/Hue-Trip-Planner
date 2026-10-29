@@ -243,7 +243,7 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
 - **Tham chiếu:** `docs/07` mục 8.1, 17.1; `docs/06` mục 13
 - **Dep:** T-020, **chủ dự án đã chọn nhà cung cấp LLM**
-- **Trạng thái hiện tại:** interface và FakeLlmClient đã làm; provider thật và gọi thử đang chờ chủ dự án chọn nhà cung cấp/model (D-10) và cấu hình `LLM_API_KEY`, `LLM_MODEL`.
+- **Trạng thái hiện tại:** provider Gemini và test HTTP giả đã làm; `pnpm llm:ping` đã gọi một lần nhưng timeout sau khoảng 12 giây, nên T-029 vẫn chưa đạt.
 - **Làm:** interface `LlmClient`; một provider thật (đọc `LLM_API_KEY`, `LLM_MODEL`); `FakeLlmClient` có các kịch bản lỗi (id sai, trùng, thiếu ngày, không có bữa trưa, JSON hỏng, timeout, quá dài, URL/HTML trong `reason`); ghi nhận token từ phản hồi.
 - **Hoàn thành khi:** gọi thử thành công ở môi trường phát triển; timeout hoạt động bằng `AbortSignal`; không log nội dung prompt/phản hồi.
 
