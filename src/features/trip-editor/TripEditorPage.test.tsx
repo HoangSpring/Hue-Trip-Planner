@@ -21,6 +21,7 @@ const mockPlaces = [
   { ...basePlace, id: '11111111-1111-4111-8111-111111111111', slug: 'dai-noi', name: 'Đại Nội Huế', category: 'heritage' as const, lat: 16.4691, lng: 107.5794, coverImageUrl: null },
   { ...basePlace, id: '22222222-2222-4222-8222-222222222222', slug: 'chua-thien-mu', name: 'Chùa Thiên Mụ', category: 'heritage' as const, lat: 16.4528, lng: 107.5453, coverImageUrl: null },
   { ...basePlace, id: '33333333-3333-4333-8333-333333333333', slug: 'banh-khoai', name: 'Bánh Khoái Lạc Thiện', category: 'food' as const, lat: 16.4688, lng: 107.5815, coverImageUrl: null },
+  { ...basePlace, id: '44444444-4444-4444-8444-444444444444', slug: 'lang-tu-duc', name: 'Lăng Tự Đức', category: 'heritage' as const, lat: 16.4328, lng: 107.5658, coverImageUrl: null },
 ]
 
 function makeMockDraft(): TripDraft {
@@ -68,11 +69,26 @@ function makeMockDraft(): TripDraft {
           },
           {
             id: '11111111-0002-4000-8000-000000000002',
+            placeId: mockPlaces[1].id,
+            place: mockPlaces[1],
+            position: 1,
+            slot: 'morning',
+            startTime: '10:30',
+            durationMin: 60,
+            travelMinFromPrev: 15,
+            travelDistanceM: 4000,
+            reason: 'Ngôi chùa cổ kính bên dòng Hương',
+            note: null,
+            isLocked: false,
+            addedBy: 'fallback',
+          },
+          {
+            id: '11111111-0003-4000-8000-000000000003',
             placeId: mockPlaces[2].id,
             place: mockPlaces[2],
-            position: 1,
+            position: 2,
             slot: 'noon',
-            startTime: '11:45',
+            startTime: '12:00',
             durationMin: 60,
             travelMinFromPrev: 10,
             travelDistanceM: 1500,
@@ -90,16 +106,16 @@ function makeMockDraft(): TripDraft {
         note: null,
         items: [
           {
-            id: '11111111-0003-4000-8000-000000000003',
-            placeId: mockPlaces[1].id,
-            place: mockPlaces[1],
+            id: '11111111-0004-4000-8000-000000000004',
+            placeId: mockPlaces[3].id,
+            place: mockPlaces[3],
             position: 0,
             slot: 'morning',
             startTime: '08:30',
             durationMin: 90,
             travelMinFromPrev: null,
             travelDistanceM: null,
-            reason: 'Ngôi chùa cổ kính bên dòng Hương',
+            reason: 'Lăng tẩm thơ mộng của vua Tự Đức',
             note: null,
             isLocked: false,
             addedBy: 'fallback',
@@ -187,7 +203,7 @@ describe('TripEditorPage', () => {
       day2Btn?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
     })
 
-    expect(mounted.container.textContent).toContain('Chùa Thiên Mụ')
+    expect(mounted.container.textContent).toContain('Lăng Tự Đức')
   })
 
   it('allows inline editing of the trip title', () => {
@@ -265,5 +281,72 @@ describe('TripEditorPage', () => {
     })
 
     expect(mounted.container.textContent).toContain('Đăng nhập để chia sẻ lịch trình')
+  })
+
+  it('moves item position via move down button', () => {
+    const draft = makeMockDraft()
+    localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
+
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    // Initial order: Đại Nội first, Bánh Khoái second
+    const item1 = mounted.container.querySelector('#item-11111111-0001-4000-8000-000000000001')
+    expect(item1).not.toBeNull()
+
+    const moveDownBtn = item1?.querySelector('button[title="Xuống"]') as HTMLButtonElement
+    expect(moveDownBtn).not.toBeNull()
+
+    act(() => {
+      moveDownBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    // Now Chùa Thiên Mụ is first and Đại Nội is second
+    const cards = Array.from(mounted.container.querySelectorAll('[id^="item-11111111-000"]'))
+    expect(cards[0].textContent).toContain('Chùa Thiên Mụ')
+    expect(cards[1].textContent).toContain('Đại Nội Huế')
+  })
+
+  it('toggles item lock status', () => {
+    const draft = makeMockDraft()
+    localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
+
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    const lockBtn = mounted.container.querySelector('button[title="Khóa vị trí"]') as HTMLButtonElement
+    expect(lockBtn).not.toBeNull()
+
+    act(() => {
+      lockBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    // Now button has title "Mở khóa vị trí"
+    expect(mounted.container.querySelector('button[title="Mở khóa vị trí"]')).not.toBeNull()
+  })
+
+  it('moves item to another day', () => {
+    const draft = makeMockDraft()
+    localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
+
+    mounted = renderTripEditor(['/trip/draft?day=1'])
+
+    const item1 = mounted.container.querySelector('#item-11111111-0001-4000-8000-000000000001')
+    const moveDayBtn = item1?.querySelector('button[title="Chuyển ngày"]') as HTMLButtonElement
+    expect(moveDayBtn).not.toBeNull()
+
+    act(() => {
+      moveDayBtn.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    // Select Day 2 in the menu
+    const targetDayBtn = Array.from(mounted.container.querySelectorAll('button')).find((b) => b.textContent?.trim() === 'Ngày 2')
+    expect(targetDayBtn).toBeDefined()
+
+    act(() => {
+      targetDayBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+    })
+
+    // Now Day 2 is active and contains Đại Nội Huế
+    expect(mounted.container.textContent).toContain('Hành trình Ngày 2')
+    expect(mounted.container.textContent).toContain('Đại Nội Huế')
   })
 })
