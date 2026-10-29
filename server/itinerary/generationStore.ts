@@ -26,6 +26,30 @@ export interface GenerationStore {
   record(event: GenerationEvent): Promise<void>
 }
 
+export function generationInsertRow(event: GenerationEvent, telemetryColumns: boolean): Database['public']['Tables']['generation_events']['Insert'] {
+  const row: Database['public']['Tables']['generation_events']['Insert'] = {
+    user_id: event.userId,
+    client_key: event.clientKey,
+    is_guest: event.isGuest,
+    status: event.status,
+    generated_by: event.llmCallEvent ? 'llm' : event.generatedBy ?? (event.status === 'fallback' ? 'fallback' : null),
+    llm_model: event.llmModel ?? null,
+    input_tokens: event.inputTokens ?? null,
+    output_tokens: event.outputTokens ?? null,
+    duration_ms: event.durationMs,
+    error_code: event.llmCallEvent ? `LLM_CALL:${event.errorCode ?? 'success'}` : event.errorCode,
+  }
+  if (telemetryColumns) Object.assign(row, {
+    prompt_version: event.promptVersion ?? null,
+    pool_size: event.poolSize ?? null,
+    repairs: event.repairs ?? null,
+    coverage: event.coverage ?? null,
+    fallback_reason: event.fallbackReason ?? null,
+    thinking_tokens: event.thinkingTokens ?? null,
+  })
+  return row
+}
+
 export class SupabaseGenerationStore implements GenerationStore {
   constructor(private readonly client: SupabaseClient<Database>) {}
 
@@ -51,18 +75,8 @@ export class SupabaseGenerationStore implements GenerationStore {
   }
 
   async record(event: GenerationEvent): Promise<void> {
-    const { error } = await this.client.from('generation_events').insert({
-      user_id: event.userId,
-      client_key: event.clientKey,
-      is_guest: event.isGuest,
-      status: event.status,
-      generated_by: event.llmCallEvent ? 'llm' : event.generatedBy ?? (event.status === 'fallback' ? 'fallback' : null),
-      llm_model: event.llmModel ?? null,
-      input_tokens: event.inputTokens ?? null,
-      output_tokens: event.outputTokens ?? null,
-      duration_ms: event.durationMs,
-      error_code: event.llmCallEvent ? `LLM_CALL:${event.errorCode ?? 'success'}` : event.errorCode,
-    })
+    const row = generationInsertRow(event, process.env.TELEMETRY_COLUMNS === 'true')
+    const { error } = await this.client.from('generation_events').insert(row)
     if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể ghi nhận lượt tạo lịch trình.')
   }
 }

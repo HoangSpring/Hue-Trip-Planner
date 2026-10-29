@@ -70,6 +70,8 @@ export const generateTripResponseSchema = z.object({
     by: generatedBySchema,
     model: z.string().nullable(),
     durationMs: z.number(),
+    repairs: z.number().int().nonnegative().default(0),
+    replacedDayIndexes: z.array(z.number().int().min(1).max(5)).default([]),
   }),
 }).strict()
 

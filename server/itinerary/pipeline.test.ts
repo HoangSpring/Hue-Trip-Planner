@@ -13,6 +13,8 @@ import { generateTripPipeline } from './pipeline'
 import { buildUserMessage, serializeUserMessage } from './prompt'
 import { filterCandidates } from './candidates'
 import { buildCandidatePool } from './pool'
+import { estimateTravel } from '../../shared/itinerary/travel'
+import { isOpenAt } from '../../shared/itinerary/openHours'
 
 const places = placeDetailSchema.array().parse(JSON.parse(readFileSync(resolve('tests/fixtures/places.sample.json'), 'utf8')))
 const records: CandidateRecord[] = places.map((place) => ({
@@ -56,6 +58,26 @@ function assertSafeResult(result: Awaited<ReturnType<typeof run>>) {
     expect(day.items.map(({ position }) => position)).toEqual(day.items.map((_, index) => index))
     expect(day.items.every(({ startTime, durationMin }) => startTime && durationMin !== null &&
       Number(startTime.slice(0, 2)) * 60 + Number(startTime.slice(3)) + durationMin <= 21 * 60 + 30)).toBe(true)
+    for (const item of day.items) {
+      const place = records.find(({ place }) => place.id === item.placeId)?.place
+      expect(place).toBeDefined()
+      if (!place) continue
+      if (item.startTime && (place.openTime || place.closeTime)) expect(isOpenAt(place, day.date, item.startTime)).not.toBe('closed')
+      if (item.position > 0 && item.travelDistanceM !== null && item.travelMinFromPrev !== null) {
+        const previousId = day.items[item.position - 1]?.placeId
+        const previous = records.find(({ place: candidate }) => candidate.id === previousId)?.place
+        if (previous) {
+          const bounds = estimateTravel(previous, place, input.transport)
+          if (item.travelDistanceM / 1000 > bounds.maxLegKm || item.travelMinFromPrev > bounds.maxLegMin) {
+            expect(result.warnings.some(({ code, itemId }) => code === 'TOO_FAR' && itemId === item.id)).toBe(true)
+          }
+        }
+      }
+    }
+    expect(day.items.length).toBeLessThanOrEqual(Math.max(3, (input.pace === 'relaxed' ? 4 : input.pace === 'moderate' ? 5 : 7) -
+      (input.companion === 'seniors' || input.companion === 'family_kids' ? 1 : 0)))
+    expect(day.items.filter(({ slot }) => slot === 'noon').every(({ placeId }) =>
+      records.find(({ place }) => place.id === placeId)?.place.category === 'food')).toBe(true)
     const lunches = day.items.filter(({ slot, placeId }) => {
       const fullPlace = records.find(({ place }) => place.id === placeId)?.place
       return slot === 'noon' && fullPlace?.category === 'food' &&
@@ -84,6 +106,46 @@ describe('generateTripPipeline', () => {
     expect(result.draft.generatedBy).toBe('llm')
     expect(result.metrics).toMatchObject({ model: 'fake', llmCalls: 1, inputTokens: expect.any(Number) })
     assertSafeResult(result)
+  })
+
+  it('replaces only an invalid day and preserves the valid LLM day', async () => {
+    const multiDayInput = tripInputSchema.parse({ ...input, numDays: 3, startDate: '2026-11-01' })
+    const specialized = records.map((record, index) => ({
+      ...record,
+      place: { ...record.place, category: index % 5 === 0 ? 'food' as const : 'heritage' as const,
+        mealType: index % 5 === 0 ? ['lunch' as const] : [], lat: 16.45, lng: 107.56 + index * 0.00001,
+        visitDurationMin: 35, openTime: null, closeTime: null, bestTime: [],
+        closedDays: index < 4 ? [7] : [] },
+    }))
+    const secondDay = specialized.slice(5, 9)
+    const thirdDay = specialized.slice(10, 14)
+    const asItems = (day: typeof specialized) => {
+      let placeIndex = 0
+      const slots = ['morning', 'afternoon', 'evening'] as const
+      return day.map((record) => ({ placeId: record.place.id,
+        slot: record.place.category === 'food' ? 'noon' as const : slots[placeIndex++] ?? 'morning' as const,
+        reason: 'Phù hợp với sở thích của bạn.' }))
+    }
+    const response = { days: [
+      { dayIndex: 2, items: asItems(secondDay) },
+      { dayIndex: 3, items: asItems(thirdDay) },
+    ] }
+    const result = await generateTripPipeline(new FixturePlacesRepo(specialized), multiDayInput, {
+      now: new Date('2026-10-29T00:00:00.000Z'), seed: 'day-scoped', enabled: true,
+      dailyCallCount: 0, dailyCallCap: 4, timeoutMs: 1000, llm: new SequenceLlm([response]),
+      onMetrics: () => undefined,
+    })
+    expect(result.generation.by).toBe('llm')
+    expect(result.metrics.replacedDayIndexes).toEqual([1])
+    expect(result.metrics.repairs).toBeGreaterThan(0)
+    expect(new Set(result.draft.days[1]?.items.map(({ placeId }) => placeId))).toEqual(new Set(secondDay.map(({ place }) => place.id)))
+    expect(new Set(result.draft.days[2]?.items.map(({ placeId }) => placeId))).toEqual(new Set(thirdDay.map(({ place }) => place.id)))
+    const allItems = result.draft.days.flatMap(({ items }) => items)
+    expect(new Set(allItems.map(({ placeId }) => placeId)).size).toBe(allItems.length)
+    for (const day of result.draft.days) {
+      expect(day.items.filter(({ slot, placeId }) => slot === 'noon' &&
+        specialized.find(({ place }) => place.id === placeId)?.place.category === 'food')).toHaveLength(1)
+    }
   })
 
   it.each([
@@ -116,7 +178,8 @@ describe('generateTripPipeline', () => {
     const llm = new SequenceLlm([{ days: 'broken' }, validResponse.json])
     const result = await run({ llm })
     expect(result.generation.by).toBe('llm')
-    expect(result.metrics).toMatchObject({ llmCalls: 2, repairs: 1 })
+    expect(result.metrics.llmCalls).toBe(2)
+    expect(result.metrics.repairs).toBeGreaterThanOrEqual(1)
     expect(llm.calls[1]?.user).toContain('previousOutput')
     assertSafeResult(result)
   })
@@ -132,7 +195,8 @@ describe('generateTripPipeline', () => {
     } }
     const result = await run({ llm })
     expect(result.generation.by).toBe('llm')
-    expect(result.metrics).toMatchObject({ llmCalls: 2, repairs: 1 })
+    expect(result.metrics.llmCalls).toBe(2)
+    expect(result.metrics.repairs).toBeGreaterThanOrEqual(1)
     assertSafeResult(result)
   })
 

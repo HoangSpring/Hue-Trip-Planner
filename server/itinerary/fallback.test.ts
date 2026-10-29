@@ -127,7 +127,7 @@ describe('fallback itinerary generator', () => {
     expect(vietnamDate(new Date('2026-10-26T17:30:00.000Z'))).toBe('2026-10-27')
   })
 
-  it.each(['v2', 'v3', 'v6', 'v7', 'v8'])('regresses %s on a reduced fixture', async (caseId) => {
+  it.each(['v2', 'v3', 'v4', 'v6', 'v7', 'v8'])('regresses %s on a reduced fixture', async (caseId) => {
     const entry = itineraryEvalCases.find(({ id }) => id === caseId)
     if (!entry) throw new Error(`Missing eval case ${caseId}`)
     const reduced = records.slice(0, 24)
@@ -143,6 +143,15 @@ describe('fallback itinerary generator', () => {
         expect(result.notices.some(({ code, message }) => code === 'FEW_CANDIDATES' && message.includes(`Ngày ${day.dayIndex} (`))).toBe(true)
       }
     }
+  })
+
+  it('reserves distinct lunch places across every day before other candidate selection (V4/R1)', async () => {
+    const reduced = records.slice(0, 30)
+    const request = input({ numDays: 4, pace: 'packed' })
+    const result = await generateTrip(new FixturePlacesRepo(reduced), request, { now, seed: 'v4-lunch-reservation' })
+    const lunchIds = result.draft.days.map((day) => day.items.find(({ slot, place }) => slot === 'noon' && place?.category === 'food')?.placeId)
+    expect(lunchIds.every(Boolean)).toBe(true)
+    expect(new Set(lunchIds).size).toBe(lunchIds.length)
   })
 
   it('uses category-first varied reasons and never calls a market visit a meal', () => {

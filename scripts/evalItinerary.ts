@@ -197,7 +197,7 @@ async function main(): Promise<void> {
       for (const diagnostic of result.diagnostics ?? []) {
         console.info(`--explain ${entry.id.toUpperCase()} ngày ${diagnostic.dayIndex} (${diagnostic.date}): ` +
           `available=${diagnostic.available}; ${JSON.stringify(diagnostic.excluded)}; ` +
-          `scheduled=${diagnostic.scheduled}; minimum=${diagnostic.minimum}`)
+          `scheduled=${diagnostic.scheduled}; minimum=${diagnostic.minimum}; lunchChecks=${JSON.stringify(diagnostic.lunchChecks)}`)
       }
     }
   }

@@ -59,7 +59,7 @@ const mockSuccessResponse: GenerateTripResponse = {
   },
   warnings: [],
   notices: [{ code: 'FALLBACK_USED', message: 'Lịch trình được tạo theo cách đơn giản hơn.' }],
-  generation: { by: 'fallback', model: null, durationMs: 150 },
+  generation: { by: 'fallback', model: null, durationMs: 150, repairs: 0, replacedDayIndexes: [] },
 }
 
 function renderGenerating() {

@@ -2,7 +2,7 @@ import type { TripInput } from '@shared/schemas'
 import { llmItinerarySchema, type LlmItinerary } from '@shared/schemas/llmItinerary'
 import { estimateTravel } from '../../shared/itinerary/travel'
 import { ITINERARY_CONFIG } from '../../shared/itinerary/config'
-import { scheduleDay, type ScheduleRequest } from './scheduler'
+import { scheduleDay } from './scheduler'
 import { buildReason } from './reasons'
 import type { ScoredCandidate } from './types'
 
@@ -14,6 +14,7 @@ export type LlmValidationResult = {
   coverage: number
   repairs: number
   issues: string[]
+  replacedDayIndexes: number[]
   reason: 'invalid_json' | 'low_coverage' | null
 }
 
@@ -71,13 +72,14 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
     repairs = 1
     parsed = llmItinerarySchema.safeParse(await options.repair())
   }
-  if (!parsed.success) return { accepted: false, days: [], coverage: 0, repairs, issues: ['invalid_schema'], reason: 'invalid_json' }
+  if (!parsed.success) return { accepted: false, days: [], coverage: 0, repairs, issues: ['invalid_schema'], replacedDayIndexes: [], reason: 'invalid_json' }
 
   const candidateById = new Map(options.candidates.map((candidate) => [candidate.place.id, candidate]))
   const responseDays = new Map(parsed.data.days.map((day) => [day.dayIndex, day]))
   const [minimum, maximum] = targetRange(options.input)
   const output: ValidatedLlmDay[] = []
   const issues: string[] = []
+  const replacedDayIndexes: number[] = []
   const usedIds = new Set<string>()
   let targetItems = 0
   let previousGlobal: ScoredCandidate | null = null
@@ -88,19 +90,19 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
     if (!sourceDay) issues.push(`missing_day:${dayIndex}`)
     for (const proposed of sourceDay?.items ?? []) {
       const candidate = candidateById.get(proposed.placeId)
-      if (!candidate) { issues.push(`unknown_id:${proposed.placeId}`); continue }
-      if (usedIds.has(proposed.placeId)) { issues.push(`duplicate_id:${proposed.placeId}`); continue }
+      if (!candidate) { issues.push(`unknown_id:${dayIndex}:${proposed.placeId}`); continue }
+      if (usedIds.has(proposed.placeId)) { issues.push(`duplicate_id:${dayIndex}:${proposed.placeId}`); continue }
       let slot = proposed.slot
       if (slot === 'noon' && !isLunch(candidate)) {
         const fallbackSlot = candidate.place.bestTime.find((value) => value !== 'noon') ?? 'morning'
         slot = fallbackSlot
-        issues.push(`noon_non_food:${proposed.placeId}`)
+        issues.push(`noon_non_food:${dayIndex}:${proposed.placeId}`)
       }
       if (slot === 'noon' && !isLunch(candidate)) continue
       const reason = plainVietnameseReason(proposed.reason)
         ? proposed.reason.slice(0, 240)
         : buildReason(candidate, options.input, slot, dayIndex + items.length)
-      if (reason !== proposed.reason) issues.push(`reason_replaced:${proposed.placeId}`)
+      if (reason !== proposed.reason) issues.push(`reason_replaced:${dayIndex}:${proposed.placeId}`)
       items.push({ ...proposed, slot, reason, candidate })
       usedIds.add(proposed.placeId)
     }
@@ -113,7 +115,7 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
       issues.push(`multiple_lunches:${dayIndex}`)
     }
     if (lunches.length === 0) {
-      const existingFood = items.find(({ candidate }) => candidate.place.category === 'food')
+      const existingFood = items.find(({ candidate }) => isLunch(candidate))
       if (existingFood) {
         existingFood.slot = 'noon'
         issues.push(`lunch_moved:${dayIndex}`)
@@ -145,18 +147,79 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
     }
     const lunchCount = items.filter(({ slot, candidate }) => slot === 'noon' && isLunch(candidate)).length
     if (lunchCount !== 1) issues.push(`lunch_missing:${dayIndex}`)
+    for (const item of items) {
+      if (item.candidate.place.bestTime.length && !item.candidate.place.bestTime.includes(item.slot)) {
+        issues.push(`best_time_relaxed:${dayIndex}:${item.placeId}`)
+      }
+    }
 
     // V7: noon contains food only. Any repaired non-food noon item was moved above.
     const slotOrder = ['morning', 'noon', 'afternoon', 'evening']
-    items.sort((a, b) => slotOrder.indexOf(a.slot) - slotOrder.indexOf(b.slot))
-    const requests: ScheduleRequest[] = items.map((item) => ({ candidate: item.candidate, slot: item.slot }))
-    const scheduled = scheduleDay(requests, { input: options.input, dayIndex })
-    if (!sourceDay) issues.push(`day_filled_from_fallback:${dayIndex}`)
+    const scheduleCurrentDay = () => {
+      items.sort((a, b) => slotOrder.indexOf(a.slot) - slotOrder.indexOf(b.slot))
+      return scheduleDay(items.map((item) => ({ candidate: item.candidate, slot: item.slot, locked: item.slot === 'noon' })),
+        { input: options.input, dayIndex })
+    }
+    let scheduled = scheduleCurrentDay()
+    // V9/V10: repair only this day. Drop an unschedulable/farthest non-lunch stop,
+    // then fill from the submitted pool by score; never expand beyond sent IDs.
+    for (let attempt = 0; attempt < options.candidates.length && attempt < maximum + 3; attempt++) {
+      let removed = false
+      const droppedId = scheduled.droppedPlaceIds[0]
+      if (droppedId) {
+        const index = items.findIndex(({ placeId }) => placeId === droppedId)
+        if (index >= 0) {
+          if (items[index]?.slot === 'noon') issues.push(`lunch_schedule_rejected:${dayIndex}`)
+          items.splice(index, 1)
+          usedIds.delete(droppedId)
+          issues.push(`unschedulable_item:${dayIndex}:${droppedId}`)
+          removed = true
+        }
+      }
+      const currentTravel = scheduled.items.reduce((sum, item) => sum + item.travelMinFromPrev, 0)
+      if (!removed && currentTravel > ITINERARY_CONFIG.maxDayTravelMin) {
+        const removable = scheduled.items.filter(({ slot }) => slot !== 'noon')
+          .sort((a, b) => b.travelDistanceM - a.travelDistanceM || a.candidate.score - b.candidate.score)[0]
+        if (removable) {
+          items.splice(items.findIndex(({ placeId }) => placeId === removable.candidate.place.id), 1)
+          usedIds.delete(removable.candidate.place.id)
+          issues.push(`travel_limit_item:${dayIndex}:${removable.candidate.place.id}`)
+          removed = true
+        }
+      }
+      if (removed) scheduled = scheduleCurrentDay()
+      if (scheduled.items.length === items.length &&
+        scheduled.items.reduce((sum, item) => sum + item.travelMinFromPrev, 0) <= ITINERARY_CONFIG.maxDayTravelMin &&
+        items.length >= minimum && items.filter(({ slot, candidate }) => slot === 'noon' && isLunch(candidate)).length === 1) break
+
+      if (items.length < minimum) {
+        const hasLunchNow = items.some(({ slot, candidate }) => slot === 'noon' && isLunch(candidate))
+        const fill = [...options.candidates].sort((a, b) => b.score - a.score || a.place.slug.localeCompare(b.place.slug, 'en'))
+          .find((candidate) => !usedIds.has(candidate.place.id) && !items.some(({ placeId }) => placeId === candidate.place.id) &&
+            (hasLunchNow ? candidate.place.category !== 'food' : isLunch(candidate)))
+        if (fill) {
+          const slot = isLunch(fill) ? 'noon' : fill.place.bestTime.find((value) => value !== 'noon') ?? 'morning'
+          items.push({ placeId: fill.place.id, slot, reason: buildReason(fill, options.input, slot, dayIndex + items.length), candidate: fill })
+          usedIds.add(fill.place.id)
+          issues.push(`filled:${dayIndex}`)
+          scheduled = scheduleCurrentDay()
+          continue
+        }
+      }
+      if (!removed) break
+    }
+    if (!sourceDay) {
+      issues.push(`missing_day_replaced:${dayIndex}`)
+      replacedDayIndexes.push(dayIndex)
+    }
     if (scheduled.droppedPlaceIds.length > 0 || scheduled.items.length !== items.length) issues.push(`unschedulable:${dayIndex}`)
     const totalTravel = scheduled.items.reduce((sum, item) => sum + item.travelMinFromPrev, 0)
+    const lunchCountAfterRepairs = items.filter(({ slot, candidate }) => slot === 'noon' && isLunch(candidate)).length
     if (totalTravel > ITINERARY_CONFIG.maxDayTravelMin) issues.push(`travel_limit:${dayIndex}`)
-    if (scheduled.items.length !== items.length || totalTravel > ITINERARY_CONFIG.maxDayTravelMin || lunchCount !== 1) {
+    if (scheduled.items.length !== items.length || scheduled.droppedPlaceIds.length > 0 || totalTravel > ITINERARY_CONFIG.maxDayTravelMin ||
+      lunchCountAfterRepairs !== 1 || items.length < minimum) {
       output.push({ dayIndex, items: [] })
+      replacedDayIndexes.push(dayIndex)
       previousGlobal = null
       targetItems += minimum
       continue
@@ -181,15 +244,20 @@ export async function validateLlmItinerary(raw: unknown, options: LlmValidationO
   }
 
   const kept = output.reduce((total, day) => total + day.items.length, 0)
-  const coverage = targetItems ? Math.min(1, kept / targetItems) : 0
-  const hasEmptyDay = output.some((day) => day.items.length === 0)
-  const accepted = coverage >= ITINERARY_CONFIG.llm.minCoverage && !hasEmptyDay
+  const unrepairable = new Set(replacedDayIndexes).size
+  // Day-scoped fallback is itself a repair. Do not classify a single bad day
+  // as low LLM coverage when healthy neighboring days can be retained.
+  const coverage = targetItems ? Math.min(1, (kept + unrepairable * minimum) / targetItems) : 0
+  const accepted = coverage >= ITINERARY_CONFIG.llm.minCoverage &&
+    unrepairable < Math.ceil(options.input.numDays / 2)
+  const repairOperations = issues.filter((issue) => /^(?:filled|trimmed|lunch_added|lunch_moved|unschedulable_item|travel_limit_item|reason_replaced|unknown_id|duplicate_id|noon_non_food):/.test(issue)).length
   return {
     accepted,
     days: output,
     coverage,
-    repairs,
+    repairs: Math.max(repairs, repairOperations + unrepairable),
     issues,
+    replacedDayIndexes,
     reason: accepted ? null : 'low_coverage',
   }
 }

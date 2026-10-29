@@ -46,7 +46,10 @@ describe('validateLlmItinerary V1-V10', () => {
       candidates: records.map(({ place }) => ({ i: place.id, c: place.category, m: place.mealType })),
     })))
     const result = await validateLlmItinerary(response.json, { input, candidates: records })
-    expect(result.accepted).toBe(true)
+    if (scenario === 'missing_day') {
+      expect(result.replacedDayIndexes).toContain(2)
+      expect(result.days[0]?.items.length).toBeGreaterThan(0)
+    } else expect(result.accepted).toBe(true)
     expect(result.days).toHaveLength(2)
     const ids = result.days.flatMap(({ items }) => items.map(({ placeId }) => placeId))
     expect(ids.every((id) => records.some(({ place }) => place.id === id))).toBe(true)
@@ -83,7 +86,7 @@ describe('validateLlmItinerary V1-V10', () => {
     const result = await validateLlmItinerary({ days: [{ dayIndex: 1, items: [{
       placeId: '00000000-0000-4000-8000-999999999999', slot: 'morning', reason: 'Một lựa chọn phù hợp.'
     }] }] }, { input, candidates: records })
-    expect(result.issues).toContain('unknown_id:00000000-0000-4000-8000-999999999999')
+    expect(result.issues).toContain('unknown_id:1:00000000-0000-4000-8000-999999999999')
     expect(result.days.flatMap(({ items }) => items).some(({ placeId }) => placeId.endsWith('999999999999'))).toBe(false)
   })
 

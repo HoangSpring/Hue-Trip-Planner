@@ -178,12 +178,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `scheduler.ts`: giờ bắt đầu ngày, đồng bộ khung giờ, dời đến giờ mở cửa, không quá 21:30, xử lý mục không xếp được (hoán khung/thay thế/bỏ), tối ưu thứ tự trong khung (láng giềng gần nhất).
 - **Hoàn thành khi:** test nhóm Scheduler; không mục nào ngoài giờ mở cửa đã biết; `position` liên tục từ 0.
 
-### [] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
+### [x] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
 - **Tham chiếu:** `docs/07` mục 7, 11
 - **Dep:** T-018, T-019
 - **Làm:** `fallback.ts`, `reasons.ts`; hàm `generateTrip` chạy **chỉ bằng dự phòng** (cờ `LLM_ENABLED=false` mặc định ở giai đoạn này) trả `TripDraft` + `Warning` + `Notice`.
 - **Hoàn thành khi:** golden test (cùng đầu vào → cùng kết quả); thỏa R1–R8 trên ≥ 10 đầu vào; property test (`docs/07` mục 17.3): không trùng địa điểm, mọi `placeId` thuộc DB, số mục/ngày đúng khoảng, không kết thúc sau 21:30.
-- **Trạng thái:** Chưa đạt; giữ `[ ]` cho đến khi kiểm chứng R1/R7 trên eval dữ liệu thật và tất cả kiểm thử hồi quy/property qua. V1 có lỗi ngày, thiếu trưa và underfill; xem `docs/reports/phase-2a-fix-report.md`.
+- **Trạng thái:** Đạt lại trong eval dữ liệu thật ngày 2026-10-29: 0/10 kịch bản thiếu bữa trưa, 0 ngày dưới sàn; regression V4 và property tests qua. R1 được ưu tiên hơn R6 bằng cách khóa slot noon và thử mọi quán lunch chưa dùng trước khi phát `LUNCH_MISSING`. Bằng chứng: `docs/eval/2026-10-29-fallback-v2.md` và `docs/reports/phase-3c-report.md`.
 
 ### [x] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
 - **Tham chiếu:** `docs/07` mục 15
@@ -232,7 +232,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-020, T-026
 - **Làm:** `regenerateDay` (dùng dự phòng ở giai đoạn này) + `POST /api/trips/regenerate-day`; hộp thoại khóa mục; thay nội dung một ngày, có hoàn tác.
 - **Hoàn thành khi:** các ngày khác không đổi; không tạo trùng địa điểm với ngày khác; mục khóa giữ nguyên slot.
-- Đã kiểm tra: API giữ slot khóa kể cả khi `best_time` khác, tôn trọng danh sách địa điểm ngày khác; reducer chỉ thay ngày chọn và hoàn tác được. T-020 vẫn còn đánh dấu chưa đạt riêng theo báo cáo chất lượng fallback.
+- Đã kiểm tra: API giữ slot khóa kể cả khi `best_time` khác, tôn trọng danh sách địa điểm ngày khác; reducer chỉ thay ngày chọn và hoàn tác được. T-020 đã đạt lại sau eval fallback V2 ngày 2026-10-29.
 
 > ✅ **Cổng kiểm tra M2 (quan trọng):** người dùng **khách** đi trọn luồng Landing → Wizard → Lịch trình → Chỉnh sửa **không cần AI và không cần đăng nhập**. Chủ dự án chạy bộ **10 đầu vào mẫu** (`docs/07` mục 17.4) và chấm chất lượng thuật toán dự phòng. Đây là mốc đầu tiên đáng để cho người thật dùng thử.
 
@@ -259,12 +259,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `validate.ts` thực hiện V1–V10; tính `coverage`; quyết định "đủ tốt" (≥ 0.7); lượt gọi sửa lỗi tối đa 1 lần (nếu < 8 giây); thứ tự trong khung.
 - **Hoàn thành khi:** mỗi kịch bản của `FakeLlmClient` cho kết quả đúng như bảng V1–V10; không bao giờ có `placeId` ngoài nhóm ứng viên đã gửi.
 
-### [ ] T-032 · Tích hợp LLM vào pipeline + công tắc, cầu chì, dự phòng · `M`
+### [x] T-032 · Tích hợp LLM vào pipeline + công tắc, cầu chì, dự phòng · `M`
 - **Tham chiếu:** `docs/07` mục 2, 10.2, 16; `docs/06` mục 2.8, 6.1
 - **Dep:** T-031, T-022
 - **Làm:** `pipeline.ts`: LLM → kiểm tra → dự phòng khi cần; `LLM_ENABLED`, `LLM_DAILY_CALL_CAP`; ghi `fallbackReason`, `repairs`, `coverage`, `PROMPT_VERSION`, token; `regenerateDay` dùng LLM trước, dự phòng sau; `notice FALLBACK_USED`.
 - **Hoàn thành khi:** test pipeline (LLM tắt/timeout/hỏng/`coverage` thấp → dự phòng, vẫn `200`); test an toàn với `notes` độc hại; p90 ≤ 15 giây trong thử nghiệm thực tế.
-- Đang làm trên `feat/T-032-llm-pipeline`: pipeline và regenerateDay đã nối LLM → validator → dự phòng; kiểm thử Fake đạt. Chưa tick: `generation_events` hiện chưa có cột `thinking_tokens`/metadata; không thêm migration theo yêu cầu, cần chốt cách lưu hoặc chấp nhận telemetry ứng dụng.
+- Đã đạt: validator sửa theo ngày và chỉ dùng fallback cho ngày lỗi; `generation_events` ghi metadata mới khi `TELEMETRY_COLUMNS=true`, còn mặc định chỉ ghi cột cũ cho tới khi migration telemetry được chủ dự án áp dụng. Bằng chứng kiểm thử và migration chưa áp dụng: `docs/reports/phase-3c-report.md`.
 
 ### [ ] T-033 · Đánh giá chất lượng và hiệu chỉnh · `M`
 - **Tham chiếu:** `docs/07` mục 17.4, 18

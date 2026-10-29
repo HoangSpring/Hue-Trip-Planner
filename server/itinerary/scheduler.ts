@@ -75,6 +75,7 @@ function scheduleCandidate(
   date: string | null,
   firstItem: boolean,
   input: TripInput,
+  allowLongLegs: boolean,
 ): ScheduledPlace | null {
   const place = candidate.place
   const duration = place.visitDurationMin
@@ -82,7 +83,7 @@ function scheduleCandidate(
   const from = previous ?? (firstItem ? start : null)
   const travel = from ? estimateTravel(from, place, input.transport)
     : { distanceKm: 0, travelMin: 0, maxLegKm: Number.POSITIVE_INFINITY, maxLegMin: Number.POSITIVE_INFINITY }
-  if (travel.distanceKm > travel.maxLegKm || travel.travelMin > travel.maxLegMin) return null
+  if (!allowLongLegs && (travel.distanceKm > travel.maxLegKm || travel.travelMin > travel.maxLegMin)) return null
   const window = windows[slot]
   let arrival = Math.max(cursor + travel.travelMin, window.start)
   if (arrival > window.end || arrival + duration > toMinutes(ITINERARY_CONFIG.latestEnd)) return null
@@ -121,7 +122,7 @@ function requestCandidates(request: ScheduleRequest): ScoredCandidate[] {
 /** Schedule all slots in order and pick the nearest available stop within each slot. */
 export function scheduleDay(
   requests: readonly ScheduleRequest[],
-  options: { input: TripInput; dayIndex: number },
+  options: { input: TripInput; dayIndex: number; allowLongLegs?: boolean },
 ): ScheduleResult {
   const date = dayDate(options.input.startDate, options.dayIndex)
   const usedIds = new Set<string>()
@@ -146,7 +147,8 @@ export function scheduleDay(
           if (usedIds.has(candidate.place.id)) continue
           const choices = slotChoices(candidate, request.slot, request.locked === true)
           for (const choice of choices) {
-            selected = scheduleCandidate(candidate, choice, cursor, previous, options.input.start, date, scheduled.length === 0, options.input)
+            selected = scheduleCandidate(candidate, choice, cursor, previous, options.input.start, date, scheduled.length === 0,
+              options.input, options.allowLongLegs === true)
             if (selected) break
           }
           if (selected) { selectedRequest = request; break }

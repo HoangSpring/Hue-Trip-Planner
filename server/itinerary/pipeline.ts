@@ -7,11 +7,12 @@ import type { LlmClient, LlmCompletion } from '../llm/client'
 import { GeminiApiError } from '../llm/providers/gemini'
 import { buildCandidatePool } from './pool'
 import { loadCandidates } from './candidates'
-import type { PlacesRepo } from './placesRepo'
+import { FixturePlacesRepo, type PlacesRepo } from './placesRepo'
 import { buildUserMessage, PROMPT_VERSION, serializeUserMessage, SYSTEM_PROMPT } from './prompt'
 import { generateTrip, type GenerateTripOptions, type GenerateTripResult } from './fallback'
 import { scheduleDay, type ScheduleRequest } from './scheduler'
 import { validateLlmItinerary } from './validate'
+import type { ScoredCandidate } from './types'
 
 export type FallbackReason = 'llm_disabled' | 'cap_reached' | 'timeout' | 'invalid_json' | 'low_coverage' | 'llm_error' | 'quota'
 export type LlmAttempt = {
@@ -34,9 +35,11 @@ export type PipelineMetrics = {
   inputTokens: number
   outputTokens: number
   thinkingTokens: number
+  replacedDayIndexes: number[]
+  validationIssues: string[]
 }
 export type PipelineResult = Omit<GenerateTripResult, 'draft'> & { draft: TripDraft } & {
-  generation: { by: 'llm' | 'fallback'; model: string | null; durationMs: number }
+  generation: { by: 'llm' | 'fallback'; model: string | null; durationMs: number; repairs: number; replacedDayIndexes: number[] }
   metrics: PipelineMetrics
 }
 
@@ -117,6 +120,8 @@ export async function generateTripPipeline(
   const metrics: PipelineMetrics = {
     promptVersion: PROMPT_VERSION, poolSize: 0, repairs: 0, coverage: null,
     fallbackReason: null, llmCalls: 0, model: null, inputTokens: 0, outputTokens: 0, thinkingTokens: 0,
+    replacedDayIndexes: [],
+    validationIssues: [],
   }
   const candidateSelection = await loadCandidates(repo, input, options.signal)
   const candidates = buildCandidatePool(candidateSelection.candidates, input.numDays, maxItemsPerDay(input))
@@ -139,7 +144,7 @@ export async function generateTripPipeline(
       ...result,
       notices,
       draft: { ...result.draft, generatedBy: 'fallback', llmModel: null },
-      generation: { by: 'fallback', model: null, durationMs: Date.now() - startedAt },
+      generation: { by: 'fallback', model: null, durationMs: Date.now() - startedAt, repairs: metrics.repairs, replacedDayIndexes: [] },
       metrics: { ...metrics },
     }
   }
@@ -240,26 +245,54 @@ export async function generateTripPipeline(
   if (!validation) return fallback(metrics.fallbackReason ?? 'invalid_json')
   metrics.repairs = Math.max(metrics.repairs, validation.repairs)
   metrics.coverage = validation.coverage
+  metrics.replacedDayIndexes = [...validation.replacedDayIndexes]
+  metrics.validationIssues = [...validation.issues]
   if (!validation.accepted) return fallback(validation.reason ?? 'low_coverage')
 
   const [baseMinimum] = ITINERARY_CONFIG.itemsPerDay[input.pace]
   const minimum = Math.max(ITINERARY_CONFIG.itemsPerDay.floor,
     baseMinimum - (input.companion === 'seniors' || input.companion === 'family_kids' ? 1 : 0))
-  if (validation.days.some((day) => day.items.length < minimum ||
-    day.items.filter(({ slot, candidate }) => slot === 'noon' && candidate.place.category === 'food' &&
-      (candidate.place.mealType.length === 0 || candidate.place.mealType.includes('lunch'))).length !== 1)) {
-    return fallback('low_coverage')
-  }
+  metrics.repairs += validation.replacedDayIndexes.length
 
   const scheduledDays: TripDay[] = []
   const used = new Set<string>()
   for (const day of validation.days) {
-    const requests: ScheduleRequest[] = day.items.map(({ candidate, slot }) => ({ candidate, slot }))
+    let dayItems = day.items
+    if (validation.replacedDayIndexes.includes(day.dayIndex)) {
+      const keptIds = new Set(validation.days.filter((candidateDay) => candidateDay.dayIndex !== day.dayIndex)
+        .flatMap((candidateDay) => candidateDay.items.map(({ placeId }) => placeId)))
+      for (const id of used) keptIds.add(id)
+      const date = dateAtOffset(input.startDate ?? vietnamDate(options.now), day.dayIndex - 1)
+      const fallbackInput = { ...input, numDays: 1, startDate: date }
+      const fallbackRepo = new FixturePlacesRepo(candidates
+        .filter(({ place }) => !keptIds.has(place.id))
+        .map(({ place, tagWeights, featured }) => ({ place, tagWeights, featured })))
+      try {
+        const replacement = await generateTrip(fallbackRepo, fallbackInput, {
+          ...options, seed: `${options.seed ?? 'llm'}:replacement:${day.dayIndex}`,
+        })
+        const replacementDay = replacement.draft.days[0]
+        if (replacementDay && replacementDay.items.length >= minimum && replacementDay.items.some(({ slot, place }) =>
+          slot === 'noon' && place?.category === 'food')) {
+          const replacementItems = replacementDay.items.map((item) => ({
+            placeId: item.placeId, slot: item.slot, reason: item.reason ?? '',
+            candidate: candidates.find(({ place }) => place.id === item.placeId),
+          }))
+          if (replacementItems.some(({ candidate }) => !candidate)) return fallback('low_coverage')
+          dayItems = replacementItems.map(({ candidate, ...item }) => ({ ...item, candidate: candidate as ScoredCandidate }))
+        } else {
+          return fallback('low_coverage')
+        }
+      } catch {
+        return fallback('low_coverage')
+      }
+    }
+    const requests: ScheduleRequest[] = dayItems.map(({ candidate, slot }) => ({ candidate, slot, locked: slot === 'noon' }))
     const scheduled = scheduleDay(requests, { input: { ...input, startDate: input.startDate }, dayIndex: day.dayIndex })
     if (scheduled.droppedPlaceIds.length || scheduled.items.length !== requests.length) return fallback('low_coverage')
     const items: TripItem[] = scheduled.items.map((item, position) => {
       used.add(item.candidate.place.id)
-      const validated = day.items.find(({ placeId }) => placeId === item.candidate.place.id)
+      const validated = dayItems.find(({ placeId }) => placeId === item.candidate.place.id)
       return {
         id: stableUuid(options.seed, `llm:${day.dayIndex}:${position}`),
         placeId: item.candidate.place.id,
@@ -299,14 +332,19 @@ export async function generateTripPipeline(
     start: input.start,
     days: scheduledDays,
   }
+  const notices = [...candidateSelection.notices]
+  if (validation.issues.some((issue) => issue.startsWith('best_time_relaxed:'))) {
+    notices.push({ code: 'FILTER_RELAXED', message: 'Một số khung giờ được nới để bảo đảm các quy tắc cứng của lịch trình.' })
+  }
   metrics.fallbackReason = null
   metrics.model = completion.model
   metricsLog(options, metrics)
   return {
     draft,
     warnings,
-    notices: candidateSelection.notices,
-    generation: { by: 'llm', model: completion.model, durationMs: Date.now() - startedAt },
+    notices,
+    generation: { by: 'llm', model: completion.model, durationMs: Date.now() - startedAt,
+      repairs: metrics.repairs, replacedDayIndexes: [...metrics.replacedDayIndexes] },
     metrics: { ...metrics },
   }
 }
