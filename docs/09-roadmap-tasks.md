@@ -264,14 +264,14 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-031, T-022
 - **Làm:** `pipeline.ts`: LLM → kiểm tra → dự phòng khi cần; `LLM_ENABLED`, `LLM_DAILY_CALL_CAP`; ghi `fallbackReason`, `repairs`, `coverage`, `PROMPT_VERSION`, token; `regenerateDay` dùng LLM trước, dự phòng sau; `notice FALLBACK_USED`.
 - **Hoàn thành khi:** test pipeline (LLM tắt/timeout/hỏng/`coverage` thấp → dự phòng, vẫn `200`); test an toàn với `notes` độc hại; p90 ≤ 15 giây trong thử nghiệm thực tế.
-- Đã đạt: validator sửa theo ngày và chỉ dùng fallback cho ngày lỗi; `generation_events` ghi metadata mới khi `TELEMETRY_COLUMNS=true`, còn mặc định chỉ ghi cột cũ cho tới khi migration telemetry được chủ dự án áp dụng. Bằng chứng kiểm thử và migration chưa áp dụng: `docs/reports/phase-3c-report.md`.
+  - Đã đạt: validator sửa theo ngày và chỉ dùng fallback cho ngày lỗi; migration telemetry `20261029000009` đã được chủ dự án áp dụng trên remote, `db:types` đã sinh lại kiểu. `TELEMETRY_COLUMNS=true` ghi các cột mới; lần kiểm chứng thật tạo đúng một hàng fallback. Xem `docs/reports/phase-3d-report.md`.
 
 ### [ ] T-033 · Đánh giá chất lượng và hiệu chỉnh · `M`
 - **Tham chiếu:** `docs/07` mục 17.4, 18
 - **Dep:** T-032, **chủ dự án tham gia chấm**
 - **Làm:** chạy bộ 10 đầu vào mẫu với dự phòng và với LLM; ghi kết quả `docs/eval/<ngày>-<PROMPT_VERSION>.md`; điều chỉnh trọng số, ngưỡng, prompt nếu cần.
 - **Hoàn thành khi:** có báo cáo so sánh; chủ dự án quyết định mặc định (LLM hay chỉ dự phòng cho khách).
-- Đã chạy ngày 2026-10-29 bằng 12 calls (10 mẫu + 2 ghi chú đối kháng), lưu `docs/eval/2026-10-29-llm-vs-fallback.md`. Chưa tick vì bảng chấm và quyết định mặc định còn chờ chủ dự án.
+  - V2 đã chạy 12 calls; V3 ngày 2026-10-29 dừng sớm tại 11 calls theo ngưỡng fallback ≥10% (3/11). Xem `docs/eval/2026-10-29-llm-vs-fallback-v2.md` và `docs/eval/2026-10-29-llm-vs-fallback-v3.md`. Chưa tick: đối kháng thứ hai chưa chạy, diagnostics V3 thiếu, bảng chấm và quyết định mặc định còn chờ chủ dự án.
 
 > ✅ **Cổng kiểm tra M3:** lịch trình do LLM sinh vượt hoặc ngang dự phòng theo chấm điểm của chủ dự án; **không có** địa điểm bịa; tắt LLM bằng cờ vẫn chạy.
 

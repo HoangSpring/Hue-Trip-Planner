@@ -17,62 +17,62 @@ export type Database = {
       generation_events: {
         Row: {
           client_key: string
+          coverage: number | null
           created_at: string
-            coverage: number | null
           duration_ms: number | null
           error_code: string | null
+          fallback_reason: string | null
           generated_by: string | null
           id: number
           input_tokens: number | null
           is_guest: boolean
           llm_model: string | null
           output_tokens: number | null
-            pool_size: number | null
-            prompt_version: string | null
-            repairs: number | null
-            fallback_reason: string | null
-            thinking_tokens: number | null
+          pool_size: number | null
+          prompt_version: string | null
+          repairs: number | null
           status: string
+          thinking_tokens: number | null
           user_id: string | null
         }
         Insert: {
           client_key: string
+          coverage?: number | null
           created_at?: string
-            coverage?: number | null
           duration_ms?: number | null
           error_code?: string | null
+          fallback_reason?: string | null
           generated_by?: string | null
           id?: never
           input_tokens?: number | null
           is_guest: boolean
           llm_model?: string | null
           output_tokens?: number | null
-            pool_size?: number | null
-            prompt_version?: string | null
-            repairs?: number | null
-            fallback_reason?: string | null
-            thinking_tokens?: number | null
+          pool_size?: number | null
+          prompt_version?: string | null
+          repairs?: number | null
           status: string
+          thinking_tokens?: number | null
           user_id?: string | null
         }
         Update: {
           client_key?: string
+          coverage?: number | null
           created_at?: string
-            coverage?: number | null
           duration_ms?: number | null
           error_code?: string | null
+          fallback_reason?: string | null
           generated_by?: string | null
           id?: never
           input_tokens?: number | null
           is_guest?: boolean
           llm_model?: string | null
           output_tokens?: number | null
-            pool_size?: number | null
-            prompt_version?: string | null
-            repairs?: number | null
-            fallback_reason?: string | null
-            thinking_tokens?: number | null
+          pool_size?: number | null
+          prompt_version?: string | null
+          repairs?: number | null
           status?: string
+          thinking_tokens?: number | null
           user_id?: string | null
         }
         Relationships: [
