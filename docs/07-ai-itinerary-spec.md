@@ -202,9 +202,11 @@ Trong **thuật toán dự phòng**, phân ngày bằng thuật toán tham lam: 
 
 | Tham số | Giá trị |
 |---|---|
-| Nhiệt độ | `0.4` (đủ đa dạng lý do nhưng ổn định lựa chọn) |
-| Token đầu ra tối đa | `2500` (đủ cho 5 ngày × 7 mục) |
+| Nhiệt độ | Gemini 3: **không gửi `temperature`**, dùng mặc định của model. Tính ổn định đến từ structured JSON schema và `validate.ts`. |
+| Mức suy nghĩ | Gemini 3: gửi `generation_config.thinking_level = "low"` để giảm độ trễ cho lựa chọn lịch trình. |
+| Token đầu ra tối đa | `3500` (dư chỗ cho JSON và suy nghĩ; `max_output_tokens` tính cả token suy nghĩ) |
 | Thời gian chờ cứng | `LLM_TIMEOUT_MS` (mặc định 12 000 ms), dùng `AbortSignal` |
+| Ping thủ công | `pnpm llm:ping` mặc định chờ tối đa 40 000 ms; `--timeout=<ms>` chỉ áp dụng cho ping, không đổi pipeline |
 | Số lần gọi | **1 lần**; thêm **tối đa 1 lần sửa** nếu JSON hỏng **và** đã trôi qua < 8 giây |
 | Định dạng đầu ra | JSON theo schema (ưu tiên tính năng "structured output"/JSON schema của nhà cung cấp; nếu không có thì chế độ JSON + Zod) |
 | Streaming | Không dùng ở MVP |
@@ -215,9 +217,11 @@ Trong **thuật toán dự phòng**, phân ngày bằng thuật toán tham lam: 
 interface LlmClient {
   completeJson(args: {
     system: string; user: string; schema: JsonSchema;
-    maxOutputTokens: number; temperature: number; signal: AbortSignal;
-  }): Promise<{ json: unknown; usage: { inputTokens: number; outputTokens: number }; model: string }>;
+    maxOutputTokens: number; temperature?: number; signal: AbortSignal;
+  }): Promise<{ json: unknown; usage: { inputTokens: number; outputTokens: number; thinkingTokens: number }; model: string }>;
 }
+
+Với Gemini 3, tham số `temperature` của interface không gửi lên API; dùng mức mặc định của model. Độ ổn định dựa vào schema nghiêm và `validate.ts`.
 ```
 
 ### 8.2 Dữ liệu đưa vào (user message)
@@ -514,7 +518,7 @@ computeWarnings(trip: { days: TripDay[]; transport; startDate }): Warning[]
 
 ## 16. Quan sát, chi phí
 
-Mỗi lần sinh ghi `generation_events` (xem `docs/05`): `status`, `generated_by`, `llm_model`, `input_tokens`, `output_tokens`, `duration_ms`, `error_code`. Thêm vào log ứng dụng (không chứa nội dung người dùng): `PROMPT_VERSION`, `poolSize`, `repairs`, `coverage`, `fallbackReason` (`llm_disabled` | `cap_reached` | `timeout` | `invalid_json` | `low_coverage` | `llm_error`).
+Mỗi lần sinh ghi `generation_events` (xem `docs/05`): `status`, `generated_by`, `llm_model`, `input_tokens`, `output_tokens`, `duration_ms`, `error_code`. Provider cũng đọc `total_thought_tokens` từ phản hồi và báo riêng trong ping; không cộng trùng vào `output_tokens`. Thêm vào log ứng dụng (không chứa nội dung người dùng): `PROMPT_VERSION`, `poolSize`, `repairs`, `coverage`, `fallbackReason` (`llm_disabled` | `cap_reached` | `timeout` | `invalid_json` | `low_coverage` | `llm_error`).
 
 **Chỉ số theo dõi hằng tuần:** tỷ lệ dùng dự phòng (mục tiêu < 10%), p50/p90 thời gian sinh (p90 ≤ 15s), số mục bị sửa trung bình/lần, chi phí token/lần, tỷ lệ người dùng xóa/thay điểm ngay sau khi sinh (chỉ báo chất lượng).
 
@@ -571,7 +575,7 @@ export const ITINERARY_CONFIG = {
     tour:      { speedKmh: 25, bufferMin: 5, maxLegKm: 15, maxLegMin: 40 },
   },
   maxDayTravelMin: 120,
-  llm: { temperature: 0.4, maxOutputTokens: 2500, repairIfElapsedUnderMs: 8000, minCoverage: 0.7 },
+  llm: { thinkingLevel: 'low', maxOutputTokens: 3500, repairIfElapsedUnderMs: 8000, minCoverage: 0.7 },
 } as const;
 ```
 

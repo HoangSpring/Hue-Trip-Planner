@@ -46,13 +46,14 @@ function completionFor(userText: string, scenario: FakeLlmScenario): LlmCompleti
   }
   return {
     json: response,
-    usage: { inputTokens: Math.ceil(userText.length / 4), outputTokens: Math.ceil(JSON.stringify(response).length / 4) },
+    usage: { inputTokens: Math.ceil(userText.length / 4), outputTokens: Math.ceil(JSON.stringify(response).length / 4), thinkingTokens: 0 },
     model: 'fake',
+    httpStatus: 200,
   }
 }
 
 export class FakeLlmClient implements LlmClient {
-  readonly calls: Array<{ inputTokens: number; outputTokens: number }> = []
+  readonly calls: Array<{ inputTokens: number; outputTokens: number; thinkingTokens: number }> = []
 
   constructor(private readonly scenario: FakeLlmScenario = 'valid', private readonly timeoutMs = 25) {}
 

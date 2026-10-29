@@ -7,15 +7,17 @@ export interface LlmClient {
     user: string
     schema: z.ZodType
     maxOutputTokens: number
-    temperature: number
+    /** Optional for providers that expose sampling; Gemini 3 omits it and uses model defaults. */
+    temperature?: number
     signal: AbortSignal
   }): Promise<LlmCompletion>
 }
 
 export type LlmCompletion = {
   json: unknown
-  usage: { inputTokens: number; outputTokens: number }
+  usage: { inputTokens: number; outputTokens: number; thinkingTokens: number }
   model: string
+  httpStatus: number
 }
 
 export class LlmTimeoutError extends Error {

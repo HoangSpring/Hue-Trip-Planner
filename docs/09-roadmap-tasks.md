@@ -240,10 +240,10 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 3 — AI thật (M3)
 
-### [ ] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
+### [x] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
 - **Tham chiếu:** `docs/07` mục 8.1, 17.1; `docs/06` mục 13
 - **Dep:** T-020, **chủ dự án đã chọn nhà cung cấp LLM**
-- **Trạng thái hiện tại:** provider Gemini và test HTTP giả đã làm; `pnpm llm:ping` đã gọi một lần nhưng timeout sau khoảng 12 giây, nên T-029 vẫn chưa đạt.
+- **Trạng thái hiện tại:** Gemini provider, test HTTP giả và ping schema thật thành công với `gemini-3.5-flash-lite`; yêu cầu mẫu 40 ứng viên/2 ngày cũng trả JSON hợp lệ chỉ gồm candidate ID đã gửi.
 - **Làm:** interface `LlmClient`; một provider thật (đọc `LLM_API_KEY`, `LLM_MODEL`); `FakeLlmClient` có các kịch bản lỗi (id sai, trùng, thiếu ngày, không có bữa trưa, JSON hỏng, timeout, quá dài, URL/HTML trong `reason`); ghi nhận token từ phản hồi.
 - **Hoàn thành khi:** gọi thử thành công ở môi trường phát triển; timeout hoạt động bằng `AbortSignal`; không log nội dung prompt/phản hồi.
 

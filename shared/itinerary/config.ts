@@ -16,5 +16,5 @@ export const ITINERARY_CONFIG = {
     tour: { speedKmh: 25, bufferMin: 5, maxLegKm: 15, maxLegMin: 40 },
   },
   maxDayTravelMin: 120,
-  llm: { temperature: 0.4, maxOutputTokens: 2500, repairIfElapsedUnderMs: 8000, minCoverage: 0.7 },
+  llm: { thinkingLevel: 'low', maxOutputTokens: 3500, repairIfElapsedUnderMs: 8000, minCoverage: 0.7 },
 } as const

@@ -10,7 +10,7 @@ export type GeminiProviderConfig = {
   fetchImpl?: typeof fetch
 }
 
-export type GeminiApiFailureKind = 'authentication' | 'quota' | 'model_not_found' | 'http_error' | 'invalid_response'
+export type GeminiApiFailureKind = 'timeout' | 'authentication' | 'quota' | 'quota_zero' | 'model_not_found' | 'bad_request' | 'network' | 'bad_json' | 'http_error'
 
 export class GeminiApiError extends Error {
   constructor(readonly kind: GeminiApiFailureKind, readonly status?: number) {
@@ -22,7 +22,7 @@ export class GeminiApiError extends Error {
 type InteractionResponse = {
   model?: unknown
   steps?: Array<{ type?: unknown; content?: Array<{ type?: unknown; text?: unknown }> }>
-  usage?: { total_input_tokens?: unknown; total_output_tokens?: unknown }
+  usage?: { total_input_tokens?: unknown; total_output_tokens?: unknown; total_thought_tokens?: unknown }
 }
 
 function geminiSchema(schema: z.ZodType): Record<string, unknown> {
@@ -85,8 +85,9 @@ export class GeminiLlmClient implements LlmClient {
               mime_type: 'application/json',
               schema: geminiSchema(args.schema),
             },
-            // Interactions API documents max_output_tokens but no temperature field.
-            generation_config: { max_output_tokens: args.maxOutputTokens },
+            // Gemini 3 docs advise its default temperature; thinking_level low reduces latency.
+            // max_output_tokens includes thinking tokens, so reserve room for reasoning and JSON.
+            generation_config: { max_output_tokens: Math.max(3500, args.maxOutputTokens), thinking_level: 'low' },
             store: false,
           }),
           signal: controller.signal,
@@ -94,16 +95,27 @@ export class GeminiLlmClient implements LlmClient {
       } catch {
         if (controller.signal.aborted) {
           if (args.signal.aborted) throw new DOMException('LLM request aborted', 'AbortError')
-          throw new DOMException('LLM request timed out', 'TimeoutError')
+          throw new GeminiApiError('timeout')
         }
-        throw new GeminiApiError('http_error')
+        throw new GeminiApiError('network')
       }
 
       if (!response.ok) {
+        let errorBody = ''
+        if (response.status === 429) {
+          try { errorBody = await response.text() } catch {
+            if (controller.signal.aborted) {
+              if (args.signal.aborted) throw new DOMException('LLM request aborted', 'AbortError')
+              throw new GeminiApiError('timeout')
+            }
+          }
+        }
         const kind: GeminiApiFailureKind = response.status === 401 || response.status === 403
           ? 'authentication'
-          : response.status === 429 ? 'quota'
-            : response.status === 404 ? 'model_not_found' : 'http_error'
+          : response.status === 429 ? (/limit\s*[:=]\s*0|"limit"\s*:\s*0/i.test(errorBody) ? 'quota_zero' : 'quota')
+          : response.status === 408 || response.status === 504 ? 'timeout'
+            : response.status === 404 ? 'model_not_found'
+              : response.status === 400 ? 'bad_request' : 'http_error'
         throw new GeminiApiError(kind, response.status)
       }
 
@@ -113,25 +125,27 @@ export class GeminiLlmClient implements LlmClient {
       } catch {
         if (controller.signal.aborted) {
           if (args.signal.aborted) throw new DOMException('LLM request aborted', 'AbortError')
-          throw new DOMException('LLM request timed out', 'TimeoutError')
+          throw new GeminiApiError('timeout')
         }
-        throw new GeminiApiError('invalid_response', response.status)
+        throw new GeminiApiError('bad_json', response.status)
       }
       const text = responseText(body)
-      if (!text) throw new GeminiApiError('invalid_response', response.status)
+      if (!text) throw new GeminiApiError('bad_json', response.status)
       let json: unknown
       try {
         json = JSON.parse(text) as unknown
       } catch {
-        throw new GeminiApiError('invalid_response', response.status)
+        throw new GeminiApiError('bad_json', response.status)
       }
       return {
         json,
         usage: {
           inputTokens: tokenCount(body.usage?.total_input_tokens),
           outputTokens: tokenCount(body.usage?.total_output_tokens),
+          thinkingTokens: tokenCount(body.usage?.total_thought_tokens),
         },
         model: typeof body.model === 'string' ? body.model : this.config.model,
+        httpStatus: response.status,
       }
     } finally {
       clearTimeout(timeout)
