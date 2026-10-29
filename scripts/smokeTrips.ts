@@ -34,11 +34,13 @@ function loadEnvironment(): void {
 
 function remoteHasMigration10(): boolean {
   try {
-    const output = execFileSync(process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm', ['exec', 'supabase', 'migration', 'list'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], shell: process.platform === 'win32' })
-    return output.split(/\r?\n/).some((line) => {
-      const [local, remote] = line.split('|').map((column) => column.replace(/`/g, '').trim())
-      return local === '20261029000010' && remote === '20261029000010'
-    })
+    const output = execFileSync(
+      process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
+      ['exec', 'supabase', 'migration', 'list'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], shell: process.platform === 'win32' }
+    )
+    // Kiểm tra xem Migration 10 có tồn tại trong danh sách và không ở trạng thái pending
+    return output.includes('20261029000010') && !output.toLowerCase().includes('pending')
   } catch { return false }
 }
 
