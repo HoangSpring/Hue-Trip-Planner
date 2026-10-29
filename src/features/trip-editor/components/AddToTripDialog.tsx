@@ -7,6 +7,7 @@ import { getMyTripsApi, getTripApi, replaceTripApi } from '@/lib/api'
 import { paths } from '@/app/paths'
 import { readStoredTripDraft, writeStoredTripDraft } from '@/features/trip-wizard/storage'
 import { vi } from '@/lib/strings/vi'
+import { refreshTripDerived } from '../tripEditorReducer'
 
 const slots: Slot[] = ['morning', 'noon', 'afternoon', 'evening']
 
@@ -50,7 +51,8 @@ export function AddToTripDialog({ place, onClose }: { place: PlaceSummary; onClo
       reason: null, note: null, isLocked: false, addedBy: 'user',
     })
     const next = { ...current, days: current.days.map(day => day.dayIndex === dayIndex ? { ...day, items: [...day.items, newItem] } : day) }
-    writeStoredTripDraft(next)
+    const { trip: recalculated } = refreshTripDerived(next)
+    writeStoredTripDraft(recalculated)
     navigate(paths.tripDraft)
   }
 

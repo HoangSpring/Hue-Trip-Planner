@@ -324,11 +324,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** đạt AC F-10; trạng thái tim đồng nhất giữa các trang; hoàn thành nốt AC còn thiếu ở F-02 (khách bấm tim).
   - **Ghi chú:** API dùng JWT người dùng/RLS, PUT/DELETE idempotent; thẻ, chi tiết, bản đồ và trang đã lưu chia sẻ cùng cache theo user. Khách ghi `pending_action` và chuyển tiếp sau đăng nhập; danh sách có lọc loại và thao tác thêm vào chuyến đi.
 
-### [ ] T-041 · "Thêm vào chuyến đi" từ trang địa điểm · `S`
+### [x] T-041 · "Thêm vào chuyến đi" từ trang địa điểm · `S`
 - **Tham chiếu:** `docs/03` FL-04.5
 - **Dep:** T-016, T-026, T-036
 - **Làm:** nút ở `/place/:slug`: chọn chuyến đi (user) hoặc dùng nháp (khách), chọn ngày/khung giờ; chặn địa điểm đã có.
 - **Hoàn thành khi:** đạt phần liên quan trong AC F-03/F-07.
+  - **Ghi chú:** trang địa điểm mở dialog dùng chung cho user và khách; dialog chọn chuyến đi/ngày/khung, chặn địa điểm trùng, nháp khách được tính lại quãng đường và cảnh báo qua helper dùng chung trước khi lưu.
 
 ### [ ] T-042 · Chia sẻ lịch trình (F-11) · `M`
 - **Tham chiếu:** `docs/02` F-11; `docs/06` mục 7.8, 8.1, 8.2; `docs/08` S17

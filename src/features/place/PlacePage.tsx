@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { placeMapItemSchema } from '@shared/schemas/placeApi'
@@ -11,9 +11,12 @@ import { PlaceCard } from '@/components/ui/PlaceCard'
 import { MapView } from '@/features/map/MapView'
 import { PlacePhoto } from '@/components/ui/PlacePhoto'
 import { SavedPlaceButton } from '@/features/saved/SavedPlaceButton'
+import { AddToTripDialog } from '@/features/trip-editor/components/AddToTripDialog'
+import { placeSummarySchema } from '@shared/schemas/place'
 
 export default function PlacePage() {
   const { slug = '' } = useParams()
+  const [addingToTrip, setAddingToTrip] = useState(false)
   const query = useQuery({ queryKey: ['place', slug], queryFn: () => getPlaceBySlug(slug), retry: false })
   const place = query.data?.place
   useEffect(() => {
@@ -47,10 +50,11 @@ export default function PlacePage() {
         {query.data.nearby.length > 0 && <section><h2 className="font-serif text-2xl">{vi.place.nearbyTitle}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2">{query.data.nearby.slice(0, 4).map((nearby) => <PlaceCard key={nearby.id} place={nearby}/>)}</div></section>}
         <p className="border-l-2 border-accent pl-4 text-sm leading-6 text-ink-muted">{vi.place.visitNote}{place.lastVerifiedAt && ` Cập nhật gần nhất: ${new Date(place.lastVerifiedAt).toLocaleDateString('vi-VN')}.`}</p>
       </div>
-      <aside className="space-y-5"><section className="rounded-card border border-line bg-white p-5 shadow-card"><h2 className="font-serif text-xl">{vi.place.infoTitle}</h2><dl className="mt-4 divide-y divide-line text-sm">{(place.openTime || place.closeTime) && <InfoRow label={vi.place.openHours} value={`${place.openTime ?? ''}${place.openTime && place.closeTime ? ' – ' : ''}${place.closeTime ?? ''}`}/ >}{place.closedDays.length > 0 && <InfoRow label={vi.place.closedDays} value={place.closedDays.map((day) => vi.place.days[day - 1]).join(', ')}/ >}{price && <InfoRow label={vi.place.price} value={price}/ >}{place.priceLevel != null && !price && <InfoRow label={vi.place.priceLevel} value={vi.place.priceLevels[place.priceLevel]}/ >}{place.visitDurationMin && <InfoRow label={vi.place.duration} value={`${place.visitDurationMin} phút`}/ >}{place.bestTime.length > 0 && <InfoRow label={vi.place.bestTime} value={place.bestTime.map(timeLabel).join(', ')}/ >}{place.openingNote && <InfoRow label={vi.place.note} value={place.openingNote}/ >}</dl><a href={directionsUrl} target="_blank" rel="noreferrer" className="mt-5 flex min-h-12 items-center justify-center rounded-control bg-primary px-4 text-center font-semibold text-white">{vi.place.directions}</a></section>
+      <aside className="space-y-5"><section className="rounded-card border border-line bg-white p-5 shadow-card"><h2 className="font-serif text-xl">{vi.place.infoTitle}</h2><dl className="mt-4 divide-y divide-line text-sm">{(place.openTime || place.closeTime) && <InfoRow label={vi.place.openHours} value={`${place.openTime ?? ''}${place.openTime && place.closeTime ? ' – ' : ''}${place.closeTime ?? ''}`}/ >}{place.closedDays.length > 0 && <InfoRow label={vi.place.closedDays} value={place.closedDays.map((day) => vi.place.days[day - 1]).join(', ')}/ >}{price && <InfoRow label={vi.place.price} value={price}/ >}{place.priceLevel != null && !price && <InfoRow label={vi.place.priceLevel} value={vi.place.priceLevels[place.priceLevel]}/ >}{place.visitDurationMin && <InfoRow label={vi.place.duration} value={`${place.visitDurationMin} phút`}/ >}{place.bestTime.length > 0 && <InfoRow label={vi.place.bestTime} value={place.bestTime.map(timeLabel).join(', ')}/ >}{place.openingNote && <InfoRow label={vi.place.note} value={place.openingNote}/ >}</dl><button type="button" onClick={() => setAddingToTrip(true)} className="mt-5 flex min-h-12 w-full items-center justify-center rounded-control border border-primary px-4 text-center font-semibold text-primary">{vi.saved.addToTrip}</button><a href={directionsUrl} target="_blank" rel="noreferrer" className="mt-3 flex min-h-12 items-center justify-center rounded-control bg-primary px-4 text-center font-semibold text-white">{vi.place.directions}</a></section>
         <section><h2 className="mb-3 font-serif text-xl">{vi.place.locationTitle}</h2><MapView places={[mapItem]} height="300px"/></section>
       </aside>
     </div>
+    {addingToTrip && <AddToTripDialog place={placeSummarySchema.parse(place)} onClose={() => setAddingToTrip(false)} />}
   </article>
 }
 
