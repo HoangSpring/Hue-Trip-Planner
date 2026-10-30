@@ -25,6 +25,7 @@ import { LoginPromptModal } from './components/LoginPromptModal'
 import { AlternativesSheet } from './components/AlternativesSheet'
 import { AddPlaceSheet } from './components/AddPlaceSheet'
 import { RegenerateDayDialog } from './components/RegenerateDayDialog'
+import { ShareDialog } from '@/features/share/ShareDialog'
 
 const emptyTrip: TripDraft = {
   clientDraftId: '00000000-0000-0000-0000-000000000000',
@@ -118,6 +119,7 @@ export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?:
   const [isAlternativesSheetOpen, setIsAlternativesSheetOpen] = useState(false)
   const [isAddPlaceSheetOpen, setIsAddPlaceSheetOpen] = useState(false)
   const [isRegenerateDialogOpen, setIsRegenerateDialogOpen] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
 
   const allExistingPlaceIds = useMemo(() => {
     if (!state.trip) return new Set<string>()
@@ -678,16 +680,13 @@ export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?:
           >
             Lưu
           </button>}
-          <button
+          {savedMode && savedTripQuery.data && <button
             type="button"
-            onClick={() => {
-              setLoginActionName('Chia sẻ lịch trình')
-              setLoginModalOpen(true)
-            }}
+            onClick={() => setShareDialogOpen(true)}
             className="rounded-control bg-primary hover:bg-primary-hover px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors"
           >
             Chia sẻ
-          </button>
+          </button>}
         </div>
       </div>
 
@@ -898,6 +897,7 @@ export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?:
         onClose={() => setLoginModalOpen(false)}
         actionLabel={loginActionName}
       />
+      {shareDialogOpen && savedTripQuery.data && <ShareDialog trip={savedTripQuery.data} onClose={() => setShareDialogOpen(false)} />}
 
       {conflictOpen && <div className="fixed inset-0 z-50 grid place-items-center bg-ink/50 p-4" role="presentation">
         <section className="w-full max-w-md rounded-card border border-line bg-surface p-6 shadow-card" role="alertdialog" aria-modal="true" aria-labelledby="trip-conflict-title">

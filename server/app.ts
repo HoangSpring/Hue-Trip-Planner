@@ -10,6 +10,7 @@ import { createRegenerateDayRoute } from './routes/regenerateDay'
 import { createTripRoutes } from './routes/trips'
 import { createMeRoutes } from './routes/me'
 import { createSavedPlacesRoutes } from './routes/savedPlaces'
+import { createTripSharingRoutes } from './routes/tripSharing'
 
 export const app = new Hono<ApiEnv>()
 
@@ -25,3 +26,4 @@ app.route('/api', createRegenerateDayRoute())
 app.route('/api', createTripRoutes())
 app.route('/api', createMeRoutes())
 app.route('/api', createSavedPlacesRoutes())
+app.route('/api', createTripSharingRoutes())

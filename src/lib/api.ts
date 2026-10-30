@@ -20,6 +20,8 @@ import {
   deleteAccountRequestSchema,
   savedPlacesResponseSchema,
   categorySchema,
+  sharedTripViewSchema,
+  setShareResponseSchema,
 } from '@shared/schemas'
 import type { PlaceListQuery, PlaceMapQuery } from '@shared/schemas'
 import { z } from 'zod'
@@ -146,6 +148,18 @@ export function deleteTripApi(id: string, accessToken: string) {
 
 export function duplicateTripApi(id: string, accessToken: string) {
   return apiRequest(`trips/${encodeURIComponent(id)}/duplicate`, tripSchema, { method: 'POST', accessToken })
+}
+
+export function setTripShareApi(id: string, enabled: boolean, accessToken: string) {
+  return apiRequest(`trips/${encodeURIComponent(id)}/share`, setShareResponseSchema, { method: 'PUT', body: { enabled }, accessToken })
+}
+
+export function getSharedTripApi(token: string, signal?: AbortSignal) {
+  return apiRequest(`shared/${encodeURIComponent(token)}`, sharedTripViewSchema, { signal })
+}
+
+export function copySharedTripApi(token: string, accessToken: string) {
+  return apiRequest(`shared/${encodeURIComponent(token)}/copy`, tripSchema, { method: 'POST', accessToken })
 }
 
 export function putSavedPlaceApi(placeId: string, accessToken: string) {

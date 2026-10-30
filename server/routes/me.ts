@@ -29,11 +29,11 @@ const routeError: ErrorHandler<ApiEnv> = (error, context) => errorHandler(error,
 export function createMeRoutes(dependencies: MeRouteDependencies = {}) {
   const routes = new Hono<ApiEnv>()
   routes.onError(routeError)
-  routes.use('*', async (context, next) => {
+  const privateCache: MiddlewareHandler<ApiEnv> = async (context, next) => {
     context.header('Cache-Control', 'private, no-store')
     await next()
-  })
-  routes.use('*', dependencies.auth ?? requireAuth)
+  }
+  routes.use('/me', privateCache, dependencies.auth ?? requireAuth)
   const userClient = (token: string) => dependencies.createUserClient?.(token) ?? createUserSupabaseClient(token)
 
   routes.get('/me', async (context) => {

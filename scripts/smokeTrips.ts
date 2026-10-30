@@ -13,7 +13,9 @@ type ApiResult = { status: number; body: unknown }
 
 const checks: Check[] = []
 const createdIds: string[] = []
+const createdByB: string[] = []
 let accessTokenA = ''
+let accessTokenB = ''
 let baseUrl = process.env.SMOKE_TRIPS_API_URL ?? 'http://127.0.0.1:8787'
 let deletionTestUserId: string | null = null
 let deletionTestUserDeleted = false
@@ -94,6 +96,12 @@ async function request(path: string, method: string, token: string, body?: unkno
   return { status: response.status, body: responseBody }
 }
 
+async function requestPublic(path: string): Promise<ApiResult> {
+  const response = await fetch(`${baseUrl}/api${path}`)
+  const responseBody: unknown = response.status === 204 ? null : await response.json().catch(() => null)
+  return { status: response.status, body: responseBody }
+}
+
 function tripId(result: ApiResult): string | null {
   const id = jsonValue(result.body).id
   return typeof id === 'string' ? id : null
@@ -135,7 +143,7 @@ async function main(): Promise<void> {
     if (health !== 200) throw new Error('local_api_unavailable')
     record('API cục bộ', 'PASS', 'GET /api/health trả 200.')
     accessTokenA = await login(process.env.TEST_USER_A_EMAIL!, process.env.TEST_USER_A_PASSWORD!)
-    const accessTokenB = await login(process.env.TEST_USER_B_EMAIL!, process.env.TEST_USER_B_PASSWORD!)
+    accessTokenB = await login(process.env.TEST_USER_B_EMAIL!, process.env.TEST_USER_B_PASSWORD!)
     record('Supabase Auth thử nghiệm', 'PASS', 'Hai tài khoản thử đăng nhập được; token không hiển thị.')
 
     const { createPublicSupabaseClient } = await import('../server/lib/supabase')
@@ -204,6 +212,28 @@ async function main(): Promise<void> {
     }
     record('A nhân bản trip', 'PASS', '201; endpoint trả bản sao mới.')
 
+    const enabledShare = await request(`/trips/${originalId}/share`, 'PUT', accessTokenA, { enabled: true })
+    const firstToken = jsonValue(enabledShare.body).shareToken
+    if (enabledShare.status !== 200 || typeof firstToken !== 'string') throw new Error('share_enable_failed')
+    const sharedView = await requestPublic(`/shared/${firstToken}`)
+    const publicValue = jsonValue(sharedView.body)
+    const forbiddenSharedKeys = ['id', 'clientDraftId', 'input', 'shareToken'].filter(key => key in publicValue)
+    if (sharedView.status !== 200 || forbiddenSharedKeys.length > 0) throw new Error(`shared_projection_failed_status_${sharedView.status}_keys_${Object.keys(publicValue).join(',')}`)
+    record('Bật chia sẻ và xem công khai', 'PASS', 'PUT trả 200; GET trả lịch trình đã lược bỏ ID, ghi chú và dữ liệu chủ sở hữu.')
+    const disabledShare = await request(`/trips/${originalId}/share`, 'PUT', accessTokenA, { enabled: false })
+    const oldTokenResponse = await requestPublic(`/shared/${firstToken}`)
+    if (disabledShare.status !== 200 || jsonValue(disabledShare.body).shareToken !== null || oldTokenResponse.status !== 404) throw new Error('share_disable_failed')
+    const reenabledShare = await request(`/trips/${originalId}/share`, 'PUT', accessTokenA, { enabled: true })
+    const secondToken = jsonValue(reenabledShare.body).shareToken
+    const newTokenResponse = typeof secondToken === 'string' ? await requestPublic(`/shared/${secondToken}`) : null
+    if (reenabledShare.status !== 200 || typeof secondToken !== 'string' || secondToken === firstToken || newTokenResponse?.status !== 200) throw new Error('share_reenable_failed')
+    record('Tắt/vô hiệu link và bật lại', 'PASS', 'Token cũ trả 404; bật lại tạo token mới và link mới trả 200.')
+    const sharedCopy = await request(`/shared/${secondToken}/copy`, 'POST', accessTokenB)
+    const sharedCopyId = tripId(sharedCopy)
+    if (sharedCopy.status !== 201 || !sharedCopyId || jsonValue(sharedCopy.body).shareToken !== null || jsonValue(sharedCopy.body).isShared !== false) throw new Error('shared_copy_failed')
+    createdByB.push(sharedCopyId)
+    record('B tạo bản sao riêng từ lịch trình chia sẻ', 'PASS', 'POST trả 201; bản sao thuộc B và không kế thừa share token.')
+
     const bGet = await request(`/trips/${originalId}`, 'GET', accessTokenB)
     const bPut = await request(`/trips/${originalId}`, 'PUT', accessTokenB, makePut(String(current.updatedAt)))
     const bDelete = await request(`/trips/${originalId}`, 'DELETE', accessTokenB)
@@ -214,6 +244,11 @@ async function main(): Promise<void> {
       const removed = await request(`/trips/${id}`, 'DELETE', accessTokenA)
       if (removed.status !== 204) throw new Error('trip_cleanup_failed')
       createdIds.splice(createdIds.indexOf(id), 1)
+    }
+    for (const id of [...createdByB]) {
+      const removed = await request(`/trips/${id}`, 'DELETE', accessTokenB)
+      if (removed.status !== 204) throw new Error('shared_copy_cleanup_failed')
+      createdByB.splice(createdByB.indexOf(id), 1)
     }
     record('Dọn dữ liệu thử', 'PASS', 'Đã xóa toàn bộ trip được tạo bởi smoke.')
 
@@ -239,6 +274,12 @@ async function main(): Promise<void> {
         const result = await request(`/trips/${id}`, 'DELETE', accessTokenA)
         if (result.status !== 204) record('Dọn trip thử', 'FAIL', 'Không xóa được; cần chủ dự án kiểm tra thủ công.')
       } catch { record('Dọn trip thử', 'FAIL', 'Không thể xác nhận xóa; cần chủ dự án kiểm tra thủ công.') }
+    }
+    for (const id of createdByB) {
+      try {
+        const result = await request(`/trips/${id}`, 'DELETE', accessTokenB)
+        if (result.status !== 204) record('Dọn trip sao chép', 'FAIL', 'Không xóa được; cần chủ dự án kiểm tra thủ công.')
+      } catch { record('Dọn trip sao chép', 'FAIL', 'Không thể xác nhận xóa; cần chủ dự án kiểm tra thủ công.') }
     }
     printResults()
   }

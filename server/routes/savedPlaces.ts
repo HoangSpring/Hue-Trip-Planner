@@ -16,11 +16,11 @@ export type SavedPlacesRouteDependencies = {
 export function createSavedPlacesRoutes(dependencies: SavedPlacesRouteDependencies = {}) {
   const routes = new Hono<ApiEnv>()
   routes.onError(errorHandler)
-  routes.use('*', async (context, next) => {
+  const privateCache: MiddlewareHandler<ApiEnv> = async (context, next) => {
     context.header('Cache-Control', 'private, no-store')
     await next()
-  })
-  routes.use('*', dependencies.auth ?? requireAuth)
+  }
+  routes.use('/saved/*', privateCache, dependencies.auth ?? requireAuth)
   const service = (token: string) => new SavedPlacesService(
     dependencies.createRepository?.(token) ?? new SupabaseSavedPlacesRepository(createUserSupabaseClient(token)),
   )

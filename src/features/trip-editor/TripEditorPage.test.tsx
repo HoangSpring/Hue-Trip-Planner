@@ -309,20 +309,14 @@ describe('TripEditorPage', () => {
     expect(mounted.container.querySelector('#item-11111111-0001-4000-8000-000000000001')).not.toBeNull()
   })
 
-  it('opens login prompt modal when clicking Chia sẻ', () => {
+  it('does not offer sharing for an unsaved draft', () => {
     const draft = makeMockDraft()
     localStorage.setItem('trip_draft_v1', JSON.stringify(draft))
 
     mounted = renderTripEditor(['/trip/draft'])
 
     const shareBtn = Array.from(mounted.container.querySelectorAll('button')).find((b) => b.textContent === 'Chia sẻ')
-    expect(shareBtn).toBeDefined()
-
-    act(() => {
-      shareBtn?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
-    })
-
-    expect(mounted.container.textContent).toContain('Đăng nhập để chia sẻ lịch trình')
+    expect(shareBtn).toBeUndefined()
   })
 
   it('moves item position via move down button', () => {

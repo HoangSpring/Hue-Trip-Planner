@@ -43,11 +43,11 @@ async function readJson(context: Context<ApiEnv>): Promise<unknown> {
 export function createTripRoutes(dependencies: TripRouteDependencies = {}) {
   const routes = new Hono<ApiEnv>()
   routes.onError(routeError)
-  routes.use('*', async (context, next) => {
+  const setPrivateCache: MiddlewareHandler<ApiEnv> = async (context, next) => {
     context.header('Cache-Control', 'private, no-store')
     await next()
-  })
-  routes.use('*', dependencies.auth ?? requireAuth)
+  }
+  routes.use('/trips/*', setPrivateCache, dependencies.auth ?? requireAuth)
   const service = (token: string) => new TripService(
     dependencies.createRepository?.(token) ?? new SupabaseTripRepository(createUserSupabaseClient(token)),
     dependencies.maxTrips ?? env.MAX_TRIPS_PER_USER,

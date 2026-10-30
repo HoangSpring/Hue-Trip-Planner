@@ -331,11 +331,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** đạt phần liên quan trong AC F-03/F-07.
   - **Ghi chú:** trang địa điểm mở dialog dùng chung cho user và khách; dialog chọn chuyến đi/ngày/khung, chặn địa điểm trùng, nháp khách được tính lại quãng đường và cảnh báo qua helper dùng chung trước khi lưu.
 
-### [ ] T-042 · Chia sẻ lịch trình (F-11) · `M`
+### [x] T-042 · Chia sẻ lịch trình (F-11) · `M`
 - **Tham chiếu:** `docs/02` F-11; `docs/06` mục 7.8, 8.1, 8.2; `docs/08` S17
 - **Dep:** T-036
 - **Làm:** `PUT /api/trips/:id/share` (token ngẫu nhiên ≥ 128 bit, tắt xóa token), `GET /api/shared/:token` (service role, lược bỏ dữ liệu cá nhân, `no-store`, `noindex`, giới hạn tần suất theo IP), `POST /api/shared/:token/copy`; sheet chia sẻ; trang `/s/:shareToken` chỉ đọc; trạng thái "không còn được chia sẻ".
 - **Hoàn thành khi:** đạt AC F-11; test: token đã tắt không trả dữ liệu, không lộ trường bị lược bỏ; bật lại tạo token mới.
+  - **Ghi chú:** API đã test bật/tắt/bật lại, token sai và token tắt cùng 404, response công khai strict/no-store/noindex, giới hạn IP đã băm và copy riêng; smoke thật 17/17 đạt, cleanup xong.
 
 > ✅ **Cổng kiểm tra M4:** luồng khách → đăng nhập → lịch trình được lưu → chia sẻ link → người khác xem/sao chép chạy trọn vẹn; test cách ly dữ liệu xanh.
 

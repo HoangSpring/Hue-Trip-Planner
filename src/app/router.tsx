@@ -38,6 +38,7 @@ const AuthCallbackPage = lazy(() => import('@/features/auth/pages/AuthCallbackPa
 const MyTripsPage = lazy(() => import('@/features/account/MyTripsPage'))
 const AccountSettingsPage = lazy(() => import('@/features/account/AccountSettingsPage'))
 const SavedPlacesPage = lazy(() => import('@/features/saved/SavedPlacesPage'))
+const SharedTripPage = lazy(() => import('@/features/share/SharedTripPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -80,7 +81,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
     { element: <TripLayout />, children: [
       { path: paths.tripDraft, element: <RequireTripDraft />, children: [{ index: true, element: <Suspense fallback={loading}><TripEditorPage /></Suspense> }] },
       { path: paths.tripPattern, element: <RequireAuth />, children: [{ index: true, element: <TripIdPage /> }] },
-      { path: paths.sharedTripPattern, element: page(vi.pages.sharedTrip, true) },
+      { path: paths.sharedTripPattern, element: <Suspense fallback={loading}><SharedTripPage /></Suspense> },
     ] },
     { element: <AuthLayout />, children: [
       { element: <RequireGuest />, children: [

@@ -421,6 +421,8 @@ Không thuộc về người dùng hoặc không tồn tại → `404`.
 - Token sai/đã tắt → `404 NOT_FOUND` (cùng một thông báo cho cả hai trường hợp).
 - Header `X-Robots-Tag: noindex`.
 - Giới hạn tần suất theo IP để chống dò token.
+  - Phản hồi chỉ gồm `title`, `numDays`, `startDate`, `start`, `days[].dayIndex/date` và `days[].items[]` với `placeId`, `position`, `slot`, `startTime`, `durationMin`, `travelMinFromPrev`, `travelDistanceM`, `reason`, `place`. Không trả `id`, `clientDraftId`, `input` (kể cả `notes`), `shareToken`, ghi chú ngày/mục, thông tin người sở hữu hoặc trạng thái nội bộ.
+  - Trả `Cache-Control: no-store` và `X-Robots-Tag: noindex`; khóa giới hạn trong bộ nhớ bằng HMAC-SHA256 từ địa chỉ IP và `RATE_LIMIT_SALT`.
 
 ### 8.2 `POST /api/shared/:token/copy`
 Tạo chuyến đi mới cho người gọi từ lịch trình được chia sẻ (như duplicate nhưng khác chủ). **Response 201:** `Trip`. Tính vào `MAX_TRIPS_PER_USER`.

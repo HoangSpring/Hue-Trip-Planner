@@ -20,8 +20,8 @@ function validationError(issues: Array<{ path: PropertyKey[]; message: string }>
 export function createPublicPlaceRoutes(reader?: PlaceReader, rateLimit = publicReadRateLimit()) {
   const routes = new Hono<ApiEnv>()
   routes.onError(errorHandler)
-  routes.use('*', publicCache)
-  routes.use('*', rateLimit)
+  routes.use('/meta', publicCache, rateLimit)
+  routes.use('/places/*', publicCache, rateLimit)
   const getReader = () => reader ?? new PlaceService(createPublicSupabaseClient())
 
   routes.get('/meta', async (context) => context.json(await getReader().getMeta()))

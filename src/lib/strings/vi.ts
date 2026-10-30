@@ -92,6 +92,15 @@ export const vi = {
     title: 'Địa điểm đã lưu', intro: 'Những nơi bạn muốn nhớ cho chuyến đi tới Huế.', empty: 'Bạn chưa lưu địa điểm nào.',
     allCategories: 'Tất cả loại', filterLabel: 'Lọc theo loại', addToTrip: 'Thêm vào chuyến đi',
   },
+  share: {
+    title: 'Chia sẻ lịch trình', toggle: 'Cho phép ai có link xem', hint: 'Người có liên kết chỉ xem được lịch trình, không thể chỉnh sửa.',
+    linkLabel: 'Đường dẫn chia sẻ', copy: 'Sao chép link', copied: 'Đã sao chép', failed: 'Chưa thể cập nhật chia sẻ. Bạn thử lại nhé.',
+    pageTitle: 'Lịch trình được chia sẻ', pageDescription: 'Lịch trình Huế được chia sẻ để bạn tham khảo.',
+    eyebrow: 'Một lịch trình được chia sẻ cho bạn', subtitle: (days: number, startDate: string | null) => `${days} ngày${startDate ? ` · Bắt đầu ${startDate}` : ''}`,
+    timelineLabel: 'Lịch trình theo ngày', dayTitle: (day: number) => `Ngày ${day}`, emptyDay: 'Ngày này chưa có điểm dừng.',
+    invalidTitle: 'Lịch trình không còn được chia sẻ', invalidBody: 'Liên kết có thể đã bị tắt hoặc không còn hợp lệ.',
+    loadFailed: 'Chưa thể tải lịch trình này', copyTrip: 'Tạo bản sao của tôi', newTrip: 'Tạo lịch trình riêng', copyFailed: 'Chưa thể tạo bản sao. Bạn thử lại nhé.',
+  },
   placeCategories: { heritage: 'Di sản', food: 'Ẩm thực', cafe: 'Cà phê', sightseeing: 'Tham quan', shopping: 'Mua sắm' },
   explore: {
     eyebrow: 'Tạp chí khám phá Huế', title: 'Đi chậm, thấy nhiều hơn', intro: 'Tìm một góc di sản, một món ngon hay khoảng lặng bên dòng Hương theo nhịp riêng của bạn.',
