@@ -296,12 +296,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** AC F-07 phần lưu đạt; tải lại trang giữ nguyên thay đổi; người không phải chủ nhận 404.
 - **Ghi chú:** đã kiểm thử tải lại trip đã lưu, autosave debounce, xung đột 409 và rollback khi lỗi mạng; API tiếp tục dùng JWT để RLS trả 404 cho trip không thuộc người dùng.
 
-### [x] T-037 · Trang Đăng nhập/Đăng ký/Quên mật khẩu (F-08) · `M`
+### [ ] T-037 · Trang Đăng nhập/Đăng ký/Quên mật khẩu (F-08) · `M`
 - **Tham chiếu:** `docs/02` F-08; `docs/03` FL-03; `docs/08` S14
 - **Dep:** T-008, T-007
 - **Làm:** `/login`, `/register`, `/forgot-password`, `/reset-password`, `/auth/callback`; email + mật khẩu và Google (nếu đã chốt); giữ `next` an toàn; thông báo lỗi tiếng Việt, không tiết lộ email có tồn tại.
 - **Hoàn thành khi:** đạt AC F-08 (trừ đồng bộ nháp, làm ở T-038).
-- **Ghi chú:** đã có trang email/mật khẩu, xác nhận email, đặt lại mật khẩu, callback và kiểm thử next an toàn; Google không triển khai theo phạm vi yêu cầu.
+- **Ghi chú:** đã có trang email/mật khẩu, xác nhận email, đặt lại mật khẩu, callback và kiểm thử next an toàn; Google không triển khai theo phạm vi yêu cầu. Chờ chủ dự án xác nhận tự đăng ký và đăng nhập được trên trình duyệt rồi mới tick hoàn thành.
 
 ### [x] T-038 · Đồng bộ nháp khi đăng nhập · `M`
 - **Tham chiếu:** `docs/03` FL-03
@@ -431,6 +431,7 @@ M0 ──► M1 ──► M2 ──► M3
 - [ ] RLS đã kiểm tra tự động; không có secret trong bundle; `.env` không nằm trong repo.
 - [ ] Giới hạn tần suất và cầu chì LLM (`LLM_DAILY_CALL_CAP`) đã bật; đã đặt cảnh báo chi phí ở nhà cung cấp LLM.
 - [ ] Công tắc `LLM_ENABLED=false` đã được thử: hệ thống vẫn tạo được lịch trình.
+- [ ] Supabase Auth production đã bật lại **Confirm email**, cấu hình SMTP riêng và xác nhận đủ Redirect URLs (bao gồm domain production; localhost chỉ dùng cho dev).
 - [ ] Chính sách bảo mật đã duyệt; có cách xóa tài khoản và dữ liệu.
 - [ ] Ghi công OSM, ảnh hiển thị đúng.
 - [ ] Open Graph hiển thị đúng khi chia sẻ qua Zalo/Facebook/Messenger.

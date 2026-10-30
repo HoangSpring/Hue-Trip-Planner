@@ -43,7 +43,7 @@
 | D-19 | Thư viện bản đồ | **Leaflet** (`react-leaflet`) + gom cụm marker. URL tile đặt trong `VITE_MAP_TILE_URL` (có mặc định để chạy dev). Luôn hiển thị ghi công OSM | Mặc định | — |
 | D-20 | Nhà cung cấp tile cho production | **Chưa chọn.** Kiểm tra chính sách sử dụng tile của OpenStreetMap trước khi ra mắt; nếu lưu lượng không phù hợp thì chọn nhà cung cấp tile khác | **Cần chủ dự án** | T-052 |
 | D-21 | Đăng nhập Google | Email + mật khẩu là **bắt buộc**; Google làm ở T-037 nếu cấu hình được, không chặn các task khác | Mặc định | — |
-| D-22 | Xác nhận email khi đăng ký | **Bật** (mặc định Supabase); giao diện có màn "Kiểm tra email" | Mặc định | — |
+| D-22 | Xác nhận email khi đăng ký | Trong môi trường dev: tắt **Confirm email** để thử đăng ký/đăng nhập nhanh; Redirect URLs phải gồm `http://127.0.0.1:5173/auth/callback` và `http://localhost:5173/auth/callback`. Trước khi ra mắt: bật lại xác nhận email và cấu hình SMTP riêng. Giao diện vẫn hỗ trợ trạng thái "Kiểm tra email" khi xác nhận đang bật. | Mặc định | T-052 |
 | D-23 | Phân trang `/explore` | **Phân trang theo trang** (`?page=`), 24 địa điểm/trang. Nếu thiết kế dùng nút "Xem thêm" thì làm theo thiết kế nhưng vẫn đồng bộ `page` trên URL | Mặc định | — |
 | D-24 | Meta cho bot mạng xã hội | **Vercel function** (rewrite theo user-agent, `docs/06` mục 12), không dùng prerender | Mặc định | T-046 |
 | D-25 | PostGIS | **Không** ở MVP; dùng công thức Haversine và RPC `nearby_places` | Mặc định | — |

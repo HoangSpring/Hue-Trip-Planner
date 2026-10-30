@@ -8,6 +8,15 @@ Website giúp du khách **lên lịch trình du lịch Huế** theo sở thích:
 
 React + Vite + TypeScript + Tailwind · Hono trên Vercel Functions · Supabase (Postgres, Auth, Storage) · LLM gọi từ backend.
 
+## Chạy Supabase Auth khi phát triển
+
+Trong project Supabase dành cho development, mở **Authentication → Providers → Email** và tắt **Confirm email** để đăng ký/đăng nhập thử không phụ thuộc email xác nhận. Trong **Authentication → URL Configuration → Redirect URLs**, thêm cả hai địa chỉ:
+
+- `http://127.0.0.1:5173/auth/callback`
+- `http://localhost:5173/auth/callback`
+
+Trước khi ra mắt, bật lại **Confirm email** và cấu hình SMTP riêng đã xác minh cho môi trường production. Chỉ khai báo domain production trong danh sách redirect production; giữ hai địa chỉ localhost cho development.
+
 ## Bắt đầu với AI agent
 
 1. Đưa agent toàn bộ repo này. Agent đọc **`AGENTS.md`** đầu tiên.

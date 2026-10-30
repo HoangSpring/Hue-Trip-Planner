@@ -38,7 +38,9 @@ describe('SharedTripPage', () => {
 
   it('renders a read-only shared itinerary and offers login to copy', async () => {
     const { container, root, client } = mount()
-    await act(async () => { await new Promise(resolve => setTimeout(resolve, 20)) })
+    await act(async () => {
+      await vi.waitFor(() => expect(client.getQueryState(['shared-trip', 'AAAAAAAAAAAAAAAAAAAAAA'])?.status).toBe('success'))
+    })
     expect(container.textContent).toContain('Huế hai ngày')
     expect(container.textContent).toContain('Đại Nội Huế')
     expect(container.textContent).toContain('Tạo bản sao của tôi')

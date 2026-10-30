@@ -23,6 +23,18 @@ describe('PlaceCard', () => {
     act(() => root.render(<QueryClientProvider client={queryClient}><MemoryRouter><PlaceCard place={place}/></MemoryRouter></QueryClientProvider>))
     expect(container.querySelector('a')?.getAttribute('href')).toBe('/place/sample-place')
     expect(container.textContent).toContain('Ảnh giữ chỗ minh họa · Không phải ảnh địa điểm')
+    expect(container.querySelector('a a')).toBeNull()
+    act(() => root.unmount())
+  })
+
+  it('shows photo credit as text inside the card link without nesting a source link', () => {
+    const container = document.createElement('div')
+    const root = createRoot(container)
+    const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } })
+    act(() => root.render(<QueryClientProvider client={queryClient}><MemoryRouter><PlaceCard place={{ ...place, coverImageUrl: 'https://example.test/place.jpg', imageCredit: 'Nhiếp ảnh gia', imageLicense: 'CC BY 4.0', imageSourceUrl: 'https://example.test/source' }}/></MemoryRouter></QueryClientProvider>))
+    expect(container.textContent).toContain('Nhiếp ảnh gia · CC BY 4.0')
+    expect(container.querySelector('a a')).toBeNull()
+    expect(container.querySelector('a[href="https://example.test/source"]')).toBeNull()
     act(() => root.unmount())
   })
 })

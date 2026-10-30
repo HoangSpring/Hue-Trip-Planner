@@ -5,6 +5,7 @@ import { paths, safeNextPath } from '@/app/paths'
 import { AuthAlert, AuthPageFrame, AuthSubmitButton, AuthTextField } from '../components/AuthPageFrame'
 import { supabaseClient } from '@/lib/supabase'
 import { vi } from '@/lib/strings/vi'
+import { authErrorMessage, warnAuthFailure } from '../authError'
 
 export default function LoginPage() {
   const [params] = useSearchParams()
@@ -23,8 +24,8 @@ export default function LoginPage() {
     setBusy(true)
     try {
       const { error: authError } = await supabaseClient.auth.signInWithPassword(input.data)
-      if (authError) setError(vi.auth.invalidCredentials)
-    } catch { setError(vi.auth.unavailable) } finally { setBusy(false) }
+      if (authError) { warnAuthFailure(authError); setError(authErrorMessage(authError)) }
+    } catch (requestError) { warnAuthFailure(requestError); setError(authErrorMessage(requestError, true)) } finally { setBusy(false) }
   }
 
   return <AuthPageFrame title={vi.auth.loginTitle} intro={vi.auth.loginIntro}

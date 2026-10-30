@@ -5,6 +5,7 @@ import { paths, safeNextPath } from '@/app/paths'
 import { AuthAlert, AuthPageFrame, AuthSubmitButton, AuthTextField } from '../components/AuthPageFrame'
 import { supabaseClient } from '@/lib/supabase'
 import { vi } from '@/lib/strings/vi'
+import { authErrorMessage, warnAuthFailure } from '../authError'
 
 export default function RegisterPage() {
   const [params] = useSearchParams()
@@ -33,10 +34,10 @@ export default function RegisterPage() {
           emailRedirectTo: `${window.location.origin}${paths.authCallback}?next=${encodeURIComponent(next)}`,
         },
       })
-      if (authError) setError(vi.auth.registrationFailed)
+      if (authError) { warnAuthFailure(authError); setError(authErrorMessage(authError)) }
       else if (data.session) navigate(`${paths.authCallback}?next=${encodeURIComponent(next)}`, { replace: true })
       else setConfirmationNeeded(true)
-    } catch { setError(vi.auth.unavailable) } finally { setBusy(false) }
+    } catch (requestError) { warnAuthFailure(requestError); setError(authErrorMessage(requestError, true)) } finally { setBusy(false) }
   }
 
   if (confirmationNeeded) return <AuthPageFrame title={vi.auth.checkEmailTitle} intro={vi.auth.checkEmailBody} footer={<Link className="font-semibold text-primary underline" to={`${paths.login}?next=${encodeURIComponent(next)}`}>{vi.auth.backToLogin}</Link>}>

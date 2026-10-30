@@ -1,7 +1,5 @@
 import { useEffect, type FormEvent, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 import { BrandMark } from '@/components/BrandMark'
-import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
 import { brand } from '@/lib/brand'
 
@@ -43,7 +41,7 @@ export function AuthPageFrame({ title, intro, children, onSubmit, footer }: Prop
       </aside>
       <main className="flex items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
         <div className="w-full max-w-md">
-          <div className="mb-8 lg:hidden"><Link to={paths.home}><BrandMark /></Link></div>
+          <div className="mb-8 lg:hidden"><BrandMark /></div>
           <h1 className="font-serif text-3xl font-semibold text-ink md:text-4xl">{title}</h1>
           <p className="mt-2 text-sm leading-6 text-ink-muted">{intro}</p>
           {onSubmit ? <form className="mt-7 space-y-4" onSubmit={onSubmit}>{children}</form> : <div className="mt-7 space-y-4">{children}</div>}
