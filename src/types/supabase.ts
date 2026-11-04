@@ -657,6 +657,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_save_place_with_tags: { Args: { p_place: Json; p_tags: Json }; Returns: string }
       create_trip_from_payload: { Args: { p_payload: Json }; Returns: Json }
       f_unaccent: { Args: { "": string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }

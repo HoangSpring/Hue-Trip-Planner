@@ -41,7 +41,8 @@ describe('place CSV import', () => {
     ].join('\n'))
     const result = validatePlaceCsv(parsed.records)
     expect(result.invalid).toHaveLength(0)
-    expect(result.valid[0]?.warnings).toHaveLength(1)
+    expect(result.valid[0]?.warnings).toHaveLength(4)
+    expect(result.valid[0]?.warnings[0]).toContain('ngoài vùng Huế')
   })
 
   it('maps validated rows to safe draft records', () => {

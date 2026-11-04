@@ -251,12 +251,13 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 | 27 | PUT | `/api/admin/places/:id` | requireAdmin | Sửa địa điểm | F-12 |
 | 28 | POST | `/api/admin/places/:id/status` | requireAdmin | Xuất bản/gỡ/lưu trữ | F-12 |
 | 29 | POST | `/api/admin/places/:id/verify` | requireAdmin | Duyệt thông tin | F-12 |
-| 30 | POST | `/api/admin/import/preview` | requireAdmin | Xem trước CSV | F-12 |
-| 31 | POST | `/api/admin/import/commit` | requireAdmin | Ghi dữ liệu import | F-12 |
-| 32 | GET | `/api/health` | public | Kiểm tra sống | — |
-| 33 | GET | `/api/sitemap.xml` | public | Sitemap | F-14 |
-| 34 | GET | `/api/og/place/:slug` | public | HTML meta cho bot | F-14 |
-| 35 | GET | `/api/og/share/:token` | public | HTML meta cho bot | F-11 |
+| 30 | POST | `/api/admin/places/bulk` | requireAdmin | Thao tác hàng loạt trên địa điểm | F-12 |
+| 31 | POST | `/api/admin/import/preview` | requireAdmin | Xem trước CSV | F-12 |
+| 32 | POST | `/api/admin/import/commit` | requireAdmin | Ghi dữ liệu import | F-12 |
+| 33 | GET | `/api/health` | public | Kiểm tra sống | — |
+| 34 | GET | `/api/sitemap.xml` | public | Sitemap | F-14 |
+| 35 | GET | `/api/og/place/:slug` | public | HTML meta cho bot | F-14 |
+| 36 | GET | `/api/og/share/:token` | public | HTML meta cho bot | F-11 |
 
 ## 5. Chi tiết: dữ liệu công khai
 
@@ -442,21 +443,26 @@ Tạo chuyến đi mới cho người gọi từ lịch trình được chia s�
 Mọi endpoint `requireAdmin`; ghi `place_audit_log` (service role) cho mỗi thay đổi.
 
 ### 9.1 `GET /api/admin/places`
-**Query:** `status`, `verified` (`true/false`), `category`, `q`, `missing` (`hours|duration|image|coords`), `page`, `pageSize`.
-**Response 200:** `Paginated<AdminPlaceRow>`: `PlaceSummary` + `status`, `verified`, `updatedAt`, `missingFields: string[]`.
+**Query:** `status`, `verified` (`true/false`), `category`, `q` (không dấu), `missing` (`hours|duration|image|coords|meal_type|best_time`), `page`, `pageSize`.
+**Response 200:** `Paginated<AdminPlaceRow>`: trường địa điểm có thể rỗng cho bản nháp, `status`, `verified`, `updatedAt`, `missingFields: string[]`.
 
 ### 9.2 `POST /api/admin/places` · `PUT /api/admin/places/:id`
 - Body: toàn bộ trường của địa điểm (camelCase theo `PlaceDetail` + `tags: [{slug, weight}]`, `status`).
 - Kiểm tra bằng Zod; các ràng buộc DB (ở `docs/05`) là lớp bảo vệ thứ hai: chuyển lỗi `CHECK` thành `400 VALIDATION_ERROR` có thông báo tiếng Việt cụ thể.
 - Xuất bản mà thiếu trường bắt buộc → `422 BUSINESS_RULE_VIOLATION` kèm danh sách trường thiếu: `details: [{path:"visitDurationMin", message:"Thiếu thời gian tham quan"}]`.
 - Có `coverImageUrl` mà thiếu `imageCredit`/`imageLicense` → `400`.
+- `coverImageUrl` chỉ chấp nhận HTTPS.
 - Slug trùng → `409 CONFLICT`.
+- Thay tag được thực hiện cùng transaction `admin_save_place_with_tags` (migration 12).
 
 ### 9.3 `POST /api/admin/places/:id/status`
 Body: `{ "status": "published" | "draft" | "archived" }`. Áp dụng quy tắc vòng đời ở `docs/03` FL-08.3.
 
 ### 9.4 `POST /api/admin/places/:id/verify`
-Body: `{ "verified": true }`. Ghi `verified_by`, `verified_at`, `last_verified_at = now()`, và xóa `ai_filled_fields` đã được xác nhận (hoặc cho phép gửi danh sách trường được xác nhận: `confirmedFields`).
+Body: `{ "verified": true, "confirmedFields": ["open_time"] }`. Ghi `verified_by`, `verified_at`, `last_verified_at = now()`. Nếu không gửi `confirmedFields` khi duyệt thì xóa toàn bộ `ai_filled_fields`; nếu gửi thì chỉ gỡ các trường đã xác nhận.
+
+### 9.4b `POST /api/admin/places/bulk`
+Body: `{ "ids": ["<uuid>"], "action": "publish" | "unpublish" | "archive" | "verify" | "unverify" }`. Tối đa 100 ID duy nhất. Trả kết quả riêng `{id, success, reason?}`; dòng publish thiếu trường bắt buộc thất bại riêng, các dòng khác vẫn được xử lý.
 
 ### 9.5 Import CSV
 - `POST /api/admin/import/preview`, `Content-Type: text/csv`, body là nội dung CSV (≤ 2 MB).
@@ -468,15 +474,15 @@ Body: `{ "verified": true }`. Ghi `verified_by`, `verified_at`, `last_verified_a
       { "line": 2, "slug": "dai-noi-hue", "status": "valid", "action": "create", "messages": [] },
       { "line": 7, "slug": "quan-abc", "status": "error", "action": "skip",
         "messages": ["Thiếu image_credit"] }
-    ],
-    "previewToken": "opaque-string"
+    ]
   }
   ```
-  - `previewToken`: định danh bản xem trước (lưu tạm, hết hạn sau 30 phút), để `commit` không phải gửi lại cả tệp.
-- `POST /api/admin/import/commit` body `{ "previewToken": "...", "overwriteVerified": false }`
-  **Response 200:** `{ "created": 40, "updated": 8, "skipped": 2, "errors": [ { "line": 7, "message": "..." } ], "errorCsv": "data:text/csv;..." }`
-- Quy tắc nội dung CSV: `docs/05-data-model.md` mục 8. Upsert theo `slug`; mọi bản ghi `draft` + `verified = false`; **không ghi đè** trường của địa điểm đã `verified` trừ khi `overwriteVerified = true`.
-- Lưu `previewToken` ở đâu: bảng tạm `import_previews` hoặc bộ nhớ đệm dùng chung (Vercel KV/Upstash). Do function không giữ trạng thái giữa các lần gọi, **không** lưu trong biến toàn cục. Nếu chưa muốn thêm hạ tầng, cho phép `commit` nhận lại nội dung CSV (≤ 2 MB) và kiểm tra lại từ đầu.
+  - Không ghi DB và không tạo `previewToken`; `commit` nhận CSV lại và phân tích từ đầu (D-26).
+- Tệp tối đa 2 MB UTF-8 (có hoặc không BOM); import giới hạn 10 request/giờ/admin.
+- `POST /api/admin/import/commit` body `{ "csv": "<nội dung CSV>", "overwriteVerified": false }`
+  **Response 200:** `{ "created": 40, "updated": 8, "skipped": 2, "errors": [ { "line": 7, "message": "..." } ], "errorCsv": "line,slug,reason\\r\\n..." }`
+- Quy tắc CSV: địa điểm mới thành `draft`, `verified = false`, source mặc định `csv-import`; địa điểm cũ giữ `status`/`verified`; không ghi đè bản đã verified trừ khi `overwriteVerified = true`; tags rỗng giữ nguyên, tags có giá trị thay bộ cũ; dòng lỗi bị bỏ qua để dòng hợp lệ tiếp tục. Ghi một audit `import` cho mỗi dòng tạo/sửa.
+- `errorCsv` là nội dung CSV UTF-8 gồm dòng lỗi và lý do (không phải data URL).
 
 ## 10. Hàm cơ sở dữ liệu (RPC) cần tạo
 
@@ -485,6 +491,7 @@ Các hàm được chia theo task để migration theo đúng thứ tự:
 - Migration 8, task T-012: `nearby_places`.
 - Migration 9, task T-003: thêm telemetry nullable vào `generation_events` (đã áp dụng remote).
 - Migration 10, task T-034: `save_trip` và `create_trip_from_payload`.
+- Migration 12, task T-043: `admin_save_place_with_tags`, lưu place và thay tags nguyên tử dưới JWT admin.
 
 | Hàm | Mục đích |
 |---|---|

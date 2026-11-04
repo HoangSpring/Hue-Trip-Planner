@@ -349,6 +349,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-012, T-005
 - **Làm:** `GET/POST /api/admin/places`, `GET/PUT /:id`, `POST /:id/status`, `POST /:id/verify`; kiểm tra bằng Zod + chuyển lỗi `CHECK` của DB sang thông báo tiếng Việt; ghi `place_audit_log`; `missingFields`.
 - **Hoàn thành khi:** user thường nhận `403` ở mọi endpoint; xuất bản thiếu trường bắt buộc → `422` kèm danh sách; slug trùng → `409`.
+- **Ghi chú:** phần server và test đã được triển khai trên nhánh task. RPC atomic đổi tags và sửa trigger role nằm ở migration 11–12; chưa áp dụng remote, nên chưa tick hoàn thành.
 
 ### [ ] T-044 · Trang quản trị: danh sách và form địa điểm · `L`
 - **Tham chiếu:** `docs/02` F-12; `docs/03` FL-08.1; `docs/08` S18, S19
@@ -359,8 +360,9 @@ M0 ──► M1 ──► M2 ──► M3
 ### [ ] T-045 · Import CSV có xem trước (giao diện + API) · `L`
 - **Tham chiếu:** `docs/06` mục 9.5; `docs/03` FL-08.2; `docs/08` S20
 - **Dep:** T-043, T-011
-- **Làm:** `POST /api/admin/import/preview|commit` (tái dùng logic ở T-011), quyết định lưu `previewToken` (bảng tạm / KV / gửi lại CSV), trang `/admin/import` 3 bước, tải tệp CSV dòng lỗi.
+- **Làm:** `POST /api/admin/import/preview|commit` (tái dùng logic ở T-011), không dùng preview token; `commit` nhận lại CSV, trang `/admin/import` 3 bước, tải tệp CSV dòng lỗi.
 - **Hoàn thành khi:** đạt AC F-12 phần import; import lại không tạo trùng; không ghi đè địa điểm `verified` nếu không chọn rõ.
+- **Ghi chú:** phần server đã được triển khai và kiểm thử; T-045 giữ `[ ]` vì chưa làm giao diện (ngoài phạm vi lượt này).
 
 > ✅ **Cổng kiểm tra M5:** người không rành kỹ thuật có thể thêm/sửa/duyệt địa điểm và import CSV mà không đụng DB.
 

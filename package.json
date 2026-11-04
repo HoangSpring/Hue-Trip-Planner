@@ -19,6 +19,7 @@
     "db:test:rls": "supabase test db --local supabase/tests",
     "smoke:api": "tsx scripts/smokeApi.ts",
     "smoke:trips": "tsx scripts/smokeTrips.ts",
+    "smoke:admin": "tsx scripts/smokeAdmin.ts",
     "eval:itinerary": "tsx scripts/evalItinerary.ts"
   },
   "dependencies": {

@@ -81,6 +81,8 @@ supabase/migrations/
   20261024000008_nearby_places.sql      # nearby_places (T-012; xem docs/06 mục 10)
   20261029000009_generation_events_telemetry.sql # telemetry cho generation_events (đã áp dụng)
   20261029000010_trip_rpcs.sql          # save_trip, create_trip_from_payload (T-034; xem docs/06 mục 10)
+  20261104000011_allow_service_role_profile_updates.sql # sửa trigger role cho thao tác tin cậy khi auth.uid() IS NULL
+  20261104000012_admin_save_place_with_tags.sql # lưu địa điểm và thay tags nguyên tử cho admin
 supabase/seed/
   001_tags.sql
   002_start_points.sql
@@ -193,7 +195,7 @@ create trigger trg_profiles_prevent_role_change
   for each row execute function public.prevent_role_change();
 ```
 
-> Cấp quyền admin thủ công: `update public.profiles set role = 'admin' where id = '<uuid>';` chạy bằng SQL Editor/service role. Với service role, `auth.uid()` là null nên `is_admin()` trả `false`; trigger trên sẽ chặn. Khi cần gán admin bằng SQL Editor, chạy với vai trò `postgres` (superuser/bỏ qua trigger bằng `set session_replication_role = replica;` rồi đặt lại) hoặc tạm vô hiệu hóa trigger trong phiên làm việc đó.
+> Cấp quyền admin thủ công: `update public.profiles set role = 'admin' where id = '<uuid>';` chạy bằng SQL Editor/service role. Migration 11 điều chỉnh trigger chỉ chặn khi có JWT user (`auth.uid() IS NOT NULL`) và người gọi không phải admin; SQL Editor/service role có thể cập nhật role. Không sửa migration 2 đã áp dụng.
 
 ### 5.3 `..._places_and_tags.sql`
 

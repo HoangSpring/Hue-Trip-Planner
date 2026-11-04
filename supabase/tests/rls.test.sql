@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select extensions.plan(22);
+select extensions.plan(24);
 
 -- Fixtures are inserted as the migration owner and rolled back at the end.
 insert into auth.users (
@@ -151,6 +151,12 @@ select extensions.is(
 );
 
 reset role;
+select set_config('request.jwt.claim.sub', '', true);
+select extensions.is(auth.uid() is null, true, 'SQL Editor/service role has no JWT user identity');
+select extensions.lives_ok(
+  $$update public.profiles set role = 'admin' where id = 'a0000000-0000-4000-8000-000000000001'$$,
+  'Trusted SQL Editor/service role can update profile role when auth.uid() is null'
+);
 set local role anon;
 select set_config('request.jwt.claim.sub', '', true);
 select set_config('request.jwt.claim.role', 'anon', true);

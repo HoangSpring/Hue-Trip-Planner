@@ -46,7 +46,7 @@ const placeCsvRowSchema = z.object({
   tags: listOf(tagItemSchema),
   phone: nullableText,
   website: z.preprocess((value) => value === '' ? null : value, z.string().url().nullable()),
-  cover_image_url: z.preprocess((value) => value === '' ? null : value, z.string().trim().min(1).nullable()),
+  cover_image_url: z.preprocess((value) => value === '' ? null : value, z.string().trim().min(1).url().nullable()),
   image_credit: nullableText,
   image_license: nullableText,
   image_source_url: z.preprocess((value) => value === '' ? null : value, z.string().url().nullable()),
@@ -59,6 +59,9 @@ const placeCsvRowSchema = z.object({
   }
   if (row.cover_image_url && (!row.image_credit || !row.image_license)) {
     context.addIssue({ code: 'custom', path: ['image_credit'], message: 'Ảnh bìa cần image_credit và image_license' })
+  }
+  if (row.cover_image_url && new URL(row.cover_image_url).protocol !== 'https:') {
+    context.addIssue({ code: 'custom', path: ['cover_image_url'], message: 'cover_image_url chỉ được dùng HTTPS' })
   }
 })
 
@@ -160,9 +163,14 @@ export function validatePlaceCsv(records: CsvRecord[]): { valid: ValidatedPlaceR
       const [slug, weight = '1'] = item.split(':')
       return { slug, weight: Number(weight) }
     })
-    const warnings = parsed.data.lat < 16.0 || parsed.data.lat > 16.8 || parsed.data.lng < 107.0 || parsed.data.lng > 108.0
-      ? ['Tọa độ nằm ngoài vùng Huế mở rộng ước tính (16.0–16.8°N, 107.0–108.0°E)']
-      : []
+    const warnings: string[] = []
+    if (parsed.data.lat < 16.0 || parsed.data.lat > 16.8 || parsed.data.lng < 107.0 || parsed.data.lng > 108.0) {
+      warnings.push('Tọa độ nằm ngoài vùng Huế mở rộng ước tính (16.0–16.8°N, 107.0–108.0°E)')
+    }
+    if (parsed.data.open_time === null) warnings.push('Chưa có giờ mở cửa.')
+    if (parsed.data.visit_duration_min === null) warnings.push('Chưa có thời lượng tham quan.')
+    if (parsed.data.best_time.length === 0) warnings.push('Chưa có khung giờ phù hợp.')
+    if (parsed.data.category === 'food' && parsed.data.meal_type.length === 0) warnings.push('Địa điểm ẩm thực chưa có loại bữa ăn.')
     valid.push({ rowNumber: record.rowNumber, data: parsed.data, tagWeights, warnings })
   }
 
