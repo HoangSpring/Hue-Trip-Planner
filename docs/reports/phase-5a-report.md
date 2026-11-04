@@ -8,6 +8,7 @@
 - Đã thêm server preview/commit CSV, dùng lại parser/validator T-011, không dùng preview token, và giữ nguyên trạng thái/verified của bản ghi cũ.
 - Hai migration mới (11 và 12) chỉ được tạo; chưa áp dụng. Migration 12 giữ việc lưu địa điểm và thay tags trong một RPC `SECURITY INVOKER`.
 - `smoke:api` và kiểm tra mã xanh. `smoke:trips` không qua ở bước đăng nhập tài khoản thử; không có dữ liệu smoke được tạo. Chưa kiểm tra API admin trên Supabase thật.
+- Kiểm tra git cho thấy local `main`/`origin/main` chưa chứa trọn Phase 4; checkout tác vụ hiện tại có các thay đổi T-036–T-042. Theo yêu cầu Bước 0 không chặn công việc, baseline được chạy trên checkout hiện có và không tuyên bố rằng `main` đã được xác nhận.
 
 ## 2. Task
 
