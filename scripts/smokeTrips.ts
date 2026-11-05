@@ -55,7 +55,12 @@ async function login(email: string, password: string): Promise<string> {
   if (!url || !anonKey) throw new Error('missing_supabase_config')
   const client = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } })
   const { data, error } = await client.auth.signInWithPassword({ email, password })
-  if (error || !data.session?.access_token) throw new Error('test_login_failed')
+  if (error || !data.session?.access_token) {
+    const authError = error as (typeof error & { error_code?: string })
+    const code = authError?.code ?? authError?.error_code ?? 'not_returned'
+    const status = authError?.status ?? 'not_returned'
+    throw new Error(`Đăng nhập tài khoản thử thất bại: HTTP ${status}, error_code=${code}. Kiểm tra tên biến môi trường được cấu hình; nguyên nhân thường gặp: thiếu cấu hình/tài khoản thử, tài khoản không tồn tại, email chưa xác nhận hoặc sai mật khẩu.`)
+  }
   return data.session.access_token
 }
 
@@ -129,7 +134,7 @@ async function main(): Promise<void> {
   }
   record('Migration 10 đã áp dụng trên remote', 'PASS', '20261029000010 hiện diện.')
 
-  const missing = ['TEST_USER_A_EMAIL', 'TEST_USER_A_PASSWORD', 'TEST_USER_B_EMAIL', 'TEST_USER_B_PASSWORD']
+  const missing = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY', 'SUPABASE_SERVICE_ROLE_KEY', 'TEST_USER_A_EMAIL', 'TEST_USER_A_PASSWORD', 'TEST_USER_B_EMAIL', 'TEST_USER_B_PASSWORD']
     .filter((name) => !process.env[name])
   if (missing.length) {
     record('Tài khoản thử A/B', 'SKIP', `Thiếu cấu hình: ${missing.join(', ')}; không gọi Auth/API.`)
@@ -169,7 +174,6 @@ async function main(): Promise<void> {
     const created = await request('/trips', 'POST', accessTokenA, generated.draft)
     const originalId = tripId(created)
     if (created.status !== 201 || !originalId) {
-      console.error('SERVER ERROR RESPONSE:', created.status, JSON.stringify(created.body, null, 2))
       throw new Error('trip_create_failed')
     }
     createdIds.push(originalId)

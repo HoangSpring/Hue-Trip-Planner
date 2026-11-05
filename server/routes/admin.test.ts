@@ -66,9 +66,7 @@ class MemoryAdminRepo implements AdminPlaceRepository {
 class EmptyImportRepo {
   async tagSlugs() { return new Set<string>() }
   async existingBySlugs() { return new Map() }
-  async upsertPlace() { return placeId }
-  async replaceTags() {}
-  async audit() {}
+  async importPlace() { return { action: 'created' as const, placeId, reason: null } }
 }
 
 function api(repo = new MemoryAdminRepo()) {

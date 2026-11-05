@@ -4,7 +4,7 @@ import { AppError } from '../lib/errors'
 import type { ImportExistingPlace, PlaceImportRepository } from './importService'
 
 export class SupabasePlaceImportRepository implements PlaceImportRepository {
-  constructor(private readonly userClient: SupabaseClient<Database>, private readonly writeClient: SupabaseClient<Database>) {}
+  constructor(private readonly userClient: SupabaseClient<Database>) {}
 
   async tagSlugs(slugs: string[]): Promise<Set<string>> {
     if (!slugs.length) return new Set()
@@ -25,32 +25,23 @@ export class SupabasePlaceImportRepository implements PlaceImportRepository {
     return output
   }
 
-  async upsertPlace(row: Record<string, unknown>): Promise<string> {
-    const insert = row as unknown as Database['public']['Tables']['places']['Insert']
-    const { data, error } = await this.writeClient.from('places').upsert(insert, { onConflict: 'slug' }).select('id').single()
-    if (error || !data) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể ghi địa điểm từ CSV.')
-    return data.id
-  }
-
-  async replaceTags(placeId: string, tags: Array<{ slug: string; weight: number }>): Promise<void> {
-    const slugs = tags.map(({ slug }) => slug)
-    const { data, error: loadError } = await this.writeClient.from('tags').select('id,slug').in('slug', slugs)
-    if (loadError || !data || data.length !== slugs.length) throw new AppError(400, 'VALIDATION_ERROR', 'Một hoặc nhiều tag không tồn tại.')
-    const idBySlug = new Map(data.map(({ id, slug }) => [slug, id]))
-    const { error: deleteError } = await this.writeClient.from('place_tags').delete().eq('place_id', placeId)
-    if (deleteError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể cập nhật tag địa điểm.')
-    const rows = tags.map(({ slug, weight }) => ({ place_id: placeId, tag_id: idBySlug.get(slug)!, weight }))
-    const { error } = await this.writeClient.from('place_tags').insert(rows)
-    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể cập nhật tag địa điểm.')
-  }
-
-  async audit(placeId: string, actorId: string, changedFields: string[]): Promise<void> {
-    const { error } = await this.writeClient.from('place_audit_log').insert({
-      place_id: placeId,
-      actor_id: actorId,
-      action: 'import',
-      changes: { changedFields } as Json,
+  async importPlace(row: Record<string, unknown>, overwriteVerified: boolean): Promise<{ action: 'created' | 'updated' | 'skipped'; placeId: string; reason: string | null }> {
+    const { data, error } = await this.userClient.rpc('admin_import_place', {
+      p_row: row as unknown as Json,
+      p_overwrite_verified: overwriteVerified,
     })
-    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể ghi nhật ký import.')
+    if (error) {
+      if (error.code === 'PGRST202' || error.code === '42883' || error.code === 'PGRST203') {
+        throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Import chưa sẵn sàng: cần áp dụng migration RPC import nguyên tử rồi thử lại.')
+      }
+      if (error.code === '42501') throw new AppError(403, 'FORBIDDEN', 'Bạn không có quyền import địa điểm.')
+      if (error.code === '23503') throw new AppError(400, 'VALIDATION_ERROR', 'Một hoặc nhiều tag không tồn tại.')
+      throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể import địa điểm lúc này.')
+    }
+    const result = data as unknown as { action?: string; place_id?: string; reason?: string | null } | null
+    if (!result || !['created', 'updated', 'skipped'].includes(result.action ?? '') || !result.place_id) {
+      throw new AppError(503, 'SERVICE_UNAVAILABLE', 'RPC import trả kết quả chưa hợp lệ.')
+    }
+    return { action: result.action as 'created' | 'updated' | 'skipped', placeId: result.place_id, reason: result.reason ?? null }
   }
 }

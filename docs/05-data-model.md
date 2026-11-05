@@ -83,6 +83,7 @@ supabase/migrations/
   20261029000010_trip_rpcs.sql          # save_trip, create_trip_from_payload (T-034; xem docs/06 mục 10)
   20261104000011_allow_service_role_profile_updates.sql # sửa trigger role cho thao tác tin cậy khi auth.uid() IS NULL
   20261104000012_admin_save_place_with_tags.sql # lưu địa điểm và thay tags nguyên tử cho admin
+  20261105000013_admin_import_place_atomic.sql # import một dòng place+tags+audit nguyên tử bằng JWT admin
 supabase/seed/
   001_tags.sql
   002_start_points.sql
@@ -436,6 +437,8 @@ create trigger trg_trip_items_consistency
 
 `create_trip_from_payload(jsonb)` và `save_trip(uuid,jsonb,timestamptz)` được tạo trong migration 10. Cả hai là `SECURITY INVOKER`, xác định người dùng qua `auth.uid()` và chịu các policy RLS ở mục 5.6. `create_trip_from_payload` chống trùng theo `(user_id, client_draft_id)` và giới hạn mặc định 50 chuyến/người; có thể cấu hình ở DB bằng `app.max_trips_per_user`. `save_trip` khóa trip bằng `FOR UPDATE`, phát SQLSTATE `PT409` (`TRIP_VERSION_CONFLICT`) khi phiên bản cũ, giữ nguyên `num_days`, đồng bộ days/items trong một transaction và đánh lại `position` do API đã kiểm tra. Không được áp dụng migration 10 trước khi chủ dự án review.
 
+Migration 13 thêm `admin_import_place(p_row jsonb, p_overwrite_verified boolean)` với `SECURITY INVOKER` và kiểm tra `public.is_admin()` ở đầu hàm. RPC khóa theo slug, tạo place mới ở `draft`/`verified=false`, giữ nguyên `status`/`verified` của place cũ, bỏ qua place verified nếu chưa chọn ghi đè; thay tags chỉ khi CSV có tag; và ghi `place_audit_log` trong cùng transaction. Kết quả JSON gồm `action` (`created|updated|skipped`), `place_id`, `reason`. Import gọi RPC bằng JWT admin. Nếu RPC chưa khả dụng API trả 503 rõ ràng, không quay về ghi place/tag/audit rời rạc.
+
 > **Đổi thứ tự (`position`):** không đặt ràng buộc `unique (trip_day_id, position)` để việc hoán đổi không bị lỗi tạm thời. Khi lưu, backend ghi lại toàn bộ `position` của ngày trong **một transaction** (hàm RPC hoặc `upsert` hàng loạt), đánh số liên tục 0..n-1.
 
 ### 5.5 `..._saved_and_logs.sql`
@@ -566,15 +569,19 @@ create policy "trip_items: chủ sở hữu" on public.trip_items
 create policy "saved_places: chủ sở hữu" on public.saved_places
   for all using (user_id = auth.uid()) with check (user_id = auth.uid());
 
--- place_audit_log: admin chỉ đọc; ghi bằng service role (bỏ qua RLS)
+-- place_audit_log: admin chỉ đọc; các thao tác quản trị thường ghi bằng service role.
+-- Migration 13 cấp INSERT cho RPC import SECURITY INVOKER, chỉ khi caller là admin.
 create policy "audit: admin đọc" on public.place_audit_log
   for select using (public.is_admin());
+-- Migration 13: only the atomic SECURITY INVOKER import RPC may insert import audit rows.
+create policy "audit: admin ghi import" on public.place_audit_log
+  for insert with check (public.is_admin() and action = 'import' and actor_id = auth.uid());
 
 -- generation_events: KHÔNG có policy nào => client không truy cập được;
 -- chỉ service role (backend) đọc/ghi.
 ```
 
-> **Lưu ý bảo mật:** `service role` bỏ qua RLS, vì vậy mọi endpoint dùng nó phải **tự kiểm tra quyền** (xác thực JWT, kiểm tra `user_id`, kiểm tra admin) trước khi truy vấn. Khuyến nghị: với thao tác của người dùng thường, backend nên tạo Supabase client **kèm JWT của người dùng** để RLS vẫn có hiệu lực, và chỉ dùng service role cho các việc cần thiết (đọc theo `share_token`, ghi `generation_events`, `place_audit_log`, import).
+> **Lưu ý bảo mật:** `service role` bỏ qua RLS, vì vậy mọi endpoint dùng nó phải **tự kiểm tra quyền** (xác thực JWT, kiểm tra `user_id`, kiểm tra admin) trước khi truy vấn. Khuyến nghị: với thao tác của người dùng thường, backend nên tạo Supabase client **kèm JWT của người dùng** để RLS vẫn có hiệu lực. Import địa điểm dùng JWT admin qua RPC migration 13; không dùng service role để ghi place/tag/audit của import.
 
 RPC lưu trip là `SECURITY INVOKER`; route T-035 luôn dùng client kèm JWT người gọi, không dùng service role. Policy archived ở migration 10 chỉ mở quyền đọc một địa điểm archived nếu nó đã nằm trong trip do chính người gọi sở hữu.
 
@@ -694,9 +701,11 @@ Lưu đúng dữ liệu đã qua Zod. Schema Zod nằm ở `shared/schemas/tripI
 **Quy tắc kiểm tra khi import**
 - Thiếu cột bắt buộc, `category`/`tags` không hợp lệ, `lat`/`lng` ngoài khu vực Huế mở rộng (cảnh báo nếu nằm ngoài vùng hợp lý) → đánh dấu lỗi/cảnh báo theo từng dòng.
 - Có `cover_image_url` mà thiếu `image_credit` hoặc `image_license` → **lỗi**.
-- Mọi bản ghi import: `status = 'draft'`, `verified = false`.
-- Import lại cùng `slug` → **cập nhật**; không ghi đè các trường đã `verified` trừ khi admin chọn "Ghi đè" rõ ràng.
+- Bản ghi mới từ import vào `status = 'draft'`, `verified = false`; bản ghi có sẵn giữ nguyên `status` và `verified`.
+- Import lại cùng `slug` → **cập nhật nguyên tử**; bản ghi `verified` bị bỏ qua nếu không chọn "Ghi đè" rõ ràng. Ghi đè không tự hạ trạng thái hoặc bỏ verified.
 - Ghi một dòng `place_audit_log` (`action = 'import'`) cho mỗi bản ghi tạo/sửa.
+
+API commit gọi `admin_import_place(p_row, p_overwrite_verified)` (migration 13) bằng JWT admin. RPC khóa theo slug và thực hiện upsert, thay tags không rỗng, cùng audit trong một transaction. Nếu migration 13 chưa áp dụng/được nạp vào PostgREST, API trả 503 nêu rõ migration còn thiếu và không dùng đường ghi nhiều bước.
 
 CLI: `pnpm db:seed -- --csv=supabase/seed/places.sample.csv --dry-run` để kiểm tra trước; bỏ `--dry-run` để ghi. Mặc định địa điểm `verified` bị bỏ qua; chỉ dùng `--overwrite-verified` khi chủ động muốn thay thế và đưa địa điểm về `draft`, `verified = false`. Mỗi lần chạy sinh JSON báo cáo và CSV các dòng lỗi cạnh file đầu vào. Cần `VITE_SUPABASE_URL` và `SUPABASE_SERVICE_ROLE_KEY` trong môi trường hoặc `.env.local`.
 

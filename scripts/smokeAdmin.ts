@@ -38,7 +38,12 @@ function report(): void {
 async function getToken(email: string, password: string, url: string, anonKey: string): Promise<string> {
   const auth = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } })
   const { data, error } = await auth.auth.signInWithPassword({ email, password })
-  if (error || !data.session?.access_token) throw new Error('test_login_failed')
+  if (error || !data.session?.access_token) {
+    const authError = error as (typeof error & { error_code?: string })
+    const code = authError?.code ?? authError?.error_code ?? 'not_returned'
+    const status = authError?.status ?? 'not_returned'
+    throw new Error(`Đăng nhập tài khoản thử thất bại: HTTP ${status}, error_code=${code}. Kiểm tra tên biến môi trường; nguyên nhân thường gặp: thiếu cấu hình/tài khoản thử, tài khoản không tồn tại, email chưa xác nhận hoặc sai mật khẩu.`)
+  }
   return data.session.access_token
 }
 
@@ -57,11 +62,17 @@ async function main(): Promise<void> {
       encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], shell: process.platform === 'win32',
     })
   } catch { /* Summarize the missing prerequisite without exposing environment output. */ }
-  if (!migrationOutput.includes('20261104000012')) {
-    record('Migration RPC admin đã áp dụng', 'SKIP', 'Không thấy migration 20261104000012 ở cả local và remote; không tạo dữ liệu thử.')
+  const migrationHasLocalAndRemote = (version: string) => {
+    const row = migrationOutput.split(/\r?\n/).find((line) => line.includes(version))
+    return (row?.match(new RegExp(version, 'g'))?.length ?? 0) >= 2
+  }
+  if (!migrationHasLocalAndRemote('20261104000011') || !migrationHasLocalAndRemote('20261104000012')) {
+    record('Migration 11–12 đã áp dụng', 'SKIP', 'Không xác nhận được migration 11 và 12 ở cả cột local/remote; không tạo dữ liệu thử.')
     report()
     return
   }
+  record('Migration 11–12 đã áp dụng', 'PASS', 'Cả hai phiên bản hiện diện ở local và remote.')
+  const importRpcApplied = migrationHasLocalAndRemote('20261105000013')
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL!
   const anonKey = process.env.VITE_SUPABASE_ANON_KEY!
@@ -121,8 +132,17 @@ async function main(): Promise<void> {
     const preview = await request('/admin/import/preview', adminToken, 'POST', importCsv, 'text/csv')
     if (preview.status !== 200) throw new Error('admin_import_preview_failed')
     const committed = await request('/admin/import/commit', adminToken, 'POST', { csv: importCsv })
-    if (committed.status !== 200) throw new Error('admin_import_commit_failed')
-    record('Import preview/commit', 'PASS', 'Ba dòng zz-test-* được preview rồi commit; sẽ được dọn sạch.')
+    if (importRpcApplied) {
+      const result = committed.body as { created?: number }
+      if (committed.status !== 200 || result.created !== 3) throw new Error('admin_import_commit_failed')
+      record('Import preview/commit', 'PASS', 'Ba dòng zz-test-* được preview rồi import nguyên tử; sẽ được dọn sạch.')
+    } else {
+      const error = committed.body as { error?: { message?: string } }
+      if (committed.status !== 503 || !error.error?.message?.includes('migration RPC import nguyên tử')) {
+        throw new Error('missing_import_migration_not_reported_clearly')
+      }
+      record('Import commit chưa có migration 13', 'PASS', 'Preview đạt; commit trả 503 nêu rõ migration RPC còn thiếu, không ghi place/tag/audit.')
+    }
   } catch (error) {
     record('Luồng smoke admin', 'FAIL', error instanceof Error ? error.message : 'admin_smoke_failed')
   } finally {
@@ -135,7 +155,12 @@ async function main(): Promise<void> {
       const places = await admin.from('places').delete().in('id', ids)
       clean = !audit.error && !places.error
     }
-    record('Dọn dữ liệu thử', clean ? 'PASS' : 'FAIL', clean ? `Đã xóa ${ids.length} địa điểm thử và audit tương ứng.` : 'Không dọn sạch toàn bộ dữ liệu thử.')
+    const remaining = await admin.from('places').select('id', { count: 'exact', head: true }).like('slug', `${prefix}%`)
+    const remainingCount = remaining.count ?? -1
+    clean = clean && !remaining.error && remainingCount === 0
+    record('Dọn dữ liệu thử', clean ? 'PASS' : 'FAIL', clean
+      ? `Đã xóa ${ids.length} địa điểm thử/audit; còn ${remainingCount} dòng zz-test-*.`
+      : `Không xác nhận dọn sạch; còn ${remainingCount} dòng zz-test-*.`)
   }
   report()
 }

@@ -29,15 +29,17 @@ class MemoryImportRepo implements PlaceImportRepository {
 
   async tagSlugs(slugs: string[]) { return new Set(slugs.filter((slug) => this.tags.has(slug))) }
   async existingBySlugs(slugs: string[]) { return new Map(slugs.flatMap((slug) => { const row = this.places.get(slug); return row ? [[slug, row] as const] : [] })) }
-  async upsertPlace(row: Record<string, unknown>) {
+  async importPlace(row: Record<string, unknown>, overwriteVerified: boolean) {
     const slug = String(row.slug)
     const current = this.places.get(slug)
+    if (current?.verified && !overwriteVerified) return { action: 'skipped' as const, placeId: current.id, reason: 'Địa điểm đã verified và không được ghi đè.' }
     const id = current?.id ?? (this.nextId++ === 0 ? idA : idB)
     this.places.set(slug, { id, slug, status: (current?.status ?? row.status) as ImportExistingPlace['status'], verified: current?.verified ?? Boolean(row.verified), source: (row.source as string | null) ?? null })
-    return id
+    const tags = row.tags as Array<{ slug: string; weight: number }>
+    if (tags.length) this.tagAssignments.set(id, tags)
+    this.auditRows.push({ id, actor: actorId, fields: [...Object.keys(row).filter((field) => field !== 'tags'), ...(tags.length ? ['tags'] : [])] })
+    return { action: current ? 'updated' as const : 'created' as const, placeId: id, reason: null }
   }
-  async replaceTags(placeId: string, tags: Array<{ slug: string; weight: number }>) { this.tagAssignments.set(placeId, tags) }
-  async audit(id: string, actor: string, fields: string[]) { this.auditRows.push({ id, actor, fields }) }
 }
 
 describe('ImportService', () => {
@@ -69,7 +71,7 @@ describe('ImportService', () => {
       csvRow({ slug: 'published-existing', tags: '', source: '' }),
       csvRow({ slug: 'verified-existing', tags: 'food:2', source: 'csv-source' }),
     ].join('\n')
-    const result = await service.commit(csv, false, actorId)
+    const result = await service.commit(csv, false)
     expect(result).toMatchObject({ created: 1, updated: 1, skipped: 1 })
     expect(repository.places.get('new-place')).toMatchObject({ status: 'draft', verified: false, source: 'csv-import' })
     expect(repository.places.get('published-existing')).toMatchObject({ status: 'published', verified: false, source: 'manual' })
@@ -86,7 +88,7 @@ describe('ImportService', () => {
     repository.places.set('verified-existing', { id: idA, slug: 'verified-existing', status: 'published', verified: true, source: 'manual' })
     repository.tagAssignments.set(idA, [{ slug: 'heritage', weight: 1 }])
     const service = new ImportService(repository)
-    const result = await service.commit([header, csvRow({ slug: 'verified-existing', tags: 'food:3' })].join('\n'), true, actorId)
+    const result = await service.commit([header, csvRow({ slug: 'verified-existing', tags: 'food:3' })].join('\n'), true)
     expect(result).toMatchObject({ created: 0, updated: 1, skipped: 0 })
     expect(repository.places.get('verified-existing')).toMatchObject({ status: 'published', verified: true })
     expect(repository.tagAssignments.get(idA)).toEqual([{ slug: 'food', weight: 3 }])
@@ -97,14 +99,24 @@ describe('ImportService', () => {
     const repository = new MemoryImportRepo()
     const service = new ImportService(repository)
     const csv = [header, csvRow({ slug: 'same-place', tags: '' }), csvRow({ slug: 'same-place', tags: '' }), csvRow({ slug: 'bad-row', category: 'unknown' }), csvRow({ slug: 'good-place', tags: '' })].join('\n')
-    const first = await service.commit(csv, false, actorId)
+    const first = await service.commit(csv, false)
     expect(first).toMatchObject({ created: 1, updated: 0, skipped: 3 })
     expect(first.errorCsv).toContain('line,slug,reason')
     const duplicateOnly = [header, csvRow({ slug: 'same-place', tags: '' })].join('\n')
-    const imported = await service.commit(duplicateOnly, false, actorId)
-    const repeated = await service.commit(duplicateOnly, false, actorId)
+    const imported = await service.commit(duplicateOnly, false)
+    const repeated = await service.commit(duplicateOnly, false)
     expect(imported.created).toBe(1)
     expect(repeated.updated).toBe(1)
     expect(repository.places.size).toBe(2)
+  })
+
+  it('delegates every accepted row to one repository RPC so place, tags, and audit are one unit', async () => {
+    const repository = new MemoryImportRepo()
+    const service = new ImportService(repository)
+    const result = await service.commit([header, csvRow({ slug: 'atomic-place' })].join('\n'), false)
+    expect(result).toMatchObject({ created: 1, updated: 0, skipped: 0 })
+    expect(repository.places.has('atomic-place')).toBe(true)
+    expect(repository.auditRows).toHaveLength(1)
+    expect(repository.tagAssignments.get(idA)).toEqual([{ slug: 'heritage', weight: 2 }])
   })
 })

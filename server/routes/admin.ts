@@ -22,7 +22,7 @@ export type AdminRouteDependencies = {
   auth?: MiddlewareHandler<ApiEnv>
   authorizeAdmin?: MiddlewareHandler<ApiEnv>
   createRepository?: (accessToken: string) => AdminPlaceRepository
-  createImportRepository?: () => PlaceImportRepository
+  createImportRepository?: (accessToken: string) => PlaceImportRepository
   now?: () => Date
 }
 
@@ -68,7 +68,7 @@ export function createAdminRoutes(dependencies: AdminRouteDependencies = {}) {
     dependencies.createRepository?.(token) ?? new SupabaseAdminPlaceRepository(createUserSupabaseClient(token), createServiceRoleSupabaseClient()),
   )
   const importService = (token: string) => new ImportService(
-    dependencies.createImportRepository?.() ?? new SupabasePlaceImportRepository(createUserSupabaseClient(token), createServiceRoleSupabaseClient()),
+    dependencies.createImportRepository?.(token) ?? new SupabasePlaceImportRepository(createUserSupabaseClient(token)),
   )
   const importBuckets = new Map<string, { startedAt: number; count: number }>()
   const importRateLimit: MiddlewareHandler<ApiEnv> = async (context, next) => {
@@ -144,7 +144,7 @@ export function createAdminRoutes(dependencies: AdminRouteDependencies = {}) {
 
   routes.post('/admin/import/commit', importRateLimit, async (context) => {
     const input = parseOrThrow(importCommitRequestSchema, await readJson(context, 5 * 1024 * 1024), 'Yêu cầu import chưa hợp lệ.')
-    return context.json(await importService(context.get('accessToken')).commit(input.csv, input.overwriteVerified ?? false, context.get('user').id))
+    return context.json(await importService(context.get('accessToken')).commit(input.csv, input.overwriteVerified ?? false))
   })
 
   return routes

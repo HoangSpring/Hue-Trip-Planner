@@ -483,6 +483,7 @@ Body: `{ "ids": ["<uuid>"], "action": "publish" | "unpublish" | "archive" | "ver
   **Response 200:** `{ "created": 40, "updated": 8, "skipped": 2, "errors": [ { "line": 7, "message": "..." } ], "errorCsv": "line,slug,reason\\r\\n..." }`
 - Quy tắc CSV: địa điểm mới thành `draft`, `verified = false`, source mặc định `csv-import`; địa điểm cũ giữ `status`/`verified`; không ghi đè bản đã verified trừ khi `overwriteVerified = true`; tags rỗng giữ nguyên, tags có giá trị thay bộ cũ; dòng lỗi bị bỏ qua để dòng hợp lệ tiếp tục. Ghi một audit `import` cho mỗi dòng tạo/sửa.
 - `errorCsv` là nội dung CSV UTF-8 gồm dòng lỗi và lý do (không phải data URL).
+- Commit gọi `admin_import_place(p_row, p_overwrite_verified)` qua JWT admin. Place, tags và audit của mỗi dòng cùng transaction. Nếu migration 13 chưa được áp dụng hoặc RPC chưa hiện trong schema cache, trả 503 với thông báo cần migration; không chuyển sang ghi nhiều bước bằng service role.
 
 ## 10. Hàm cơ sở dữ liệu (RPC) cần tạo
 
@@ -492,6 +493,7 @@ Các hàm được chia theo task để migration theo đúng thứ tự:
 - Migration 9, task T-003: thêm telemetry nullable vào `generation_events` (đã áp dụng remote).
 - Migration 10, task T-034: `save_trip` và `create_trip_from_payload`.
 - Migration 12, task T-043: `admin_save_place_with_tags`, lưu place và thay tags nguyên tử dưới JWT admin.
+- Migration 13, T-045 server: `admin_import_place`, nhập place, tags không rỗng và audit nguyên tử; trả `created|updated|skipped` cùng `place_id` và lý do.
 
 | Hàm | Mục đích |
 |---|---|
@@ -508,10 +510,9 @@ Các hàm được chia theo task để migration theo đúng thứ tự:
 Chỉ những nơi sau; mỗi nơi phải **tự kiểm tra quyền** trước khi truy vấn:
 
 1. `GET /api/shared/:token` và `POST /api/shared/:token/copy` (tra theo token).
-2. Ghi `generation_events` và `place_audit_log`.
+2. Ghi `generation_events` và `place_audit_log` của API quản trị địa điểm (import ghi audit bên trong RPC migration 13 với JWT admin).
 3. `DELETE /api/me` (xóa `auth.users`).
-4. Các endpoint import (ghi hàng loạt, sau khi đã xác nhận `requireAdmin`).
-5. `/api/sitemap.xml`, `/api/og/*` (đọc dữ liệu công khai, có thể dùng anon key).
+4. `/api/sitemap.xml`, `/api/og/*` (đọc dữ liệu công khai, có thể dùng anon key).
 
 Mọi nơi còn lại dùng client kèm JWT người dùng (hoặc anon key cho dữ liệu công khai).
 

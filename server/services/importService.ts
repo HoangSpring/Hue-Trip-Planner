@@ -8,9 +8,7 @@ export type ImportExistingPlace = Pick<Tables<'places'>, 'id' | 'slug' | 'status
 export interface PlaceImportRepository {
   tagSlugs(slugs: string[]): Promise<Set<string>>
   existingBySlugs(slugs: string[]): Promise<Map<string, ImportExistingPlace>>
-  upsertPlace(row: Record<string, unknown>): Promise<string>
-  replaceTags(placeId: string, tags: Array<{ slug: string; weight: number }>): Promise<void>
-  audit(placeId: string, actorId: string, changedFields: string[]): Promise<void>
+  importPlace(row: Record<string, unknown>, overwriteVerified: boolean): Promise<{ action: 'created' | 'updated' | 'skipped'; placeId: string; reason: string | null }>
 }
 
 type ValidImportRow = {
@@ -44,7 +42,7 @@ export class ImportService {
     return (await this.plan(csv, false)).preview
   }
 
-  async commit(csv: string, overwriteVerified: boolean, actorId: string): Promise<ImportCommitResponse> {
+  async commit(csv: string, overwriteVerified: boolean): Promise<ImportCommitResponse> {
     const plan = await this.plan(csv, overwriteVerified)
     let created = 0
     let updated = 0
@@ -66,16 +64,17 @@ export class ImportService {
         const rowToSave: Record<string, unknown> = {
           ...place,
           source: entry.data.source ?? existing?.source ?? 'csv-import',
-          status: existing?.status ?? 'draft',
-          verified: existing?.verified ?? false,
+          tags: entry.tagWeights,
         }
-        const placeId = await this.repository.upsertPlace(rowToSave)
-        if (entry.tagWeights.length > 0) await this.repository.replaceTags(placeId, entry.tagWeights)
-        const changedFields = Object.keys(place).filter((field) => !['status', 'verified'].includes(field))
-        if (entry.tagWeights.length > 0) changedFields.push('tags')
-        await this.repository.audit(placeId, actorId, changedFields)
-        if (existing) updated += 1
-        else created += 1
+        const result = await this.repository.importPlace(rowToSave, overwriteVerified)
+        if (result.action === 'created') created += 1
+        else if (result.action === 'updated') updated += 1
+        else {
+          skipped += 1
+          const message = result.reason ?? 'Địa điểm đã verified và không được ghi đè.'
+          errors.push({ line: entry.rowNumber, message })
+          csvErrors.push({ line: entry.rowNumber, slug: entry.data.slug, messages: [message], values: {} })
+        }
       } catch {
         skipped += 1
         const message = 'Không thể import dòng này; không ghi nhận hoàn tất.'
