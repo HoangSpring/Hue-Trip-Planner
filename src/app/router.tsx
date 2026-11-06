@@ -41,6 +41,7 @@ const SavedPlacesPage = lazy(() => import('@/features/saved/SavedPlacesPage'))
 const SharedTripPage = lazy(() => import('@/features/share/SharedTripPage'))
 const AdminPlaceListPage = lazy(() => import('@/features/admin/AdminPlaceListPage'))
 const AdminPlaceFormPage = lazy(() => import('@/features/admin/AdminPlaceFormPage'))
+const AdminImportPage = lazy(() => import('@/features/admin/AdminImportPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -105,7 +106,7 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.adminPlaces, element: <Suspense fallback={loading}><AdminPlaceListPage /></Suspense> },
       { path: paths.adminPlaceNew, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },
       { path: paths.adminPlacePattern, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },
-      { path: paths.adminImport, element: page(vi.pages.csvImport, true) },
+      { path: paths.adminImport, element: <Suspense fallback={loading}><AdminImportPage /></Suspense> },
     ] }] },
     { path: paths.forbidden, element: <ForbiddenPage /> },
     { path: '*', element: <NotFoundPage /> },

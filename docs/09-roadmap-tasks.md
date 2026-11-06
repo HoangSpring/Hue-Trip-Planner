@@ -354,18 +354,19 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** user thường nhận `403` ở mọi endpoint; xuất bản thiếu trường bắt buộc → `422` kèm danh sách; slug trùng → `409`.
 - **Ghi chú:** phần server và test đã triển khai. RPC atomic đổi tags nằm ở migration 12; migration 11 sửa trigger role. T-043 chỉ tick sau khi `smoke:admin` đạt.
 
-### [x] T-044 · Trang quản trị: danh sách và form địa điểm · `L`
+### [ ] T-044 · Trang quản trị: danh sách và form địa điểm · `L`
 - **Tham chiếu:** `docs/02` F-12; `docs/03` FL-08.1; `docs/08` S18, S19
 - **Dep:** T-043, T-006
 - **Làm:** `/admin/places` (bộ lọc, bảng, thao tác hàng loạt), `/admin/places/new|:id` (form theo nhóm, ghim bản đồ, tải ảnh lên Storage, **bắt buộc** ghi công + giấy phép ảnh, gán tag + trọng số, nút Duyệt riêng).
 - **Hoàn thành khi:** đạt AC F-12 phần tạo/sửa; địa điểm vừa xuất bản hiện ở `/explore`; không lưu được ảnh khi thiếu ghi công.
+  - **Ghi chú:** UI và kiểm tra schema đã có; giữ `[ ]` đến khi kiểm tra trên trình duyệt một địa điểm vừa xuất bản xuất hiện ở `/explore` (smoke:admin hiện chỉ tạo nháp và xác nhận thiếu ảnh bị chặn).
 
-### [ ] T-045 · Import CSV có xem trước (giao diện + API) · `L`
+### [x] T-045 · Import CSV có xem trước (giao diện + API) · `L`
 - **Tham chiếu:** `docs/06` mục 9.5; `docs/03` FL-08.2; `docs/08` S20
 - **Dep:** T-043, T-011
 - **Làm:** `POST /api/admin/import/preview|commit` (tái dùng logic ở T-011), không dùng preview token; `commit` nhận lại CSV, trang `/admin/import` 3 bước, tải tệp CSV dòng lỗi.
 - **Hoàn thành khi:** đạt AC F-12 phần import; import lại không tạo trùng; không ghi đè địa điểm `verified` nếu không chọn rõ.
-- **Ghi chú:** preview server đã triển khai; commit dùng RPC `admin_import_place` ở migration 13, không ghi place/tag/audit nhiều bước. T-045 giữ `[ ]` đến khi làm giao diện ba bước.
+  - **Ghi chú:** preview server đã triển khai; commit dùng RPC `admin_import_place` ở migration 13, không ghi place/tag/audit nhiều bước. Giao diện ba bước tải CSV mẫu, gửi lại nội dung CSV khi commit và cho tải CSV các dòng lỗi.
 
 > ✅ **Cổng kiểm tra M5:** người không rành kỹ thuật có thể thêm/sửa/duyệt địa điểm và import CSV mà không đụng DB.
 

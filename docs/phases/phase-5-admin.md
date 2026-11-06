@@ -6,6 +6,8 @@
 
 Trang admin quản lý địa điểm và import CSV có xem trước.
 
+UI admin nối với API admin đã có, dùng `RequireAdmin` ở client để điều hướng trải nghiệm; quyền thực tế vẫn được kiểm tra ở server và RLS.
+
 ## Đọc trước khi làm
 
 - docs/02-features.md (F-12)
