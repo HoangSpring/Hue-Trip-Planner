@@ -347,7 +347,7 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 5 — Quản trị (M5)
 
-### [ ] T-043 · API quản trị địa điểm · `L`
+### [x] T-043 · API quản trị địa điểm · `L`
 - **Tham chiếu:** `docs/06` mục 9.1–9.4
 - **Dep:** T-012, T-005
 - **Làm:** `GET/POST /api/admin/places`, `GET/PUT /:id`, `POST /:id/status`, `POST /:id/verify`; kiểm tra bằng Zod + chuyển lỗi `CHECK` của DB sang thông báo tiếng Việt; ghi `place_audit_log`; `missingFields`.
