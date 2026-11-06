@@ -95,12 +95,12 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.resetPassword, element: <Suspense fallback={loading}><ResetPasswordPage /></Suspense> },
       { path: paths.authCallback, element: <Suspense fallback={loading}><AuthCallbackPage /></Suspense> },
     ] },
-    { path: paths.account, element: <RequireAuth />, children: [{ element: <AccountLayout />, children: [
+    { path: paths.account, element: <RequireAuth />, children: [{ element: <PublicLayout />, children: [{ element: <AccountLayout />, children: [
       { index: true, element: <Navigate to={paths.accountTrips} replace /> },
       { path: paths.accountTrips, element: <Suspense fallback={loading}><MyTripsPage /></Suspense> },
       { path: paths.accountSaved, element: <Suspense fallback={loading}><SavedPlacesPage /></Suspense> },
       { path: paths.accountSettings, element: <Suspense fallback={loading}><AccountSettingsPage /></Suspense> },
-    ] }] },
+    ] }] }] },
     { path: paths.admin, element: <RequireAdmin />, children: [{ element: <AdminLayout />, children: [
       { index: true, element: <Navigate to={paths.adminPlaces} replace /> },
       { path: paths.adminPlaces, element: <Suspense fallback={loading}><AdminPlaceListPage /></Suspense> },
