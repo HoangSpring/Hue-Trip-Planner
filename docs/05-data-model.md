@@ -472,10 +472,18 @@ create table public.generation_events (
   llm_model     text,
   input_tokens  integer,
   output_tokens integer,
+  prompt_version text,
+  pool_size integer,
+  repairs integer,
+  coverage numeric(4,3),
+  fallback_reason text,
+  thinking_tokens integer,
   duration_ms   integer,
   error_code    text,
   created_at    timestamptz not null default now()
 );
+-- Các cột telemetry được thêm bởi migration 20261029000009_generation_events_telemetry.sql.
+-- Chỉ bật TELEMETRY_COLUMNS=true sau khi migration đã được áp dụng; mặc định false để tương thích schema cũ.
 create index generation_events_user_time_idx on public.generation_events (user_id, created_at desc);
 create index generation_events_client_time_idx on public.generation_events (client_key, created_at desc);
 ```

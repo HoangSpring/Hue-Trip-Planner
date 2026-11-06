@@ -161,6 +161,11 @@ function formatEvaluation(input: {
 }
 
 async function main(): Promise<void> {
+  if (process.argv.includes('--llm')) {
+    const { runLlmEvaluation } = await import('./evalItineraryLlm')
+    await runLlmEvaluation()
+    return
+  }
   const explain = process.argv.includes('--explain')
   loadLocalEnvironment()
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
@@ -192,7 +197,7 @@ async function main(): Promise<void> {
       for (const diagnostic of result.diagnostics ?? []) {
         console.info(`--explain ${entry.id.toUpperCase()} ngày ${diagnostic.dayIndex} (${diagnostic.date}): ` +
           `available=${diagnostic.available}; ${JSON.stringify(diagnostic.excluded)}; ` +
-          `scheduled=${diagnostic.scheduled}; minimum=${diagnostic.minimum}`)
+          `scheduled=${diagnostic.scheduled}; minimum=${diagnostic.minimum}; lunchChecks=${JSON.stringify(diagnostic.lunchChecks)}`)
       }
     }
   }

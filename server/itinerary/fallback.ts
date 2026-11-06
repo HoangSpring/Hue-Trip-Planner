@@ -31,6 +31,7 @@ export type DayCandidateDiagnostics = {
   }
   scheduled: number
   minimum: number
+  lunchChecks: Array<{ slug: string; result: string }>
 }
 
 export type GenerateTripResult = {
@@ -147,7 +148,7 @@ function lunchOptions(
     const possible: LunchPlan[] = []
     const options = scheduleOptions(input, effectiveStartDate, dayIndex)
     for (const lunch of lunches) {
-      const direct = scheduleDay([{ candidate: lunch, slot: 'noon' }], options)
+      const direct = scheduleDay([{ candidate: lunch, slot: 'noon', locked: true }], options)
       if (direct.items.some((item) => item.slot === 'noon' && item.candidate.place.id === lunch.place.id)) {
         possible.push({ lunch, morningAnchor: null })
         continue
@@ -156,7 +157,7 @@ function lunchOptions(
         candidate.place.id !== lunch.place.id &&
         (candidate.place.bestTime.length === 0 || candidate.place.bestTime.includes('morning')))
       for (const anchor of morningAnchors) {
-        const paired = scheduleDay([{ candidate: anchor, slot: 'morning' }, { candidate: lunch, slot: 'noon' }], options)
+        const paired = scheduleDay([{ candidate: anchor, slot: 'morning' }, { candidate: lunch, slot: 'noon', locked: true }], options)
         const ids = new Set(paired.items.map(({ candidate: item }) => item.place.id))
         if (ids.has(anchor.place.id) && ids.has(lunch.place.id) && paired.items.some((item) => item.slot === 'noon')) {
           possible.push({ lunch, morningAnchor: anchor })
@@ -223,9 +224,23 @@ function dayDiagnostics(
       excluded.outsideBestTime++
     }
   }
+  const lunchChecks = selection.diagnosticCandidates.filter(isLunch).map((candidate) => {
+    let result = 'eligible'
+    if (usedBefore.has(candidate.place.id)) result = 'already_used_on_prior_day'
+    else if (input.start && selection.effectiveRadiusKm !== null &&
+      estimateTravel(input.start, candidate.place, input.transport).distanceKm > selection.effectiveRadiusKm) result = 'outside_radius'
+    else if (weekday !== null && candidate.place.closedDays.includes(weekday)) result = 'closed_on_date'
+    else {
+      const attempt = scheduleDay([{ candidate, slot: 'noon', locked: true }], scheduleOptions(input, date, dayIndex))
+      if (!attempt.items.some(({ candidate: scheduledCandidate }) => scheduledCandidate.place.id === candidate.place.id)) {
+        result = 'scheduler_rejected_hours_or_route'
+      }
+    }
+    return { slug: candidate.place.slug, result }
+  })
   return {
     dayIndex, date, available: selection.candidates.length, excluded,
-    scheduled: scheduled.items.length, minimum: itemBounds(input)[0],
+    scheduled: scheduled.items.length, minimum: itemBounds(input)[0], lunchChecks,
   }
 }
 
@@ -272,7 +287,7 @@ export async function generateTrip(repo: PlacesRepo, input: TripInput, options: 
       const alternatives = selection.candidates.filter((candidate) => isLunch(candidate) &&
         candidate.place.id !== assignedLunch.lunch.place.id && !allocatedLunchIds.has(candidate.place.id) && !usedIds.has(candidate.place.id))
       if (assignedLunch.morningAnchor) requests.push({ candidate: assignedLunch.morningAnchor, slot: 'morning' })
-      requests.push({ candidate: assignedLunch.lunch, slot: 'noon', alternatives })
+      requests.push({ candidate: assignedLunch.lunch, slot: 'noon', alternatives, locked: true })
     }
     let scheduled = scheduleDay(requests, scheduleOptions(input, effectiveStartDate, dayIndex))
     const requiredLunch = lunchByDay.get(dayIndex)?.lunch.place.id
@@ -329,7 +344,25 @@ export async function generateTrip(repo: PlacesRepo, input: TripInput, options: 
     dayDiagnosticsResult.excluded.schedulerRejected = Math.max(dayDiagnosticsResult.excluded.schedulerRejected, rejectedCandidates.size)
     if (options.explain) diagnostics.push(dayDiagnosticsResult)
     const hasLunch = scheduled.items.filter(({ slot, candidate }) => slot === 'noon' && isLunch(candidate)).length === 1
+    // R1 outranks route preference (R6): if the reserved lunch failed, exhaust every
+    // still-unused lunch place before emitting LUNCH_MISSING. Other slots may be re-fit.
     if (!hasLunch) {
+      const lunchPlaces = selection.candidates.filter((candidate) => isLunch(candidate) &&
+        !usedIds.has(candidate.place.id) && !scheduled.items.some(({ candidate: item }) => item.place.id === candidate.place.id))
+      for (const lunch of lunchPlaces) {
+        const nonLunchRequests = requests.filter(({ slot }) => slot !== 'noon')
+        const alternatives = lunchPlaces.filter(({ place }) => place.id !== lunch.place.id)
+        const attempt = scheduleDay([...nonLunchRequests, { candidate: lunch, slot: 'noon', alternatives, locked: true }],
+          { ...scheduleOptions(input, effectiveStartDate, dayIndex), allowLongLegs: true })
+        if (attempt.items.some(({ candidate, slot }) => candidate.place.id === lunch.place.id && slot === 'noon')) {
+          scheduled = attempt
+          requests.splice(0, requests.length, ...nonLunchRequests, { candidate: lunch, slot: 'noon', alternatives, locked: true })
+          break
+        }
+      }
+    }
+    const lunchAfterRescue = scheduled.items.filter(({ slot, candidate }) => slot === 'noon' && isLunch(candidate)).length === 1
+    if (!lunchAfterRescue) {
       notices.push({ code: 'LUNCH_MISSING', message: `Ngày ${dayIndex} (${date}) không còn quán ăn trưa chưa dùng có thể xếp đúng giờ mở cửa và khoảng cách.` })
     }
     if (scheduled.items.length < minimum) {

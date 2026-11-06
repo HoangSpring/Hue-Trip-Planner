@@ -178,12 +178,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** `scheduler.ts`: giờ bắt đầu ngày, đồng bộ khung giờ, dời đến giờ mở cửa, không quá 21:30, xử lý mục không xếp được (hoán khung/thay thế/bỏ), tối ưu thứ tự trong khung (láng giềng gần nhất).
 - **Hoàn thành khi:** test nhóm Scheduler; không mục nào ngoài giờ mở cửa đã biết; `position` liên tục từ 0.
 
-### [ ] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
+### [x] T-020 · Thuật toán dự phòng + lý do mẫu · `L`
 - **Tham chiếu:** `docs/07` mục 7, 11
 - **Dep:** T-018, T-019
 - **Làm:** `fallback.ts`, `reasons.ts`; hàm `generateTrip` chạy **chỉ bằng dự phòng** (cờ `LLM_ENABLED=false` mặc định ở giai đoạn này) trả `TripDraft` + `Warning` + `Notice`.
 - **Hoàn thành khi:** golden test (cùng đầu vào → cùng kết quả); thỏa R1–R8 trên ≥ 10 đầu vào; property test (`docs/07` mục 17.3): không trùng địa điểm, mọi `placeId` thuộc DB, số mục/ngày đúng khoảng, không kết thúc sau 21:30.
-- **Trạng thái:** Chưa đạt; giữ `[ ]` cho đến khi kiểm chứng R1/R7 trên eval dữ liệu thật và tất cả kiểm thử hồi quy/property qua. V1 có lỗi ngày, thiếu trưa và underfill; xem `docs/reports/phase-2a-fix-report.md`.
+- **Trạng thái:** Đạt lại trong eval dữ liệu thật ngày 2026-10-29: 0/10 kịch bản thiếu bữa trưa, 0 ngày dưới sàn; regression V4 và property tests qua. R1 được ưu tiên hơn R6 bằng cách khóa slot noon và thử mọi quán lunch chưa dùng trước khi phát `LUNCH_MISSING`. Bằng chứng: `docs/eval/2026-10-29-fallback-v2.md` và `docs/reports/phase-3c-report.md`.
 
 ### [x] T-021 · Hàm cảnh báo và `computeWarnings` · `S`
 - **Tham chiếu:** `docs/07` mục 15
@@ -232,7 +232,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-020, T-026
 - **Làm:** `regenerateDay` (dùng dự phòng ở giai đoạn này) + `POST /api/trips/regenerate-day`; hộp thoại khóa mục; thay nội dung một ngày, có hoàn tác.
 - **Hoàn thành khi:** các ngày khác không đổi; không tạo trùng địa điểm với ngày khác; mục khóa giữ nguyên slot.
-- Đã kiểm tra: API giữ slot khóa kể cả khi `best_time` khác, tôn trọng danh sách địa điểm ngày khác; reducer chỉ thay ngày chọn và hoàn tác được. T-020 vẫn còn đánh dấu chưa đạt riêng theo báo cáo chất lượng fallback.
+- Đã kiểm tra: API giữ slot khóa kể cả khi `best_time` khác, tôn trọng danh sách địa điểm ngày khác; reducer chỉ thay ngày chọn và hoàn tác được. T-020 đã đạt lại sau eval fallback V2 ngày 2026-10-29.
 
 > ✅ **Cổng kiểm tra M2 (quan trọng):** người dùng **khách** đi trọn luồng Landing → Wizard → Lịch trình → Chỉnh sửa **không cần AI và không cần đăng nhập**. Chủ dự án chạy bộ **10 đầu vào mẫu** (`docs/07` mục 17.4) và chấm chất lượng thuật toán dự phòng. Đây là mốc đầu tiên đáng để cho người thật dùng thử.
 
@@ -240,35 +240,38 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## PHASE 3 — AI thật (M3)
 
-### [ ] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
+### [x] T-029 · `LlmClient`, nhà cung cấp và `FakeLlmClient` · `M`
 - **Tham chiếu:** `docs/07` mục 8.1, 17.1; `docs/06` mục 13
 - **Dep:** T-020, **chủ dự án đã chọn nhà cung cấp LLM**
+- **Trạng thái hiện tại:** Gemini provider, test HTTP giả và ping schema thật thành công với `gemini-3.5-flash-lite`; yêu cầu mẫu 40 ứng viên/2 ngày cũng trả JSON hợp lệ chỉ gồm candidate ID đã gửi.
 - **Làm:** interface `LlmClient`; một provider thật (đọc `LLM_API_KEY`, `LLM_MODEL`); `FakeLlmClient` có các kịch bản lỗi (id sai, trùng, thiếu ngày, không có bữa trưa, JSON hỏng, timeout, quá dài, URL/HTML trong `reason`); ghi nhận token từ phản hồi.
 - **Hoàn thành khi:** gọi thử thành công ở môi trường phát triển; timeout hoạt động bằng `AbortSignal`; không log nội dung prompt/phản hồi.
 
-### [ ] T-030 · Prompt, làm sạch `notes`, schema đầu ra · `M`
+### [x] T-030 · Prompt, làm sạch `notes`, schema đầu ra · `M`
 - **Tham chiếu:** `docs/07` mục 8, 12
 - **Dep:** T-029
 - **Làm:** `prompt.ts` (system prompt có `PROMPT_VERSION`, user message là JSON), `sanitizeNotes`, `shared/schemas/llmItinerary.ts`, dữ liệu ứng viên rút gọn (tọa độ làm tròn, `summary` ≤ 160 ký tự).
 - **Hoàn thành khi:** snapshot test của user message; `notes` không bao giờ nối vào system prompt; test `sanitizeNotes`.
 
-### [ ] T-031 · Kiểm tra và sửa đầu ra LLM · `L`
+### [x] T-031 · Kiểm tra và sửa đầu ra LLM · `L`
 - **Tham chiếu:** `docs/07` mục 10
 - **Dep:** T-030, T-019
 - **Làm:** `validate.ts` thực hiện V1–V10; tính `coverage`; quyết định "đủ tốt" (≥ 0.7); lượt gọi sửa lỗi tối đa 1 lần (nếu < 8 giây); thứ tự trong khung.
 - **Hoàn thành khi:** mỗi kịch bản của `FakeLlmClient` cho kết quả đúng như bảng V1–V10; không bao giờ có `placeId` ngoài nhóm ứng viên đã gửi.
 
-### [ ] T-032 · Tích hợp LLM vào pipeline + công tắc, cầu chì, dự phòng · `M`
+### [x] T-032 · Tích hợp LLM vào pipeline + công tắc, cầu chì, dự phòng · `M`
 - **Tham chiếu:** `docs/07` mục 2, 10.2, 16; `docs/06` mục 2.8, 6.1
 - **Dep:** T-031, T-022
 - **Làm:** `pipeline.ts`: LLM → kiểm tra → dự phòng khi cần; `LLM_ENABLED`, `LLM_DAILY_CALL_CAP`; ghi `fallbackReason`, `repairs`, `coverage`, `PROMPT_VERSION`, token; `regenerateDay` dùng LLM trước, dự phòng sau; `notice FALLBACK_USED`.
 - **Hoàn thành khi:** test pipeline (LLM tắt/timeout/hỏng/`coverage` thấp → dự phòng, vẫn `200`); test an toàn với `notes` độc hại; p90 ≤ 15 giây trong thử nghiệm thực tế.
+  - Đã đạt: validator sửa theo ngày và chỉ dùng fallback cho ngày lỗi; migration telemetry `20261029000009` đã được chủ dự án áp dụng trên remote, `db:types` đã sinh lại kiểu. `TELEMETRY_COLUMNS=true` ghi các cột mới; lần kiểm chứng thật tạo đúng một hàng fallback. Xem `docs/reports/phase-3d-report.md`.
 
 ### [ ] T-033 · Đánh giá chất lượng và hiệu chỉnh · `M`
 - **Tham chiếu:** `docs/07` mục 17.4, 18
 - **Dep:** T-032, **chủ dự án tham gia chấm**
 - **Làm:** chạy bộ 10 đầu vào mẫu với dự phòng và với LLM; ghi kết quả `docs/eval/<ngày>-<PROMPT_VERSION>.md`; điều chỉnh trọng số, ngưỡng, prompt nếu cần.
 - **Hoàn thành khi:** có báo cáo so sánh; chủ dự án quyết định mặc định (LLM hay chỉ dự phòng cho khách).
+  - V2 đã chạy 12 calls; V3 ngày 2026-10-29 dừng sớm tại 11 calls theo ngưỡng fallback ≥10% (3/11). Xem `docs/eval/2026-10-29-llm-vs-fallback-v2.md` và `docs/eval/2026-10-29-llm-vs-fallback-v3.md`. Chưa tick: đối kháng thứ hai chưa chạy, diagnostics V3 thiếu, bảng chấm và quyết định mặc định còn chờ chủ dự án.
 
 > ✅ **Cổng kiểm tra M3:** lịch trình do LLM sinh vượt hoặc ngang dự phòng theo chấm điểm của chủ dự án; **không có** địa điểm bịa; tắt LLM bằng cờ vẫn chạy.
 

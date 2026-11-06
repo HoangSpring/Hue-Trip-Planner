@@ -7,7 +7,10 @@ import { createPublicSupabaseClient, createServiceRoleSupabaseClient } from '../
 import type { ApiEnv } from '../types'
 import { errorHandler } from '../middleware/errorHandler'
 import { optionalAuth } from '../middleware/auth'
-import { NoCandidatesError, generateTrip } from '../itinerary/fallback'
+import { NoCandidatesError } from '../itinerary/fallback'
+import { generateTripPipeline } from '../itinerary/pipeline'
+import type { LlmClient } from '../llm/client'
+import { GeminiLlmClient } from '../llm/providers/gemini'
 import { SupabasePlacesRepo, type PlacesRepo } from '../itinerary/placesRepo'
 import { SupabaseGenerationStore, type GenerationEvent, type GenerationIdentity, type GenerationStore } from '../itinerary/generationStore'
 
@@ -18,6 +21,12 @@ export type GenerateTripRouteDependencies = {
   createPlacesRepo?: () => PlacesRepo
   createGenerationStore?: () => GenerationStore
   validateInterests?: (slugs: string[], signal?: AbortSignal) => Promise<boolean>
+  createLlmClient?: () => LlmClient
+  llmEnabled?: boolean
+  llmTimeoutMs?: number
+  llmDailyCallCap?: number
+  totalTimeoutMs?: number
+  logTelemetry?: (metrics: Record<string, unknown>) => void
   now?: () => Date
   rateLimitSalt?: string
 }
@@ -83,15 +92,16 @@ export function createGenerateTripRoutes(dependencies: GenerateTripRouteDependen
   routes.onError(errorHandler)
   routes.post('/trips/generate', dependencies.auth ?? optionalAuth, async (context) => {
     context.header('Cache-Control', 'no-store')
+    const requestSignal = context.req.raw.signal ?? new AbortController().signal
     const now = dependencies.now ?? (() => new Date())
     const started = now().getTime()
     const user = (context.get('user') ?? null) as RouteUser
     const identity = makeIdentity(user, clientAddress(context), context.req.header('user-agent'), dependencies.rateLimitSalt)
     const store = dependencies.createGenerationStore?.() ?? createStore()
     let eventAttempted = false
-    const record = async (status: GenerationEvent['status'], errorCode: string | null) => {
+    const record = async (status: GenerationEvent['status'], errorCode: string | null, extra: Partial<GenerationEvent> = {}) => {
       eventAttempted = true
-      await store.record({ ...identity, status, durationMs: Math.max(0, now().getTime() - started), errorCode })
+      await store.record({ ...identity, ...extra, status, durationMs: Math.max(0, now().getTime() - started), errorCode })
     }
 
     try {
@@ -110,7 +120,7 @@ export function createGenerateTripRoutes(dependencies: GenerateTripRouteDependen
       if (!parsed.success) throw validationError(parsed.error.issues)
 
       const checkedAt = now()
-      const recentEvents = await store.listRecent(identity, new Date(checkedAt.getTime() - 24 * 60 * 60 * 1000).toISOString(), context.req.raw.signal)
+      const recentEvents = await store.listRecent(identity, new Date(checkedAt.getTime() - 24 * 60 * 60 * 1000).toISOString(), requestSignal)
       const quota = rateLimit(identity, recentEvents, checkedAt)
       context.header('X-RateLimit-Limit', String(quota.limit))
       context.header('X-RateLimit-Remaining', String(quota.remaining))
@@ -121,27 +131,79 @@ export function createGenerateTripRoutes(dependencies: GenerateTripRouteDependen
         return context.json({ error: { code: 'RATE_LIMITED', message: 'Bạn đã tạo nhiều lịch trình trong thời gian ngắn.', requestId: context.get('requestId') } }, 429)
       }
 
+      const dayStart = new Date(checkedAt)
+      dayStart.setUTCHours(0, 0, 0, 0)
+      const llmCallEvents = await store.listRecentLlmCalls(identity, dayStart.toISOString(), requestSignal)
+      const llmClient = dependencies.createLlmClient?.() ?? new GeminiLlmClient()
+
       const checkInterests = dependencies.validateInterests ?? validInterestSlugs
-      if (!(await checkInterests(parsed.data.input.interests, context.req.raw.signal))) {
+      if (!(await checkInterests(parsed.data.input.interests, requestSignal))) {
         throw new AppError(400, 'VALIDATION_ERROR', 'Có sở thích không hợp lệ.', [{ path: 'input.interests', message: 'Chỉ dùng tag sở thích đã được cấu hình.' }])
       }
       const repo = dependencies.createPlacesRepo?.() ?? new SupabasePlacesRepo(createPublicSupabaseClient())
-      const generated = await generateTrip(repo, parsed.data.input, {
+      const generated = await generateTripPipeline(repo, parsed.data.input, {
         now: checkedAt,
         seed: parsed.data.clientDraftId ?? context.get('requestId'),
         clientDraftId: parsed.data.clientDraftId,
-        signal: context.req.raw.signal,
+        signal: requestSignal,
+        llm: llmClient,
+        enabled: dependencies.llmEnabled ?? env.LLM_ENABLED === 'true',
+        dailyCallCount: llmCallEvents.length,
+        dailyCallCap: dependencies.llmDailyCallCap ?? env.LLM_DAILY_CALL_CAP,
+        timeoutMs: dependencies.llmTimeoutMs ?? env.LLM_TIMEOUT_MS,
+        totalTimeoutMs: dependencies.totalTimeoutMs ?? 15_000,
+        onAttempt: async (attempt) => store.record({
+          ...identity,
+          llmCallEvent: true,
+          generatedBy: 'llm',
+          status: attempt.result === 'success' ? 'success' : 'error',
+          llmModel: attempt.model,
+          inputTokens: attempt.inputTokens,
+          outputTokens: attempt.outputTokens,
+          thinkingTokens: attempt.thinkingTokens,
+          durationMs: attempt.durationMs,
+          errorCode: attempt.errorCode,
+        }),
+        onMetrics: (metrics) => {
+          const safeTelemetry = {
+            event: 'itinerary_generation',
+            promptVersion: metrics.promptVersion,
+            poolSize: metrics.poolSize,
+            repairs: metrics.repairs,
+            coverage: metrics.coverage,
+            fallbackReason: metrics.fallbackReason,
+            llmCalls: metrics.llmCalls,
+            model: metrics.model,
+            inputTokens: metrics.inputTokens,
+            outputTokens: metrics.outputTokens,
+            thinkingTokens: metrics.thinkingTokens,
+          }
+          dependencies.logTelemetry?.(safeTelemetry)
+          if (!dependencies.logTelemetry) console.info(JSON.stringify(safeTelemetry))
+        },
       })
       const placeIds = generated.draft.days.flatMap((day) => day.items.map((item) => item.placeId))
-      const selectedRecords = await repo.listPublished(context.req.raw.signal)
+      const selectedRecords = await repo.listPublished(requestSignal.aborted ? undefined : requestSignal)
       const publishedIds = new Set(selectedRecords.map(({ place }) => place.id))
       if (placeIds.some((id) => !publishedIds.has(id))) throw new AppError(500, 'INTERNAL_ERROR', 'Kết quả có địa điểm không còn được xuất bản.')
-      await record('fallback', null)
+      const isLlm = generated.generation.by === 'llm'
+      await record(isLlm ? 'success' : 'fallback', generated.metrics.fallbackReason, {
+        generatedBy: generated.generation.by,
+        llmModel: generated.generation.model,
+        inputTokens: generated.metrics.inputTokens,
+        outputTokens: generated.metrics.outputTokens,
+        thinkingTokens: generated.metrics.thinkingTokens,
+        promptVersion: generated.metrics.promptVersion,
+        poolSize: generated.metrics.poolSize,
+        repairs: generated.metrics.repairs,
+        coverage: generated.metrics.coverage,
+        fallbackReason: generated.metrics.fallbackReason,
+      })
       return context.json({
         draft: generated.draft,
         warnings: generated.warnings,
         notices: generated.notices,
-        generation: { by: 'fallback', model: null, durationMs: Math.max(0, now().getTime() - started) },
+        generation: generated.generation,
       })
     } catch (error) {
       if (!eventAttempted) {

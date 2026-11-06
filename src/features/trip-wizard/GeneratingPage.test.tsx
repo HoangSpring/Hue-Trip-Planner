@@ -63,7 +63,7 @@ const mockSuccessResponse: GenerateTripResponse = {
   },
   warnings: [],
   notices: [{ code: 'FALLBACK_USED', message: 'Lịch trình được tạo theo cách đơn giản hơn.' }],
-  generation: { by: 'fallback', model: null, durationMs: 150 },
+  generation: { by: 'fallback', model: null, durationMs: 150, repairs: 0, replacedDayIndexes: [] },
 }
 
 const testSession = { access_token: 'test-token', user: { id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb' } } as Session

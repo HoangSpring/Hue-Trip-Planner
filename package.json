@@ -20,7 +20,8 @@
     "smoke:api": "tsx scripts/smokeApi.ts",
     "smoke:trips": "tsx scripts/smokeTrips.ts",
     "smoke:admin": "tsx scripts/smokeAdmin.ts",
-    "eval:itinerary": "tsx scripts/evalItinerary.ts"
+    "eval:itinerary": "tsx scripts/evalItinerary.ts",
+    "llm:ping": "tsx scripts/llmPing.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

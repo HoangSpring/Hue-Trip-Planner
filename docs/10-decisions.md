@@ -26,7 +26,7 @@
 
 | Mã | Câu hỏi | Quyết định mặc định | Trạng thái | Cần trước |
 |---|---|---|---|---|
-| D-10 | Nhà cung cấp và model LLM | **Chưa chọn.** Phase 0–2 không cần LLM. Agent chỉ viết interface `LlmClient`, `FakeLlmClient` và provider theo biến môi trường khi đã có lựa chọn | **Cần chủ dự án** | T-029 |
+| D-10 | Nhà cung cấp và model LLM | **Google Gemini API; model `gemini-3.5-flash-lite` (model đang cấu hình và đã ping thành công).** Dùng Gemini Interactions API và structured JSON schema. Gói Free chỉ dùng với dữ liệu giả ở dev/test; cần bật billing trước khi phục vụ người dùng thật. | Đã chọn | Trước khi có người dùng thật |
 | D-11 | Khách (chưa đăng nhập) dùng LLM | **Có**, giới hạn 3 lần/giờ, 6 lần/ngày (`docs/06` mục 2.8); user 10 lần/giờ, 30 lần/ngày. Chỉnh bằng biến môi trường | Mặc định | — |
 | D-12 | Bữa tối bắt buộc | **Không**; chỉ bắt buộc bữa trưa | Mặc định | — |
 | D-13 | Địa điểm chưa `verified` | Chỉ **trừ điểm**, không loại. Xem lại sau khi chấm chất lượng (T-033) | Mặc định | — |

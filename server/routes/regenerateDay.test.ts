@@ -7,6 +7,12 @@ import type { PlacesRepo } from '../itinerary/placesRepo'
 import type { CandidateRecord } from '../itinerary/types'
 import type { GenerationStore } from '../itinerary/generationStore'
 import type { ApiEnv } from '../types'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+import { placeDetailSchema } from '@shared/schemas'
+import { FixturePlacesRepo } from '../itinerary/placesRepo'
+import { FakeLlmClient } from '../llm/fake'
+import type { GenerationEvent } from '../itinerary/generationStore'
 
 const basePlace = {
   shortDescription: null,
@@ -91,10 +97,14 @@ class MockPlacesRepo implements PlacesRepo {
 
 class MockGenerationStore implements GenerationStore {
   events: string[] = []
+  recorded: GenerationEvent[] = []
   async listRecent(): Promise<string[]> {
     return this.events
   }
-  async record(): Promise<void> {}
+  async listRecentLlmCalls(): Promise<string[]> {
+    return []
+  }
+  async record(event: GenerationEvent): Promise<void> { this.recorded.push(event) }
 }
 
 describe('POST /api/trips/regenerate-day', () => {
@@ -108,6 +118,7 @@ describe('POST /api/trips/regenerate-day', () => {
       createPlacesRepo: () => new MockPlacesRepo(),
       createGenerationStore: () => store,
       rateLimitSalt: 'test-salt',
+      logTelemetry: () => undefined,
     })
   )
 
@@ -215,6 +226,34 @@ describe('POST /api/trips/regenerate-day', () => {
     expect(new Set(body.day.items.map(({ placeId }) => placeId)).size).toBe(body.day.items.length)
   })
 
+  it('uses LLM first when regenerating a day and records the attempt', async () => {
+    const samplePlaces = placeDetailSchema.array().parse(JSON.parse(readFileSync(resolve('tests/fixtures/places.sample.json'), 'utf8')))
+    const sampleRecords: CandidateRecord[] = samplePlaces.map((place) => ({
+      place, tagWeights: Object.fromEntries(place.tags.map(({ slug }) => [slug, 2])), featured: false,
+    }))
+    const llmStore = new MockGenerationStore()
+    const llmApp = new Hono<ApiEnv>()
+    llmApp.use('*', requestIdMiddleware)
+    llmApp.onError(errorHandler)
+    llmApp.route('/api', createRegenerateDayRoute({
+      createPlacesRepo: () => new FixturePlacesRepo(sampleRecords),
+      createGenerationStore: () => llmStore,
+      createLlmClient: () => new FakeLlmClient('valid'),
+      llmEnabled: true,
+      rateLimitSalt: 'test-salt',
+      logTelemetry: () => undefined,
+    }))
+    const payload = { ...validPayload, input: { ...validPayload.input, numDays: 1 }, lockedItems: [] }
+    const response = await llmApp.request('/api/trips/regenerate-day', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+    })
+    const body = await response.json() as { generation: { by: string }; day: { items: Array<{ placeId: string }> } }
+    expect(response.status).toBe(200)
+    expect(body.generation.by).toBe('llm')
+    expect(llmStore.recorded.filter(({ llmCallEvent }) => llmCallEvent)).toHaveLength(1)
+    expect(new Set(body.day.items.map(({ placeId }) => placeId)).size).toBe(body.day.items.length)
+  })
+
   it('returns 429 when hourly limit exceeded', async () => {
     const fullStore = new MockGenerationStore()
     const now = new Date()
@@ -231,6 +270,7 @@ describe('POST /api/trips/regenerate-day', () => {
         createGenerationStore: () => fullStore,
         rateLimitSalt: 'test-salt',
         now: () => now,
+        logTelemetry: () => undefined,
       })
     )
 
