@@ -39,6 +39,8 @@ const MyTripsPage = lazy(() => import('@/features/account/MyTripsPage'))
 const AccountSettingsPage = lazy(() => import('@/features/account/AccountSettingsPage'))
 const SavedPlacesPage = lazy(() => import('@/features/saved/SavedPlacesPage'))
 const SharedTripPage = lazy(() => import('@/features/share/SharedTripPage'))
+const AdminPlaceListPage = lazy(() => import('@/features/admin/AdminPlaceListPage'))
+const AdminPlaceFormPage = lazy(() => import('@/features/admin/AdminPlaceFormPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
 
@@ -100,9 +102,9 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
     ] }] },
     { path: paths.admin, element: <RequireAdmin />, children: [{ element: <AdminLayout />, children: [
       { index: true, element: <Navigate to={paths.adminPlaces} replace /> },
-      { path: paths.adminPlaces, element: page(vi.pages.places, true) },
-      { path: paths.adminPlaceNew, element: page(vi.pages.addPlace, true) },
-      { path: paths.adminPlacePattern, element: page(vi.pages.editPlace, true) },
+      { path: paths.adminPlaces, element: <Suspense fallback={loading}><AdminPlaceListPage /></Suspense> },
+      { path: paths.adminPlaceNew, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },
+      { path: paths.adminPlacePattern, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },
       { path: paths.adminImport, element: page(vi.pages.csvImport, true) },
     ] }] },
     { path: paths.forbidden, element: <ForbiddenPage /> },

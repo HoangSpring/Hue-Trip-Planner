@@ -30,18 +30,20 @@ import { vi } from './strings/vi'
 type ApiRequestOptions = Omit<RequestInit, 'body'> & {
   accessToken?: string
   body?: unknown
+  rawBody?: string
 }
 
 export async function apiRequest<T>(path: string, schema: z.ZodType<T>, options: ApiRequestOptions = {}): Promise<T> {
+  const { accessToken, body, rawBody, ...requestOptions } = options
   const headers = new Headers(options.headers)
   headers.set('Accept', 'application/json')
-  if (options.body !== undefined) headers.set('Content-Type', 'application/json')
-  if (options.accessToken) headers.set('Authorization', `Bearer ${options.accessToken}`)
+  if (body !== undefined && rawBody === undefined) headers.set('Content-Type', 'application/json')
+  if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`)
 
   const response = await fetch(path.startsWith('/api/') ? path : `/api/${path.replace(/^\//, '')}`, {
-    ...options,
+    ...requestOptions,
     headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    body: rawBody ?? (body === undefined ? undefined : JSON.stringify(body)),
   })
 
   const payload: unknown = response.status === 204 ? undefined : await response.json()

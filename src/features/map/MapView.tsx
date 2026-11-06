@@ -1,7 +1,7 @@
 import { Component, useCallback, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import L from 'leaflet'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
 import { Link } from 'react-router-dom'
 import type { PlaceMapItemDto } from '@shared/schemas'
 import { paths } from '@/app/paths'
@@ -20,6 +20,7 @@ type MapViewProps = {
   className?: string
   selectedPlaceId?: string | null
   onSelectPlace?: (place: PlaceMapItemDto | null) => void
+  picker?: { lat: number; lng: number; onChange: (lat: number, lng: number) => void }
 }
 const hueCenter: L.LatLngExpression = [16.4637, 107.5909]
 export const categoryColor: Record<PlaceMapItemDto['category'], string> = { heritage: '#5B3A8C', food: '#C65D36', cafe: '#2F6F5E', sightseeing: '#347A9C', shopping: '#B7791F' }
@@ -88,6 +89,16 @@ function PlacesFallback({ places }: { places: PlaceMapItemDto[] }) {
   return <div className="grid h-full min-h-56 place-content-center bg-white p-6 text-center"><h3 className="font-serif text-xl">{vi.map.mapUnavailable}</h3><p className="mt-2 text-sm text-ink-muted">{vi.map.listFallback}</p><ul className="mt-4 max-h-44 space-y-2 overflow-auto text-left">{places.slice(0, 20).map((place) => <li key={place.id}><Link className="text-sm font-semibold text-primary underline" to={paths.place(place.slug)}>{place.name}</Link></li>)}</ul></div>
 }
 
+function DraggablePin({ picker }: { picker: NonNullable<MapViewProps['picker']> }) {
+  const map = useMap()
+  useEffect(() => { map.setView([picker.lat, picker.lng], Math.max(map.getZoom(), 13)) }, [map, picker.lat, picker.lng])
+  const icon = L.divIcon({ className: 'hue-marker-wrap', html: '<span class="hue-marker"><i>⌖</i></span>', iconSize: [36, 42], iconAnchor: [18, 38] })
+  return <Marker position={[picker.lat, picker.lng]} icon={icon} draggable eventHandlers={{ dragend: (event) => {
+    const position = event.target.getLatLng()
+    picker.onChange(position.lat, position.lng)
+  } }} />
+}
+
 export function MapView({
   places,
   numbered = false,
@@ -95,6 +106,7 @@ export function MapView({
   className = '',
   selectedPlaceId,
   onSelectPlace,
+  picker,
 }: MapViewProps) {
   const [tileFailed, setTileFailed] = useState(false)
   const [internalSelected, setInternalSelected] = useState<PlaceMapItemDto | null>(null)
@@ -117,6 +129,7 @@ export function MapView({
     <MapBoundary fallback={<PlacesFallback places={places}/> }>
       {tileFailed ? <PlacesFallback places={places}/> : <MapContainer center={hueCenter} zoom={13} scrollWheelZoom attributionControl={false} className="h-full w-full" aria-label="Bản đồ địa điểm Huế">
         <TileLayer url={tileUrl} eventHandlers={{ tileerror: () => setTileFailed(true) }} />
+        {picker && <DraggablePin picker={picker} />}
         <ClusterLayer places={places} numbered={numbered} selectedPlaceId={selectedPlaceId} onChoose={choosePlace}/>
       </MapContainer>}
     </MapBoundary>

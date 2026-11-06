@@ -24,6 +24,19 @@ export type AdminRouteDependencies = {
   createRepository?: (accessToken: string) => AdminPlaceRepository
   createImportRepository?: (accessToken: string) => PlaceImportRepository
   now?: () => Date
+  listAudit?: (placeId: string) => Promise<{ id: number; action: string; changes: unknown; created_at: string; actor_id: string | null }[]>
+}
+
+type AuditRow = { id: number; action: string; changes: unknown; created_at: string; actor_id: string | null }
+type AuditQueryResult = { data: AuditRow[] | null; error: unknown }
+type AuditQueryClient = {
+  from: (table: 'place_audit_log') => {
+    select: (columns: 'id,action,changes,created_at,actor_id') => {
+      eq: (column: 'place_id', value: string) => {
+        order: (column: 'created_at', options: { ascending: false }) => { limit: (count: number) => Promise<AuditQueryResult> }
+      }
+    }
+  }
 }
 
 function routeError(error: Error, context: Parameters<ErrorHandler<ApiEnv>>[1]): Response | Promise<Response> {
@@ -102,6 +115,16 @@ export function createAdminRoutes(dependencies: AdminRouteDependencies = {}) {
   routes.get('/admin/places/:id', async (context) => {
     const id = parseOrThrow(adminPlaceIdSchema, context.req.param('id'), 'Mã địa điểm không hợp lệ.')
     return context.json(await service(context.get('accessToken')).get(id))
+  })
+
+  routes.get('/admin/places/:id/audit', async (context) => {
+    const id = parseOrThrow(adminPlaceIdSchema, context.req.param('id'), 'Mã địa điểm không hợp lệ.')
+    if (dependencies.listAudit) return context.json({ items: await dependencies.listAudit(id) })
+    const auditClient = createServiceRoleSupabaseClient() as unknown as AuditQueryClient
+    const { data, error } = await auditClient.from('place_audit_log')
+      .select('id,action,changes,created_at,actor_id').eq('place_id', id).order('created_at', { ascending: false }).limit(50)
+    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể tải lịch sử thay đổi lúc này.')
+    return context.json({ items: data })
   })
 
   routes.put('/admin/places/:id', async (context) => {

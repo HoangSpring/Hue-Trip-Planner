@@ -464,6 +464,9 @@ Body: `{ "verified": true, "confirmedFields": ["open_time"] }`. Ghi `verified_by
 ### 9.4b `POST /api/admin/places/bulk`
 Body: `{ "ids": ["<uuid>"], "action": "publish" | "unpublish" | "archive" | "verify" | "unverify" }`. Tối đa 100 ID duy nhất. Trả kết quả riêng `{id, success, reason?}`; dòng publish thiếu trường bắt buộc thất bại riêng, các dòng khác vẫn được xử lý.
 
+  ### 9.4c `GET /api/admin/places/:id/audit`
+  Yêu cầu `requireAdmin`; trả tối đa 50 sự kiện mới nhất của địa điểm (`id`, `action`, `changes`, `created_at`, `actor_id`) để trang sửa hiển thị lịch sử chỉ đọc. Route đặt `Cache-Control: private, no-store`; service role chỉ dùng sau khi middleware đã xác thực và kiểm tra vai trò admin.
+
 ### 9.5 Import CSV
 - `POST /api/admin/import/preview`, `Content-Type: text/csv`, body là nội dung CSV (≤ 2 MB).
   **Response 200:**

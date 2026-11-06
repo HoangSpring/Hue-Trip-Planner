@@ -354,7 +354,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Hoàn thành khi:** user thường nhận `403` ở mọi endpoint; xuất bản thiếu trường bắt buộc → `422` kèm danh sách; slug trùng → `409`.
 - **Ghi chú:** phần server và test đã triển khai. RPC atomic đổi tags nằm ở migration 12; migration 11 sửa trigger role. T-043 chỉ tick sau khi `smoke:admin` đạt.
 
-### [ ] T-044 · Trang quản trị: danh sách và form địa điểm · `L`
+### [x] T-044 · Trang quản trị: danh sách và form địa điểm · `L`
 - **Tham chiếu:** `docs/02` F-12; `docs/03` FL-08.1; `docs/08` S18, S19
 - **Dep:** T-043, T-006
 - **Làm:** `/admin/places` (bộ lọc, bảng, thao tác hàng loạt), `/admin/places/new|:id` (form theo nhóm, ghim bản đồ, tải ảnh lên Storage, **bắt buộc** ghi công + giấy phép ảnh, gán tag + trọng số, nút Duyệt riêng).

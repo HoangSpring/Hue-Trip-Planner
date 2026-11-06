@@ -1,4 +1,14 @@
 export const vi = {
+  admin: {
+    title: 'Quản lý địa điểm', add: 'Thêm địa điểm', search: 'Tìm theo tên hoặc slug', all: 'Tất cả', status: 'Trạng thái', verified: 'Đã duyệt', category: 'Loại địa điểm', missing: 'Thiếu dữ liệu',
+    hours: 'Giờ mở cửa', duration: 'Thời lượng', image: 'Ảnh', coords: 'Tọa độ', meal_type: 'Loại bữa ăn', best_time: 'Thời điểm phù hợp',
+    name: 'Tên địa điểm', slug: 'Đường dẫn (slug)', shortDescription: 'Mô tả ngắn', description: 'Mô tả chi tiết', address: 'Địa chỉ', area: 'Khu vực', categoryLabel: 'Phân loại',
+    location: 'Vị trí', schedule: 'Giờ giấc và chi phí', tags: 'Phân loại và tag', photos: 'Ảnh và ghi công', sources: 'Nguồn dữ liệu', saveDraft: 'Lưu nháp', publish: 'Xuất bản', verify: 'Duyệt thông tin',
+    author: 'Tác giả ảnh', license: 'Giấy phép ảnh', sourceUrl: 'Trang nguồn ảnh', imageUrl: 'URL ảnh HTTPS', upload: 'Tải ảnh lên', statusDraft: 'Nháp', statusPublished: 'Đã xuất bản', statusArchived: 'Đã lưu trữ',
+    loading: 'Đang tải dữ liệu…', retry: 'Thử lại', empty: 'Chưa có địa điểm phù hợp.', saveSuccess: 'Đã lưu địa điểm.', requiredCredit: 'Ảnh bìa cần có tác giả và giấy phép.',
+    importTitle: 'Import địa điểm từ CSV', chooseFile: 'Chọn tệp CSV', preview: 'Xem trước', commit: 'Import các dòng hợp lệ', overwrite: 'Ghi đè địa điểm đã duyệt',
+    noRows: 'Chưa có dữ liệu xem trước.', audit: 'Lịch sử thay đổi',
+  },
   navigation: {
     home: 'Trang chủ', explore: 'Khám phá', createTrip: 'Tạo lịch trình',
     map: 'Bản đồ', me: 'Tôi', myTrips: 'Chuyến đi của tôi', signIn: 'Đăng nhập',

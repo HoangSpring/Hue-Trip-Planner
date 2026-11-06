@@ -81,19 +81,26 @@ function api(repo = new MemoryAdminRepo()) {
     if (context.get('accessToken') !== 'admin') throw new AppError(403, 'FORBIDDEN', 'Bạn không có quyền.')
     await next()
   }
-  const routes = createAdminRoutes({ auth, authorizeAdmin, createRepository: () => repo, createImportRepository: () => new EmptyImportRepo() })
+  const routes = createAdminRoutes({ auth, authorizeAdmin, createRepository: () => repo, createImportRepository: () => new EmptyImportRepo(), listAudit: async () => [{ id: 1, action: 'create', changes: { changedFields: ['name'] }, created_at: '2026-11-05T00:00:00Z', actor_id: actorId }] })
   return { repo, request: (path: string, init: RequestInit = {}) => routes.request(path, init) }
 }
 
 const headers = { Authorization: 'Bearer admin' }
 
 describe('admin routes', () => {
+  it('returns read-only audit history only after admin authorization', async () => {
+    const testApi = api()
+    const response = await testApi.request(`/admin/places/${placeId}/audit`, { headers })
+    expect(response.status).toBe(200)
+    expect(await response.json()).toMatchObject({ items: [{ action: 'create', actor_id: actorId }] })
+  })
   it('requires authentication and rejects regular users on every admin endpoint', async () => {
     const testApi = api()
     const endpoints: Array<[string, RequestInit]> = [
       ['/admin/places', { method: 'GET' }],
       ['/admin/places', { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{}' }],
       [`/admin/places/${placeId}`, { method: 'GET' }],
+      [`/admin/places/${placeId}/audit`, { method: 'GET' }],
       [`/admin/places/${placeId}`, { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{}' }],
       [`/admin/places/${placeId}/status`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{"status":"draft"}' }],
       [`/admin/places/${placeId}/verify`, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: '{"verified":true}' }],
