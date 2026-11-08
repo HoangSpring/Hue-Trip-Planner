@@ -1,250 +1,192 @@
 
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { BrandMark } from '@/components/BrandMark'
-import { paths } from '../paths'
-import { vi } from '@/lib/strings/vi'
-import { AuthResumeNotice } from '@/features/auth/components/AuthResumeNotice'
+import { paths } from '@/app/paths'
 import { useSession } from '@/features/auth/hooks/useSession'
 import { useProfile } from '@/features/auth/hooks/useProfile'
 
-const navClass = ({ isActive }: { isActive: boolean }) =>
-  `relative rounded-full px-3.5 py-2.5 text-sm transition-all duration-300 ${isActive
-    ? 'bg-[#EDE5F5] font-semibold text-[#57347D]'
-    : 'text-[#625B62] hover:bg-[#F1EBF4] hover:text-[#57347D]'
-  }`
-
-export function PublicLayout() {
-  const { isAuthenticated, user } = useSession()
-  const profile = useProfile()
-
-  const userName =
-    profile.data?.displayName?.trim()
-    || (typeof user?.user_metadata?.full_name === 'string'
-      ? user.user_metadata.full_name.trim()
-      : '')
-    || (typeof user?.user_metadata?.name === 'string'
-      ? user.user_metadata.name.trim()
-      : '')
-    || user?.email?.split('@')[0]
-    || vi.navigation.me
-
+function LandingHero() {
   return (
-    <div className="min-h-screen bg-[#FAF7F0] pb-20 text-[#30283A] md:pb-0">
+    <section className="relative isolate min-h-[680px] overflow-hidden bg-[#211329] md:min-h-[760px]">
+      {/* Ảnh nền zoom ra rồi zoom vào liên tục */}
+      <div className="absolute inset-0 -z-20 overflow-hidden">
+        <img
+          src="/images/dai-noi-hue-hero.jpg"
+          alt=""
+          aria-hidden="true"
+          width={1920}
+          height={1080}
+          loading="eager"
+          ref={(image) => image?.setAttribute('fetchpriority', 'high')}
+          decoding="async"
+          className="hero-zoom-out absolute inset-0 h-full w-full object-cover object-center"
+        />
+      </div>
 
-      {/* ================= NAVBAR ================= */}
-      <header className="sticky top-0 z-50 border-b border-[#E9E0D5] bg-[#FAF7F0]/95 shadow-[0_2px_16px_rgba(48,35,57,0.04)] backdrop-blur-xl">
-        <nav
-          className="mx-auto flex min-h-[68px] max-w-[1440px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-8"
-          aria-label={vi.layout.primaryNavigation}
-        >
-          {/* Logo */}
-          <div className="shrink-0">
-            <BrandMark />
-          </div>
+      {/* Lớp phủ giúp nội dung dễ đọc */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-[#211329]/95 via-[#211329]/65 to-[#211329]/10"
+      />
 
-          {/* Desktop navigation */}
-          <div className="hidden items-center gap-1 lg:flex">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-[#211329]/70 via-transparent to-black/10"
+      />
 
-            <NavLink to={paths.home} end className={navClass}>
-              {vi.navigation.home}
-            </NavLink>
+      {/* Nội dung Hero */}
+      <div className="relative z-10 mx-auto flex min-h-[680px] max-w-[1440px] items-center px-4 py-12 sm:px-6 sm:py-16 md:min-h-[760px] md:px-12 md:py-20 lg:px-16">
+        <div className="w-full max-w-[680px]">
+          <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#f4dda5] backdrop-blur-sm sm:px-4 sm:text-sm sm:tracking-[0.16em]">
+            <span className="size-2 shrink-0 rounded-full bg-[#e9c779]" />
+            Khám phá Cố Đô Huế
+          </span>
 
-            <NavLink to={paths.explore} className={navClass}>
-              {vi.navigation.explore}
-            </NavLink>
+          <h1 className="mt-6 break-words font-serif text-4xl font-bold leading-[1.08] tracking-tight text-white sm:mt-7 sm:text-6xl md:text-7xl lg:text-[76px]">
+            Lịch trình Huế,
+            <span className="mt-1 block text-[#f4d994]">
+              đúng gu của bạn
+            </span>
+          </h1>
 
-            <NavLink to={paths.map} className={navClass}>
-              {vi.navigation.map}
-            </NavLink>
+          <p className="mt-6 max-w-[610px] text-sm leading-7 text-white/90 sm:mt-7 sm:text-lg sm:leading-8 md:text-xl">
+            Từ những công trình di sản trầm mặc đến món ngon đất Cố Đô,
+            hãy để mỗi hành trình đưa bạn đến gần hơn với vẻ đẹp và nhịp
+            sống của Huế.
+          </p>
 
-            <NavLink to={paths.accountTrips} className={navClass}>
-              {vi.navigation.myTrips}
-            </NavLink>
-
-            {/* Primary CTA */}
+          {/* Hai nút hành động chính */}
+          <div className="mt-7 flex flex-wrap gap-3 sm:mt-9">
             <Link
               to={paths.planNew}
-              className="ml-2 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-[#57347D] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_12px_rgba(87,52,125,0.16)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#462765] hover:shadow-[0_7px_18px_rgba(87,52,125,0.22)] active:translate-y-0"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#69409b] px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#7950aa] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d994] sm:px-6 sm:py-4"
             >
-              <span>{vi.navigation.createTrip}</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="size-5 shrink-0"
+              >
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M16 3v4M8 3v4M3 10h18M8 14h3M8 17h6" />
+              </svg>
+              Tạo lịch trình
+              <span aria-hidden="true">→</span>
             </Link>
 
-            {/* Account */}
-            {isAuthenticated ? (
-              <NavLink
-                to={paths.accountSettings}
-                aria-label={userName}
-                title={userName}
-                className={({ isActive }) =>
-                  `ml-1 inline-flex min-h-10 max-w-[190px] items-center gap-2 rounded-full border px-2.5 py-1.5 transition-all duration-300 ${isActive
-                    ? 'border-[#D8C8E7] bg-[#EDE5F5] text-[#57347D]'
-                    : 'border-transparent text-[#625B62] hover:border-[#E9DFF0] hover:bg-white'
-                  }`
-                }
-              >
-                <span
-                  className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#57347D] text-sm font-semibold text-white"
-                  aria-hidden="true"
-                >
-                  {userName.slice(0, 1).toUpperCase()}
-                </span>
-
-                <span className="truncate text-sm font-medium">
-                  {userName}
-                </span>
-              </NavLink>
-            ) : (
-              <NavLink
-                to={paths.login}
-                aria-label={vi.navigation.signIn}
-                title={vi.navigation.signIn}
-                className="ml-1 flex size-10 shrink-0 items-center justify-center rounded-full bg-[#57347D] text-sm font-semibold text-white transition-all duration-300 hover:bg-[#462765]"
-              >
-                <span aria-hidden="true">
-                  {vi.navigation.signIn.slice(0, 1).toUpperCase()}
-                </span>
-              </NavLink>
-            )}
-          </div>
-
-          {/* Tablet / mobile account */}
-          <div className="flex items-center gap-2 lg:hidden">
             <Link
-              to={paths.planNew}
-              className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[#57347D] px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#462765]"
+              to={paths.explore}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/40 bg-white/10 px-4 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d994] sm:px-6 sm:py-4"
             >
-              {vi.navigation.createTrip}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="size-5 shrink-0"
+              >
+                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+              Khám phá Huế
             </Link>
-
-            {isAuthenticated ? (
-              <Link
-                className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#E6DCEC] bg-[#EDE5F5] text-sm font-semibold text-[#57347D] transition-colors hover:bg-[#E2D5EF]"
-                to={paths.accountSettings}
-                aria-label={userName}
-                title={userName}
-              >
-                {userName.slice(0, 1).toUpperCase()}
-              </Link>
-            ) : (
-              <Link
-                className="flex size-10 shrink-0 items-center justify-center rounded-full border border-[#E6DCEC] bg-white text-sm font-semibold text-[#57347D] transition-colors hover:bg-[#EDE5F5]"
-                to={paths.login}
-                aria-label={vi.navigation.signIn}
-                title={vi.navigation.signIn}
-              >
-                <span aria-hidden="true">↗</span>
-              </Link>
-            )}
-          </div>
-        </nav>
-
-        {/* Secondary mobile navigation */}
-        <div className="border-t border-[#E9E0D5]/70 px-3 py-2 lg:hidden">
-          <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-1 overflow-x-auto">
-            <MobileTopTab to={paths.home} label={vi.navigation.home} />
-            <MobileTopTab to={paths.explore} label={vi.navigation.explore} />
-            <MobileTopTab to={paths.map} label={vi.navigation.map} />
-            <MobileTopTab to={paths.accountTrips} label={vi.navigation.myTrips} />
-          </div>
-        </div>
-      </header>
-
-      {/* Authentication notice */}
-      <AuthResumeNotice />
-
-      {/* Page content */}
-      <main className="min-w-0">
-        <Outlet />
-      </main>
-
-      {/* ================= FOOTER ================= */}
-      <footer className="border-t border-[#E7DED2] bg-[#F4EFE5] px-4 py-8 sm:px-6 md:py-10">
-        <div className="mx-auto max-w-[1440px]">
-
-          <div className="flex flex-col gap-7 md:flex-row md:items-start md:justify-between">
-
-            {/* Brand */}
-            <div className="max-w-md space-y-3">
-              <Link
-                to={paths.home}
-                className="inline-flex items-center gap-2 rounded-lg transition-opacity hover:opacity-80"
-              >
-                <BrandMark />
-              </Link>
-
-              <p className="max-w-sm text-sm leading-6 text-[#756B65]">
-                Nét Huế – nơi bạn tìm thấy hành trình phù hợp để khám phá
-                di sản, văn hóa và nhịp sống bình yên của cố đô.
-              </p>
-            </div>
-
-            {/* Footer links */}
-            <div className="flex flex-wrap gap-x-8 gap-y-4 text-sm text-[#756B65]">
-              <div className="flex flex-col gap-3">
-                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#57347D]">
-                  {vi.layout.about}
-                </span>
-
-                <Link
-                  to={paths.about}
-                  className="transition-colors hover:text-[#57347D]"
-                >
-                  {vi.layout.about}
-                </Link>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#57347D]">
-                  Pháp lý
-                </span>
-
-                <Link
-                  to={paths.privacy}
-                  className="transition-colors hover:text-[#57347D]"
-                >
-                  {vi.layout.privacy}
-                </Link>
-              </div>
-            </div>
           </div>
 
-          <div className="mt-7 flex flex-col gap-3 border-t border-[#E4DACE] pt-5 text-xs leading-5 text-[#8A8077] sm:flex-row sm:items-center sm:justify-between">
-            <span>{vi.layout.osmCredit}</span>
+          {/* Thẻ kế hoạch trên banner */}
+          <Link
+            to={paths.tripDraft}
+            className="mt-5 flex w-full max-w-sm items-center justify-between gap-3 rounded-xl border border-white/25 bg-white/10 px-3 py-3 text-white shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d994] sm:px-4"
+          >
+            <span className="flex min-w-0 flex-col gap-1">
+              <span className="text-xs text-white/70">
+                Tiếp tục chuyến đi
+              </span>
+              <span className="break-words text-sm font-semibold">
+                Kế hoạch Huế đang dang dở
+              </span>
+            </span>
 
-            <span>
-              © {new Date().getFullYear()} Hue Trip Planner
+            <span className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2 text-xs font-semibold text-[#60378c]">
+              Mở →
+            </span>
+          </Link>
+
+          {/* Các điểm nổi bật */}
+          <div className="mt-7 flex flex-wrap gap-x-5 gap-y-3 border-t border-white/20 pt-5 text-xs text-white/90 sm:mt-8 sm:gap-x-6 sm:text-sm">
+            <span className="inline-flex items-center gap-2">
+              <span className="text-[#f4d994]">✦</span>
+              Di sản và văn hóa
+            </span>
+
+            <span className="inline-flex items-center gap-2">
+              <span className="text-[#f4d994]">✦</span>
+              Khám phá ẩm thực
+            </span>
+
+            <span className="inline-flex items-center gap-2">
+              <span className="text-[#f4d994]">✦</span>
+              Lịch trình cá nhân hóa
             </span>
           </div>
         </div>
-      </footer>
+      </div>
+    </section>
+  )
+}
 
-      {/* ================= MOBILE BOTTOM NAVIGATION ================= */}
-      <nav
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-[#E7DED2] bg-[#FAF7F0]/95 px-1 pt-1.5 pb-[env(safe-area-inset-bottom)] shadow-[0_-5px_24px_rgba(48,35,57,0.06)] backdrop-blur-xl md:hidden"
-        aria-label={vi.layout.mobileNavigation}
-      >
-        <MobileTab to={paths.home} label={vi.navigation.home} />
+/**
+ * Lớp mây chuyển cảnh giữa Hero và phần nội dung.
+ * Tiến trình thay đổi theo scrollY, nên khi cuộn ngược lên,
+ * lớp mây cũng chuyển động ngược lại.
+ */
+function CloudTransition() {
+  const [progress, setProgress] = useState(0)
 
-        <MobileTab to={paths.explore} label={vi.navigation.explore} />
+  useEffect(() => {
+    let frame = 0
 
-        <Link
-          to={paths.planNew}
-          className="-mt-4 mx-1 flex min-h-[62px] flex-col items-center justify-center gap-1 rounded-2xl border-[3px] border-[#FAF7F0] bg-[#57347D] px-1 text-center text-[10px] font-semibold leading-tight text-white shadow-[0_5px_15px_rgba(87,52,125,0.2)] transition-all duration-300 hover:bg-[#462765] active:scale-95"
-          aria-label={vi.navigation.createTrip}
-        >
-          <span aria-hidden="true" className="text-xl leading-none">
-            ＋
-          </span>
-          <span>{vi.navigation.createTrip}</span>
-        </Link>
+    const updateProgress = () => {
+      cancelAnimationFrame(frame)
 
-        <MobileTab to={paths.map} label={vi.navigation.map} />
+      frame = requestAnimationFrame(() => {
+        const distance = Math.max(window.innerHeight * 0.4, 1)
+        const value = Math.min(
+          1,
+          Math.max(0, window.scrollY / distance),
+        )
 
-        <MobileTab
-          to={isAuthenticated ? paths.accountTrips : paths.login}
-          label={vi.navigation.me}
-        />
-      </nav>
+        setProgress(value)
+      })
+    }
+
+    updateProgress()
+
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    window.addEventListener('resize', updateProgress)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', updateProgress)
+      window.removeEventListener('resize', updateProgress)
+    }
+  }, [])
+
+  const cloudStyle = {
+    '--cloud-progress': progress,
+  } as CSSProperties
+
+  return (
+    <div
+      aria-hidden="true"
+      className="cloud-transition"
+      style={cloudStyle}
+    >
+      <div className="cloud-transition__layer cloud-transition__layer--back" />
+      <div className="cloud-transition__layer cloud-transition__layer--front" />
     </div>
   )
 }
@@ -252,45 +194,242 @@ export function PublicLayout() {
 function MobileTab({
   to,
   label,
+  icon,
 }: {
   to: string
   label: string
+  icon: string
 }) {
   return (
     <NavLink
       to={to}
-      end={to === paths.home}
       className={({ isActive }) =>
-        `flex min-h-12 flex-col items-center justify-center rounded-xl px-1 text-center text-[10px] transition-all duration-300 ${isActive
-          ? 'bg-[#EDE5F5] font-semibold text-[#57347D]'
-          : 'text-[#81766D] hover:text-[#57347D]'
-        }`
+        isActive
+          ? 'flex min-w-0 flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium text-primary transition'
+          : 'flex min-w-0 flex-1 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium text-ink-muted transition'
       }
     >
-      {label}
+      <span aria-hidden="true" className="text-lg leading-5">
+        {icon}
+      </span>
+      <span className="truncate">{label}</span>
     </NavLink>
   )
 }
 
-function MobileTopTab({
-  to,
-  label,
-}: {
-  to: string
-  label: string
-}) {
+export function PublicLayout() {
+  const location = useLocation()
+  const auth = useSession()
+  const profile = useProfile()
+
+  const isHome = location.pathname === paths.home
+
+  const userName =
+    profile.data?.displayName ||
+    (typeof auth.session?.user?.user_metadata?.full_name === 'string'
+      ? auth.session.user.user_metadata.full_name
+      : '') ||
+    auth.session?.user?.email?.split('@')[0] ||
+    ''
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [location.pathname])
+
   return (
-    <NavLink
-      to={to}
-      end={to === paths.home}
-      className={({ isActive }) =>
-        `shrink-0 rounded-full px-3 py-2 text-xs transition-colors duration-300 ${isActive
-          ? 'bg-[#EDE5F5] font-semibold text-[#57347D]'
-          : 'text-[#756B65] hover:bg-white hover:text-[#57347D]'
-        }`
-      }
-    >
-      {label}
-    </NavLink>
+    <div className="min-h-screen overflow-x-clip bg-bg text-ink">
+      <a href="#main-content" className="sr-only z-[100] rounded-control bg-white px-4 py-3 text-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Bỏ qua đến nội dung chính</a>
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-line/70 bg-surface/95 backdrop-blur-md">
+        <div className="mx-auto flex min-h-[64px] max-w-content items-center justify-between gap-2 px-3 sm:min-h-[76px] sm:gap-4 sm:px-4 md:px-8">
+          {/* BrandMark tự tạo Link, không bọc Link bên ngoài */}
+          <div className="min-w-0 shrink">
+            <BrandMark />
+          </div>
+
+          <nav
+            aria-label="Điều hướng chính"
+            className="hidden items-center gap-1 lg:flex"
+          >
+            <NavLink
+              to={paths.home}
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? 'rounded-full bg-primary-tint px-4 py-3 text-sm font-medium text-primary transition'
+                  : 'rounded-full px-4 py-3 text-sm font-medium text-ink-muted transition hover:bg-surface-high hover:text-ink'
+              }
+            >
+              Trang chủ
+            </NavLink>
+
+            <NavLink
+              to={paths.explore}
+              className={({ isActive }) =>
+                isActive
+                  ? 'rounded-full bg-primary-tint px-4 py-3 text-sm font-medium text-primary transition'
+                  : 'rounded-full px-4 py-3 text-sm font-medium text-ink-muted transition hover:bg-surface-high hover:text-ink'
+              }
+            >
+              Khám phá
+            </NavLink>
+
+            <NavLink
+              to={paths.map}
+              className={({ isActive }) =>
+                isActive
+                  ? 'rounded-full bg-primary-tint px-4 py-3 text-sm font-medium text-primary transition'
+                  : 'rounded-full px-4 py-3 text-sm font-medium text-ink-muted transition hover:bg-surface-high hover:text-ink'
+              }
+            >
+              Bản đồ
+            </NavLink>
+
+            <NavLink
+              to={paths.accountTrips}
+              className={({ isActive }) =>
+                isActive
+                  ? 'rounded-full bg-primary-tint px-4 py-3 text-sm font-medium text-primary transition'
+                  : 'rounded-full px-4 py-3 text-sm font-medium text-ink-muted transition hover:bg-surface-high hover:text-ink'
+              }
+            >
+              Chuyến đi của tôi
+            </NavLink>
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+            <Link
+              to={paths.planNew}
+              className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg bg-primary px-2.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-primary/90 sm:min-h-11 sm:gap-2 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
+            >
+              <span aria-hidden="true">＋</span>
+              <span className="hidden sm:inline">Tạo lịch trình</span>
+              <span className="sm:hidden">Tạo lịch</span>
+            </Link>
+
+            {auth.session ? (
+              <Link
+                to={paths.accountSettings}
+                className="flex min-w-0 max-w-[180px] items-center gap-2 rounded-full py-2 text-sm font-medium text-ink-muted hover:text-primary"
+                aria-label={`Tài khoản${userName ? ` ${userName}` : ''}`}
+              >
+                <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-white sm:size-9">
+                  {userName ? userName.charAt(0).toUpperCase() : '●'}
+                </span>
+
+                <span className="hidden truncate xl:block">
+                  {userName || 'Tài khoản'}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                to={paths.login}
+                className="hidden min-h-10 items-center justify-center rounded-xl px-2 text-xs font-semibold text-primary hover:bg-primary-tint sm:inline-flex sm:px-3 sm:text-sm"
+              >
+                Đăng nhập
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Hero chỉ xuất hiện ở trang chủ */}
+      {isHome && <LandingHero />}
+
+      {/* Mây chuyển cảnh: chỉ xuất hiện trên trang chủ */}
+      {isHome && <CloudTransition />}
+
+      {/* Giữ nguyên nội dung của các trang */}
+      <main id="main-content" tabIndex={-1} className={isHome ? 'relative z-0' : undefined}>
+        <Outlet />
+      </main>
+
+      {/* Footer */}
+      <footer className="relative z-0 mt-16 border-t border-line bg-surface">
+        <div className="mx-auto max-w-content px-4 py-10 md:px-8">
+          <div className="grid gap-8 md:grid-cols-[1fr_auto_auto] md:gap-16">
+            <div className="max-w-md">
+              <div className="inline-flex items-center gap-3">
+                <BrandMark />
+              </div>
+
+              <p className="mt-3 text-sm leading-6 text-ink-muted">
+                Nền tảng kiến tạo hành trình di sản và trải nghiệm văn hóa
+                Cố Đô Huế tinh tế, chậm rãi dành cho lữ khách trân quý hồn
+                cốt ngàn xưa.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-ink">
+                Khám phá
+              </h2>
+
+              <ul className="mt-3 space-y-2 text-sm text-ink-muted">
+                <li>
+                  <Link to={paths.about} className="hover:text-primary">
+                    Giới thiệu
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to={paths.explore} className="hover:text-primary">
+                    Khám phá Cố Đô
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to={paths.planNew} className="hover:text-primary">
+                    Tạo lịch trình
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-wider text-ink">
+                Pháp lý
+              </h2>
+
+              <ul className="mt-3 space-y-2 text-sm text-ink-muted">
+                <li>
+                  <Link to={paths.privacy} className="hover:text-primary">
+                    Chính sách bảo mật
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-10 flex flex-col gap-3 border-t border-line pt-5 text-xs leading-5 text-ink-muted sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              Bản đồ © OpenStreetMap contributors · © 2025 Cố Đô — Hue Trip Planner
+            </p>
+
+            <p className="font-medium text-secondary">
+              Di sản Hoàng triều Nguyễn · Huế, Việt Nam
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      {/* Điều hướng mobile */}
+      <nav
+        aria-label="Điều hướng trên thiết bị di động"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur-md lg:hidden"
+      >
+        <MobileTab to={paths.home} label="Trang chủ" icon="⌂" />
+        <MobileTab to={paths.explore} label="Khám phá" icon="⌕" />
+        <MobileTab to={paths.map} label="Bản đồ" icon="⌖" />
+
+        <MobileTab
+          to={auth.session ? paths.accountTrips : paths.login}
+          label="Chuyến đi"
+          icon="▤"
+        />
+      </nav>
+    </div>
   )
 }
+
+export default PublicLayout

@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Source+Serif+4:wght@500;600;700&display=swap&subset=vietnamese,latin');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ========================================
+   GLOBAL STYLES
+======================================== */
 
 :root {
   font-family: 'Be Vietnam Pro', sans-serif;
@@ -11,11 +16,179 @@
   text-rendering: optimizeLegibility;
 }
 
-body { margin: 0; min-width: 320px; min-height: 100vh; }
-h1, h2, h3 { font-family: 'Source Serif 4', serif; }
-a { color: inherit; text-decoration: none; }
-:focus-visible { outline: 3px solid theme('colors.accent.DEFAULT'); outline-offset: 3px; }
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Source Serif 4', serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid theme('colors.accent.DEFAULT');
+  outline-offset: 3px;
+}
+
+/* ========================================
+   COMPONENT STYLES
+======================================== */
+
 @layer components {
-  .admin-input { @apply min-h-11 w-full rounded-control border border-line bg-white px-3 py-2 text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20; }
-  .admin-button { @apply inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-4 py-2 font-semibold text-white transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50; }
+  .admin-input {
+    @apply min-h-11 w-full rounded-control border border-line bg-white px-3 py-2 text-ink outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20;
+  }
+
+  .admin-button {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-4 py-2 font-semibold text-white transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
+
+/* ========================================
+   HERO CINEMATIC ZOOM
+   Chuyển động chậm, tạo chiều sâu cho ảnh nền
+======================================== */
+
+.hero-zoom-out {
+  transform: scale(1.12);
+  transform-origin: center center;
+  animation: hero-cinematic-zoom 8s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes hero-cinematic-zoom {
+  0% {
+    transform: scale(1.12);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+/* Chuyển động chậm hơn trên thiết bị di động */
+@media (max-width: 640px) {
+  .hero-zoom-out {
+    animation-duration: 12s;
+  }
+}
+
+/* ========================================
+   CLOUD TRANSITION
+   Chuyển cảnh giữa Hero và nội dung trang chủ
+======================================== */
+
+.cloud-transition {
+  --cloud-progress: 0;
+
+  position: relative;
+  z-index: 10;
+  height: 180px;
+  margin-top: -100px;
+  margin-bottom: -80px;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.cloud-transition__layer {
+  position: absolute;
+  inset: 0 -12%;
+  height: 200px;
+  opacity: var(--cloud-progress);
+  will-change: transform, opacity;
+  background-repeat: no-repeat;
+}
+
+/* Lớp mây phía xa */
+.cloud-transition__layer--back {
+  z-index: 0;
+
+  background:
+    radial-gradient(ellipse 25% 64% at 10% 82%,
+      rgba(255, 255, 255, 0.96) 0 55%,
+      transparent 57%),
+    radial-gradient(ellipse 30% 75% at 36% 78%,
+      rgba(255, 255, 255, 0.98) 0 55%,
+      transparent 57%),
+    radial-gradient(ellipse 29% 70% at 65% 80%,
+      rgba(255, 255, 255, 0.96) 0 55%,
+      transparent 57%),
+    radial-gradient(ellipse 25% 65% at 92% 83%,
+      rgba(255, 255, 255, 0.96) 0 55%,
+      transparent 57%);
+
+  transform: translate3d(0,
+      calc((1 - var(--cloud-progress)) * 100px),
+      0);
+}
+
+/* Lớp mây phía trước */
+.cloud-transition__layer--front {
+  z-index: 1;
+
+  background:
+    radial-gradient(ellipse 20% 58% at 20% 65%,
+      #fff 0 55%,
+      transparent 57%),
+    radial-gradient(ellipse 24% 72% at 48% 62%,
+      #fff 0 55%,
+      transparent 57%),
+    radial-gradient(ellipse 22% 62% at 76% 67%,
+      #fff 0 55%,
+      transparent 57%),
+    linear-gradient(to bottom,
+      transparent 0%,
+      rgba(255, 255, 255, 0.92) 65%,
+      #fff 100%);
+
+  transform: translate3d(0,
+      calc((1 - var(--cloud-progress)) * 135px),
+      0);
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 640px) {
+  .cloud-transition {
+    height: 145px;
+    margin-top: -75px;
+    margin-bottom: -65px;
+  }
+
+  .cloud-transition__layer {
+    height: 165px;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   Tôn trọng cài đặt giảm chuyển động
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom-out {
+    animation: none;
+    transform: scale(1.06);
+    will-change: auto;
+  }
+
+  .cloud-transition__layer {
+    transform: none;
+    will-change: auto;
+  }
 }

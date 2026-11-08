@@ -97,7 +97,7 @@ describe('PublicLayout Navbar', () => {
       expect(header).not.toBeNull()
       expect(header?.className).toContain('sticky')
       expect(header?.className).toContain('top-0')
-      expect(header?.className).toContain('z-30')
+      expect(header?.className).toContain('z-50')
     } finally {
       await rendered.cleanup()
     }
