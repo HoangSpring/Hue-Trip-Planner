@@ -9,13 +9,14 @@ import { paths } from '@/app/paths'
 import { vi } from '@/lib/strings/vi'
 import { ImageCredit } from '@/components/ui/ImageCredit'
 import { PlaceCard } from '@/components/ui/PlaceCard'
-import { MapView } from '@/features/map/MapView'
+import { DeferredPlaceMap } from './DeferredPlaceMap'
 import { PlacePhoto } from '@/components/ui/PlacePhoto'
 import { SavedPlaceButton } from '@/features/saved/SavedPlaceButton'
 import { AddToTripDialog } from '@/features/trip-editor/components/AddToTripDialog'
 import { placeSummarySchema } from '@shared/schemas/place'
 import { Helmet } from 'react-helmet-async'
 import { buildPlaceJsonLd, serializeJsonLd } from './placeJsonLd'
+import { PlacePageSkeleton } from './PlacePageSkeleton'
 
 export default function PlacePage() {
   const { slug = '' } = useParams()
@@ -42,24 +43,7 @@ export default function PlacePage() {
   }, [place])
 
   if (query.isPending) {
-    return (
-      <div
-        role="status"
-        aria-label={vi.place.loading}
-        className="mx-auto max-w-[1440px] animate-pulse px-4 py-10 md:px-8"
-      >
-        <div className="h-5 w-48 rounded-full bg-[#eae3d7]" />
-        <div className="mt-6 grid gap-3 lg:grid-cols-[1.8fr_1fr]">
-          <div className="aspect-[16/10] rounded-[20px] bg-[#eae3d7]" />
-          <div className="hidden gap-3 lg:grid">
-            <div className="rounded-[20px] bg-[#eae3d7]" />
-            <div className="rounded-[20px] bg-[#eae3d7]" />
-          </div>
-        </div>
-        <div className="mt-8 h-10 w-2/3 rounded bg-[#eae3d7]" />
-        <div className="mt-5 h-32 rounded-[20px] bg-[#eae3d7]" />
-      </div>
-    )
+    return <PlacePageSkeleton />
   }
 
   if (query.isError) {
@@ -526,7 +510,7 @@ export default function PlacePage() {
               </div>
 
               <div className="mt-3 overflow-hidden rounded-[15px] border border-[#eee6da] bg-[#f3edf5]">
-                <MapView places={[mapItem]} height="250px" />
+                <DeferredPlaceMap place={mapItem} height="250px" />
               </div>
 
               {place.address && (

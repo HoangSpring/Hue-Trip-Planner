@@ -205,7 +205,7 @@ export default function ExplorePage() {
             aria-label={vi.explore.loading}
             className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
-            {Array.from({ length: 8 }, (_, index) => (
+            {Array.from({ length: 24 }, (_, index) => (
               <div
                 key={index}
                 className="overflow-hidden rounded-2xl border border-[#eee6dc] bg-white shadow-sm"

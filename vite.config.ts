@@ -30,11 +30,11 @@ export default defineConfig({
         manualChunks(id) {
           const moduleId = id.replaceAll('\\', '/')
           if (!moduleId.includes('/node_modules/')) return
+          if (moduleId.includes('/leaflet/') || moduleId.includes('/leaflet.markercluster/') || moduleId.includes('/react-leaflet/')) return
           if (moduleId.includes('/react-router')) return 'router-vendor'
           if (moduleId.includes('/@supabase/')) return 'supabase-vendor'
           if (moduleId.includes('/@tanstack/')) return 'query-vendor'
           if (moduleId.includes('/react/') || moduleId.includes('/react-dom/') || moduleId.includes('/scheduler/')) return 'react-vendor'
-          return 'vendor'
         },
       },
     },

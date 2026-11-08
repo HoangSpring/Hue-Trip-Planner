@@ -20,6 +20,8 @@ import { ForbiddenPage } from '@/features/static/ForbiddenPage'
 import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { vi } from '@/lib/strings/vi'
 import { supabaseClient } from '@/lib/supabase'
+import { PlacePageSkeleton } from '@/features/place/PlacePageSkeleton'
+import { ExplorePageSkeleton } from '@/features/explore/ExplorePageSkeleton'
 
 const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const MapPage = lazy(() => import('@/features/map/MapPage'))
@@ -67,8 +69,8 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
   children: [
     { element: <PublicLayout />, children: [
       { index: true, element: <Suspense fallback={loading}><HomePage /></Suspense> },
-      { path: paths.explore, element: <Suspense fallback={loading}><ExplorePage /></Suspense> },
-      { path: paths.placePattern, element: <Suspense fallback={loading}><PlacePage /></Suspense> },
+      { path: paths.explore, element: <Suspense fallback={<ExplorePageSkeleton />}><ExplorePage /></Suspense> },
+      { path: paths.placePattern, element: <Suspense fallback={<PlacePageSkeleton />}><PlacePage /></Suspense> },
       { path: paths.map, element: <Suspense fallback={loading}><MapPage /></Suspense> },
       { path: paths.about, element: <Suspense fallback={loading}><AboutPage /></Suspense> },
       { path: paths.privacy, element: <Suspense fallback={loading}><PrivacyPage /></Suspense> },
