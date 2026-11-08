@@ -14,6 +14,8 @@ import { PlacePhoto } from '@/components/ui/PlacePhoto'
 import { SavedPlaceButton } from '@/features/saved/SavedPlaceButton'
 import { AddToTripDialog } from '@/features/trip-editor/components/AddToTripDialog'
 import { placeSummarySchema } from '@shared/schemas/place'
+import { Helmet } from 'react-helmet-async'
+import { buildPlaceJsonLd, serializeJsonLd } from './placeJsonLd'
 
 export default function PlacePage() {
   const { slug = '' } = useParams()
@@ -27,30 +29,16 @@ export default function PlacePage() {
 
   const place = query.data?.place
 
+  const pageDescription = place?.shortDescription || place?.description || `${place?.name ?? 'Địa điểm Huế'} · ${brand.description}`
   useEffect(() => {
-    if (!place) return
-
-    document.title = `${place.name} · ${brand.name}`
-
-    let description =
-      document.querySelector<HTMLMetaElement>(
-        'meta[name="description"]',
-      )
-
-    if (!description) {
-      description = document.createElement('meta')
-      description.name = 'description'
-      document.head.append(description)
-    }
-
-    description.content =
-      place.shortDescription ||
-      place.description ||
-      `${place.name} · ${brand.description}`
-
-    return () => {
-      description?.removeAttribute('content')
-    }
+    const current = document.getElementById('place-jsonld')
+    if (!place) { current?.remove(); return }
+    const script = document.createElement('script')
+    script.id = 'place-jsonld'
+    script.type = 'application/ld+json'
+    script.textContent = serializeJsonLd(buildPlaceJsonLd(place))
+    document.head.append(script)
+    return () => script.remove()
   }, [place])
 
   if (query.isPending) {
@@ -160,6 +148,16 @@ export default function PlacePage() {
 
   return (
     <article className="min-h-screen bg-[#fcf8f0] text-[#302536]">
+      <Helmet>
+        <title>{place.name} · {brand.name}</title>
+        <meta name="description" content={pageDescription} />
+        <meta name="robots" content="index,follow" />
+        <link rel="canonical" href={`${window.location.origin}/place/${encodeURIComponent(place.slug)}`} />
+        <meta property="og:title" content={`${place.name} · ${brand.name}`} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:url" content={`${window.location.origin}/place/${encodeURIComponent(place.slug)}`} />
+        {place.coverImageUrl && <meta property="og:image" content={place.coverImageUrl} />}
+      </Helmet>
       <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-5 sm:px-6 lg:px-8 lg:pt-7">
 
         {/* Breadcrumb và thao tác */}

@@ -176,6 +176,37 @@ async function main(): Promise<void> {
     return `HTTP ${response.status}`
   })
 
+  await run('GET /api/sitemap.xml: URL công khai và lastmod', async () => {
+    const response = await app.request('/api/sitemap.xml')
+    assert(response.status === 200, `HTTP ${response.status}`)
+    assert(Boolean(response.headers.get('content-type')?.includes('application/xml')), 'Content-Type không phải XML')
+    const body = await response.text()
+    assert(body.includes('/explore') && body.includes('/privacy'), 'Sitemap thiếu route tĩnh')
+    if (publishedSlugs.length > 0) assert(body.includes(`/place/${encodeURIComponent(publishedSlugs[0])}`), 'Sitemap thiếu place published')
+    return `HTTP 200; published=${publishedSlugs.length}; cache=${response.headers.get('cache-control') ?? 'none'}`
+  })
+
+  if (publishedSlugs.length > 0) {
+    await run('GET /api/og/place/:slug thật: metadata không lỗi', async () => {
+      const slug = publishedSlugs[0]
+      const response = await app.request(`/api/og/place/${encodeURIComponent(slug)}`)
+      assert(response.status === 200, `HTTP ${response.status}`)
+      const html = await response.text()
+      assert(html.includes('og:title') && html.includes('og:image') && html.includes('og:url'), 'OG metadata bị thiếu')
+      return `HTTP 200; slug=${slug}; HTML metadata đầy đủ`
+    })
+  } else {
+    record('GET /api/og/place/:slug thật: metadata không lỗi', 'SKIP', 'Không có địa điểm published')
+  }
+
+  await run('GET /api/og/share/token-sai: 404, noindex và no-store', async () => {
+    const response = await app.request('/api/og/share/not-a-valid-token')
+    assert(response.status === 404, `HTTP ${response.status}`)
+    assert(response.headers.get('x-robots-tag') === 'noindex', 'Thiếu X-Robots-Tag noindex')
+    assert(response.headers.get('cache-control') === 'no-store', 'Thiếu Cache-Control no-store')
+    return `HTTP 404; noindex; no-store`
+  })
+
   const draftLookupKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   const draftPlaces = await readSupabase(
     url,

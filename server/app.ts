@@ -12,6 +12,7 @@ import { createMeRoutes } from './routes/me'
 import { createSavedPlacesRoutes } from './routes/savedPlaces'
 import { createTripSharingRoutes } from './routes/tripSharing'
 import { createAdminRoutes } from './routes/admin'
+import { createSeoRoutes } from './routes/seo'
 
 export const app = new Hono<ApiEnv>()
 
@@ -21,6 +22,7 @@ app.notFound((context) => context.json({ error: { code: 'NOT_FOUND', message: 'K
 
 app.get('/api/health', publicCache, (context) => context.json({ status: 'ok' as const }))
 app.route('/api', createPublicPlaceRoutes())
+app.route('/api', createSeoRoutes())
 app.route('/api', createGenerateTripRoutes())
 app.route('/api', createAlternativesRoute())
 app.route('/api', createRegenerateDayRoute())

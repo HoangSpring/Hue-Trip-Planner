@@ -48,6 +48,12 @@ export class PlaceService {
     }
   }
 
+  async listPublishedSitemapPlaces() {
+    const { data, error } = await this.client.from('places').select('slug,updated_at').eq('status', 'published').order('slug', { ascending: true }).range(0, 4999)
+    if (error || !data) throw serviceUnavailable()
+    return data.map((place) => ({ slug: place.slug, lastmod: place.updated_at }))
+  }
+
   async validateTagSlugs(slugs: string[]): Promise<boolean> {
     if (!slugs.length) return true
     const { data, error } = await this.client.from('tags').select('slug').eq('kind', 'interest').in('slug', slugs)

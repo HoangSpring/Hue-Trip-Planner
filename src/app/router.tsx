@@ -1,8 +1,9 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate, Outlet, useParams } from 'react-router-dom'
+import { createBrowserRouter, Navigate, useParams } from 'react-router-dom'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { uuidSchema } from '@shared/schemas'
 import { AuthProvider } from './authState'
+import { SeoBoundary } from './SeoBoundary'
 import { RequireAdmin } from './guards/RequireAdmin'
 import { RequireAuth } from './guards/RequireAuth'
 import { RequireGuest } from './guards/RequireGuest'
@@ -20,7 +21,6 @@ import { NotFoundPage } from '@/features/static/NotFoundPage'
 import { vi } from '@/lib/strings/vi'
 import { supabaseClient } from '@/lib/supabase'
 
-const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
 const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const MapPage = lazy(() => import('@/features/map/MapPage'))
 const PlacePage = lazy(() => import('@/features/place/PlacePage'))
@@ -30,6 +30,7 @@ const GeneratingPage = lazy(() => import('@/features/trip-wizard/GeneratingPage'
 const TripEditorPage = lazy(() => import('@/features/trip-editor/TripEditorPage').then(module => ({ default: module.TripEditorPage })))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
+const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
@@ -43,8 +44,7 @@ const AdminPlaceListPage = lazy(() => import('@/features/admin/AdminPlaceListPag
 const AdminPlaceFormPage = lazy(() => import('@/features/admin/AdminPlaceFormPage'))
 const AdminImportPage = lazy(() => import('@/features/admin/AdminImportPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
-const page = (title: string, noindex = false) => <Suspense fallback={loading}><PlaceholderPage title={title} noindex={noindex} /></Suspense>
-
+const page = (title: string) => <Suspense fallback={loading}><PlaceholderPage title={title} /></Suspense>
 function TripIdPage() {
   const { id = '' } = useParams()
   return uuidSchema.safeParse(id).success
@@ -63,7 +63,7 @@ export const routePaths = [
 
 export function createAppRoutes(authClient: SupabaseClient | null = supabaseClient) {
   return [{
-  element: <AuthProvider client={authClient}><Outlet /></AuthProvider>, errorElement: <ErrorPage />,
+  element: <AuthProvider client={authClient}><SeoBoundary /></AuthProvider>, errorElement: <ErrorPage />,
   children: [
     { element: <PublicLayout />, children: [
       { index: true, element: <Suspense fallback={loading}><HomePage /></Suspense> },
