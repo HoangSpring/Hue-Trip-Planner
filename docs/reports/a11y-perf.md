@@ -34,3 +34,4 @@ Trang chủ mobile chưa đạt LCP và điểm performance mục tiêu. CLS ở
 - Chưa hoàn thành kiểm tra bàn phím thủ công và focus trap trong modal.
 - Preview cục bộ không mô phỏng đầy đủ rewrite bot của Vercel; cần kiểm tra OG bằng Facebook Sharing Debugger và công cụ preview Zalo sau deploy.
 - Các điểm hiệu năng chưa đạt cần xử lý trước khi đánh dấu T-048 hoàn thành.
+- Audit được chạy trên working tree. Một số thay đổi liên quan trong `PublicLayout.tsx`, `BrandMark.tsx`, `HomePage.tsx` và `styles.css` còn lẫn với chỉnh sửa giao diện người dùng và chưa được đưa vào commit T-048; cần review/tách riêng trước khi merge.

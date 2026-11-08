@@ -61,6 +61,7 @@ Không thay đổi phạm vi tính năng. Audit hiện dùng route đại diện
 - CLS trang chi tiết địa điểm: 0.580 mobile, 0.200 desktop; Explore desktop: 0.380.
 - Rewrite bot trong `vercel.json` cần xác minh trên deployment thật; `vercel dev` không mô phỏng điều kiện header `has` đầy đủ.
 - Thay đổi T-048 có phần nằm trong các file giao diện đang chứa chỉnh sửa người dùng từ trước; các chỉnh sửa đó được giữ nguyên và không được xem là commit T-048 nếu chưa được stage riêng.
+- Audit axe cuối được chạy trên working tree hiện thời. Một số chỉnh sửa giao diện liên quan (skip link, BrandMark, skeleton trang chủ và CSS hero) vẫn đang ở working tree cùng với bản thiết kế người dùng đã sửa; chúng chưa nằm trong commit T-048 vì không thể tách an toàn khỏi phần người dùng sở hữu. Do đó cần review phần diff còn lại trước khi xem commit là bản đầy đủ của audit.
 
 ## 8. Cần chủ dự án
 
