@@ -30,7 +30,8 @@ const GeneratingPage = lazy(() => import('@/features/trip-wizard/GeneratingPage'
 const TripEditorPage = lazy(() => import('@/features/trip-editor/TripEditorPage').then(module => ({ default: module.TripEditorPage })))
 const ComponentGalleryPage = lazy(() => import('@/features/dev/ComponentGalleryPage').then(module => ({ default: module.ComponentGalleryPage })))
 const DevAuthPage = lazy(() => import('@/features/dev/DevAuthPage'))
-const PlaceholderPage = lazy(() => import('@/features/static/PlaceholderPage'))
+const AboutPage = lazy(() => import('@/features/static/AboutPage'))
+const PrivacyPage = lazy(() => import('@/features/static/PrivacyPage'))
 const LoginPage = lazy(() => import('@/features/auth/pages/LoginPage'))
 const RegisterPage = lazy(() => import('@/features/auth/pages/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'))
@@ -44,7 +45,6 @@ const AdminPlaceListPage = lazy(() => import('@/features/admin/AdminPlaceListPag
 const AdminPlaceFormPage = lazy(() => import('@/features/admin/AdminPlaceFormPage'))
 const AdminImportPage = lazy(() => import('@/features/admin/AdminImportPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
-const page = (title: string) => <Suspense fallback={loading}><PlaceholderPage title={title} /></Suspense>
 function TripIdPage() {
   const { id = '' } = useParams()
   return uuidSchema.safeParse(id).success
@@ -70,8 +70,8 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.explore, element: <Suspense fallback={loading}><ExplorePage /></Suspense> },
       { path: paths.placePattern, element: <Suspense fallback={loading}><PlacePage /></Suspense> },
       { path: paths.map, element: <Suspense fallback={loading}><MapPage /></Suspense> },
-      { path: paths.about, element: page(vi.pages.about) },
-      { path: paths.privacy, element: page(vi.pages.privacy) },
+      { path: paths.about, element: <Suspense fallback={loading}><AboutPage /></Suspense> },
+      { path: paths.privacy, element: <Suspense fallback={loading}><PrivacyPage /></Suspense> },
       ...(import.meta.env.DEV ? [
         { path: paths.devComponents, element: <Suspense fallback={loading}><ComponentGalleryPage /></Suspense> },
         { path: paths.devAuth, element: <Suspense fallback={loading}><DevAuthPage /></Suspense> },
