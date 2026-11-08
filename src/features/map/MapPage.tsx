@@ -86,20 +86,20 @@ export default function MapPage() {
               Bản đồ khám phá Huế
             </h1>
 
-            <p className="mt-2 max-w-xl text-sm leading-6 text-[#777068]">
+            <p className="mt-2 max-w-xl text-sm leading-6 text-[#62584f]">
               Tìm những điểm đến yêu thích, khám phá nét đẹp Cố Đô
               và bắt đầu hành trình theo cách của riêng bạn.
             </p>
           </div>
 
           <div className="rounded-2xl border border-[#e9e0d2] bg-white/80 px-4 py-3">
-            <p className="text-xs text-[#81786d]">
+            <p className="text-xs text-[#62584f]">
               Địa điểm đang hiển thị
             </p>
 
             <p className="mt-1 font-serif text-2xl font-semibold text-[#59348a]">
               {places.data ? visiblePlaces.length : '—'}
-              <span className="ml-1 text-sm font-normal text-[#81786d]">
+              <span className="ml-1 text-sm font-normal text-[#62584f]">
                 địa điểm
               </span>
             </p>
@@ -189,7 +189,7 @@ export default function MapPage() {
               </div>
 
               <div className="mt-4 flex items-center justify-between gap-3 text-xs">
-                <span className="text-[#777068]">
+                <span className="text-[#62584f]">
                   {search ? 'Kết quả tìm kiếm' : 'Khám phá quanh Huế'}
                 </span>
 
@@ -210,7 +210,7 @@ export default function MapPage() {
                     />
                   ))}
 
-                  <p className="text-center text-xs text-[#81786d]">
+                  <p className="text-center text-xs text-[#62584f]">
                     Đang tìm những điểm đến dành cho bạn...
                   </p>
                 </div>
@@ -225,7 +225,7 @@ export default function MapPage() {
                     Chưa thể tải bản đồ
                   </p>
 
-                  <p className="mt-2 text-sm text-[#81786d]">
+                  <p className="mt-2 text-sm text-[#62584f]">
                     Đã có lỗi khi tải danh sách địa điểm.
                   </p>
 
@@ -304,7 +304,7 @@ export default function MapPage() {
                                 selectPlace(place)
                               }}
                               className="inline-flex min-h-8 items-center gap-1 rounded-lg bg-[#f2ede5] px-2.5 py-1.5 text-[11px] font-semibold text-[#59348a] transition hover:bg-[#e8def3]"
-                              aria-label={`Xem ${place.name} trên bản đồ`}
+                              aria-label={`Xem trên bản đồ: ${place.name}`}
                             >
                               <span aria-hidden="true">⌖</span>
                               Xem trên bản đồ
@@ -322,7 +322,7 @@ export default function MapPage() {
                     Chưa tìm thấy điểm đến
                   </p>
 
-                  <p className="mt-2 text-sm leading-6 text-[#81786d]">
+                  <p className="mt-2 text-sm leading-6 text-[#62584f]">
                     Thử một từ khóa khác hoặc chọn danh mục khác để
                     tiếp tục khám phá Huế.
                   </p>
@@ -341,7 +341,7 @@ export default function MapPage() {
               )}
             </div>
 
-            <div className="border-t border-[#eee6d9] px-4 py-3 text-[11px] leading-5 text-[#81786d]">
+            <div className="border-t border-[#eee6d9] px-4 py-3 text-[11px] leading-5 text-[#62584f]">
               <span className="text-[#247466]">✦</span>{' '}
               Mỗi điểm đến là một câu chuyện đang chờ bạn khám phá.
             </div>
@@ -358,7 +358,7 @@ export default function MapPage() {
                 Dạo bước giữa lòng Cố Đô
               </p>
 
-              <p className="mt-1 text-xs text-[#81786d]">
+              <p className="mt-1 text-xs text-[#62584f]">
                 {visiblePlaces.length} điểm đến đang hiển thị
               </p>
             </div>
@@ -379,7 +379,7 @@ export default function MapPage() {
                     Bản đồ hành trình Huế
                   </h2>
 
-                  <p className="mt-2 text-sm leading-6 text-[#81786d]">
+                  <p className="mt-2 text-sm leading-6 text-[#62584f]">
                     Chọn một địa điểm hoặc danh mục để bắt đầu khám phá.
                   </p>
                 </div>
@@ -392,7 +392,7 @@ export default function MapPage() {
                 Khám phá Huế theo nhịp riêng của bạn
               </div>
 
-              <div className="rounded-lg bg-[#fffdf8]/90 px-3 py-2 text-[10px] text-[#81786d] shadow-sm">
+              <div className="rounded-lg bg-[#fffdf8]/90 px-3 py-2 text-[10px] text-[#62584f] shadow-sm">
                 Bản đồ © OpenStreetMap contributors
               </div>
             </div>

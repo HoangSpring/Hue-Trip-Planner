@@ -164,7 +164,7 @@ export default function PlacePage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-2 text-xs text-[#857a82]"
+            className="flex flex-wrap items-center gap-2 text-xs text-[#62584f]"
           >
             <Link
               to={paths.home}
@@ -274,7 +274,7 @@ export default function PlacePage() {
 
                 {images.length === 1 && (
                   <div className="flex min-h-[145px] items-center justify-center rounded-[18px] border border-dashed border-[#d9cebd] bg-[#f3eee5] p-5 text-center md:min-h-0">
-                    <p className="max-w-40 font-serif text-sm leading-6 text-[#897b88]">
+                    <p className="max-w-40 font-serif text-sm leading-6 text-[#62584f]">
                       Khám phá những câu chuyện của vùng đất Cố đô
                     </p>
                   </div>
@@ -433,7 +433,7 @@ export default function PlacePage() {
                 </p>
               )}
 
-              <p className="mt-5 border-l-2 border-[#bda4d9] pl-4 text-xs leading-6 text-[#8b7e88]">
+              <p className="mt-5 border-l-2 border-[#bda4d9] pl-4 text-xs leading-6 text-[#62584f]">
                 {vi.place.visitNote}
                 {place.lastVerifiedAt &&
                   ` Cập nhật gần nhất: ${new Date(place.lastVerifiedAt).toLocaleDateString('vi-VN')}.`}
@@ -485,7 +485,7 @@ export default function PlacePage() {
                   <span className="size-1.5 rounded-full bg-[#36977b]" />
                   Thông tin tham quan
                 </span>
-                <span className="text-[10px] text-[#8b7e88]">
+                <span className="text-[10px] text-[#62584f]">
                   {place.lastVerifiedAt
                     ? `Cập nhật ${new Date(place.lastVerifiedAt).toLocaleDateString('vi-VN')}`
                     : 'Địa điểm Huế'}
@@ -496,7 +496,7 @@ export default function PlacePage() {
                 Đưa vào hành trình
               </h2>
 
-              <p className="mt-2 text-sm leading-6 text-[#827681]">
+              <p className="mt-2 text-sm leading-6 text-[#62584f]">
                 Lưu địa điểm này vào kế hoạch khám phá Huế của bạn.
               </p>
 
@@ -520,7 +520,7 @@ export default function PlacePage() {
                 <h3 className="font-serif text-lg font-semibold text-[#302536]">
                   {vi.place.locationTitle}
                 </h3>
-                <span className="text-xs text-[#8b7e88]">
+                <span className="text-xs text-[#62584f]">
                   Vị trí địa lý
                 </span>
               </div>
@@ -564,7 +564,7 @@ export default function PlacePage() {
                   <div className="mt-4 space-y-4 text-sm">
                     {place.bestTime.length > 0 && (
                       <div>
-                        <p className="text-xs text-[#8b7e88]">
+                        <p className="text-xs text-[#62584f]">
                           Thời điểm phù hợp
                         </p>
                         <p className="mt-1 font-medium text-[#49362d]">
@@ -575,7 +575,7 @@ export default function PlacePage() {
 
                     {place.visitDurationMin != null && (
                       <div>
-                        <p className="text-xs text-[#8b7e88]">
+                        <p className="text-xs text-[#62584f]">
                           Thời lượng dự kiến
                         </p>
                         <p className="mt-1 font-medium text-[#49362d]">
@@ -604,7 +604,7 @@ export default function PlacePage() {
                 Có những vùng đất không cần vội vàng, chỉ cần chậm lại để cảm nhận.
               </p>
               <div className="mx-auto mt-4 h-px w-10 bg-[#cbb9d9]" />
-              <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8b7e88]">
+              <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#62584f]">
                 Cảm hứng từ đất Cố đô
               </p>
             </section>
@@ -639,13 +639,13 @@ function QuickInfo({
       <span className="flex size-8 items-center justify-center rounded-xl bg-white text-lg text-primary shadow-sm">
         {icon}
       </span>
-      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.09em] text-[#8b7e88]">
+      <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.09em] text-[#62584f]">
         {label}
       </p>
       <p className="mt-2 break-words font-serif text-base font-semibold text-[#302536]">
         {value}
       </p>
-      <p className="mt-1 text-[11px] leading-5 text-[#8b7e88]">
+      <p className="mt-1 text-[11px] leading-5 text-[#62584f]">
         {note}
       </p>
     </div>

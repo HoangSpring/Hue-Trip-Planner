@@ -12,5 +12,5 @@ export function PlacePhoto({ src, alt, loading = 'lazy', className = '' }: { src
       <path d="M92 201h191" stroke="#a57f4d" strokeWidth="10" strokeLinecap="round"/>
     </svg>
   </div>
-  return <img src={src} alt={alt} loading={loading} onError={() => setFailed(true)} className={`h-full w-full object-cover ${className}`} />
+  return <img src={src} alt={alt} width={480} height={270} decoding="async" loading={loading} onError={() => setFailed(true)} className={`h-full w-full object-cover ${className}`} />
 }

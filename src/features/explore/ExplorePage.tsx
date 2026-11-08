@@ -73,7 +73,7 @@ export default function ExplorePage() {
         <div className="relative mx-auto max-w-[1600px] px-4 pb-7 pt-7 md:px-8 md:pb-9 md:pt-10">
           <nav
             aria-label="Đường dẫn"
-            className="mb-5 flex flex-wrap items-center gap-2 text-xs text-[#81766d]"
+            className="mb-5 flex flex-wrap items-center gap-2 text-xs text-[#62584f]"
           >
             <span className="font-semibold uppercase tracking-wide text-[#79541c]">
               ◉ Danh bạ Cố Đô
@@ -99,7 +99,7 @@ export default function ExplorePage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 text-xs text-[#756b62]">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[#62584f]">
               <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-2">
                 <span className="size-2 rounded-full bg-[#70a78f]" />
                 Cập nhật địa điểm
@@ -125,7 +125,7 @@ export default function ExplorePage() {
           />
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#f0ebe3] pt-3">
-            <p className="text-xs leading-5 text-[#81766d]">
+            <p className="text-xs leading-5 text-[#62584f]">
               <span className="font-semibold text-[#59348a]">
                 Gợi ý khám phá:
               </span>{' '}
@@ -167,7 +167,7 @@ export default function ExplorePage() {
               Khám phá điểm đến
             </h2>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#81766d]">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#62584f]">
               <span>
                 {places.data
                   ? vi.explore.placeCount(total)
@@ -191,7 +191,7 @@ export default function ExplorePage() {
                 ▦ Lưới
               </span>
 
-              <span className="px-3 py-2 text-xs text-[#81766d]">
+                <span className="px-3 py-2 text-xs text-[#62584f]">
                 {currentPage}/{totalPages}
               </span>
             </div>
@@ -238,7 +238,7 @@ export default function ExplorePage() {
               {vi.explore.errorTitle}
             </h3>
 
-            <p className="mt-2 text-sm leading-6 text-[#81766d]">
+            <p className="mt-2 text-sm leading-6 text-[#62584f]">
               {vi.explore.errorBody}
             </p>
 
@@ -263,7 +263,7 @@ export default function ExplorePage() {
               {vi.explore.emptyTitle}
             </h3>
 
-            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#81766d]">
+            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#62584f]">
               {vi.explore.emptyBody}
             </p>
 

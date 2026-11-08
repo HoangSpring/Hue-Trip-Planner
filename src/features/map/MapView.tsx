@@ -35,10 +35,10 @@ export const categoryColor: Record<
   string
 > = {
   heritage: '#5B3A8C',
-  food: '#C65D36',
+  food: '#A74625',
   cafe: '#2F6F5E',
-  sightseeing: '#347A9C',
-  shopping: '#B7791F',
+  sightseeing: '#27647F',
+  shopping: '#79500F',
 }
 
 const categoryLabel: Record<

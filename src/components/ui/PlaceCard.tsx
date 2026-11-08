@@ -20,7 +20,6 @@ export function PlaceCard({ place }: { place: PlaceSummary }) {
 
       <Link
         to={paths.place(place.slug)}
-        aria-label={`Xem ${place.name}`}
         className="block"
       >
         <div className="relative aspect-[4/3] overflow-hidden bg-[#eee5d6]">
@@ -68,7 +67,7 @@ export function PlaceCard({ place }: { place: PlaceSummary }) {
         <Link
           to={`${paths.map}?place=${encodeURIComponent(place.id)}`}
           className="inline-flex min-h-10 items-center gap-2 rounded-control border border-primary/30 px-4 py-2 text-sm font-semibold text-primary transition hover:bg-primary-tint"
-          aria-label={`Xem ${place.name} trên bản đồ`}
+          aria-label={`Xem trên bản đồ: ${place.name}`}
         >
           <span aria-hidden="true">⌖</span>
           Xem trên bản đồ
