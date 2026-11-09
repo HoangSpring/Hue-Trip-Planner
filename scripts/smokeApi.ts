@@ -61,7 +61,9 @@ async function main(): Promise<void> {
   const url = process.env.SUPABASE_URL
   const anonKey = process.env.SUPABASE_ANON_KEY
   if (!url || !anonKey) throw new Error('Thiếu cấu hình Supabase URL/anon key trong .env.local')
-  const { app } = await import('../server/app')
+  const app = process.argv.includes('--vercel-bundle')
+    ? (await import('../api/_server.generated/app.js')).app
+    : (await import('../server/app')).app
 
   let publishedSlugs: string[] = []
   let firstPage: ReturnType<typeof paginatedPlacesSchema.parse> | undefined
