@@ -2,15 +2,16 @@
 
 ## 1. Tóm tắt
 
-Runtime Logs production cho thấy Vercel đã khởi tạo `api/[[...route]].js`, nhưng Node ESM không resolve được import `../server/app` và thử URL `/var/task/server/app` không có đuôi tệp. Tái hiện cùng hành vi bằng Node ESM trên repo. Thay vì dựa vào import runtime tới TypeScript source, build giờ tạo một bundle ESM cho app Hono, API function import bundle `.js` bằng đường dẫn có phần mở rộng; `vercel.json` yêu cầu build script tạo bundle trước khi deploy.
+Lỗi đầu tiên là Node ESM không resolve được import extensionless; bundle ESM được thêm trong commit `50fe4b2`. Sau deploy commit đó, Runtime Logs mới cho thấy Vercel bỏ qua `Response` được trả về từ default function và request timeout. Nguyên nhân tiếp theo là chữ ký của `hono/vercel` không phù hợp Vercel Function thường.
 
-Bundle sinh bởi Vite và chạy được trên Node cục bộ; cả smoke API source và smoke trên bundle đều đạt. Vercel CLI không có trong môi trường này, nên chưa tạo/kiểm tra `.vercel/output` và chưa thể khẳng định bản production đã hết lỗi. Cần deploy commit này rồi kiểm tra endpoint production.
+API entry hiện dùng Web Handler `default { fetch(request) }`, bundle vẫn được build từ source. Smoke gọi trực tiếp Web Handler thành công cho health và API. Vercel CLI không có trong môi trường này, nên production chưa được xác nhận; cần deploy commit follow-up rồi kiểm tra endpoint.
 
 ## 2. Task
 
 | Task | Nhánh / commit | Đạt hoàn thành? | Ghi chú |
 |---|---|---|---|
 | Vercel API ESM module resolution | `fix/vercel-api-esm-bundle` / xem hash commit sau cùng | Một phần | Bundle local và smoke bundle đạt; chưa có Vercel CLI hoặc xác minh trên deployment thật. |
+| Vercel Web Handler signature | `fix/vercel-web-handler` / xem hash commit sau cùng | Một phần | Handler và smoke qua; chưa xác minh trên deployment thật. |
 
 ## 3. Nguyên nhân gốc và bằng chứng
 
@@ -18,7 +19,7 @@ Bundle sinh bởi Vite và chạy được trên Node cục bộ; cả smoke API
 - Repo khai báo `"type": "module"`. Trong Node ESM, relative specifier `../server/app` không tự thử `app.js` hay `app.ts`. Chạy `node --input-type=module -e "import('./server/app')..."` trên repo cho đầu ra `ERR_MODULE_NOT_FOUND: file:///D:/Hue%20Trip%20Planner/server/app`.
 - Log Vercel có cùng dạng resolution: importer là `/var/task/api/[[...route]].js`, module URL tìm là `/var/task/server/app`. Điều đó xác nhận entry function đã được chuyển thành `.js` nhưng import backend không có phần mở rộng ESM hợp lệ.
 - `includeFiles: "server/**"` chỉ chỉ định thêm file runtime; nó không biên dịch TypeScript hoặc sửa specifier extensionless. Vì thế việc chép thư mục `server` không làm được `server/app.ts` thành một module `server/app` mà ESM có thể nạp.
-- Không dùng `@hono/node-server` trong function Vercel. Entry vẫn dùng `handle` từ `hono/vercel`.
+- Không dùng `@hono/node-server` trong function Vercel. Không dùng `hono/vercel` adapter cho API directory Function thường; adapter đó trả Response từ default function và không ghi vào Node `res`.
 
 ## 4. Thay đổi
 
@@ -61,3 +62,35 @@ Sau khi merge/deploy commit:
 4. Mở `/explore`, `/map`, `/place/<slug>` và trang tài khoản để xác nhận các route gọi API hoạt động.
 
 Không ghi hoặc xóa dữ liệu Supabase trong lượt này. Không in biến môi trường hoặc secret.
+
+## 8. Điều tra follow-up: Vercel bỏ qua Response — 2026-11-09
+
+### Nguyên nhân
+
+Production log cảnh báo `default export returned a Response` và nêu rằng chữ ký function mặc định là `(req, res) => void`. Kiểm tra mã đang cài cho thấy `hono@4.13.13` trong `node_modules/hono/dist/adapter/vercel/handler.js` định nghĩa `handle = (app) => (req) => app.fetch(req)`. Adapter trả một hàm một tham số với kết quả `Response`; trong Vercel API directory dạng Node Function, default function đó bị nhận diện như handler callback-style và giá trị trả về bị bỏ qua. Vì response không được gửi, runtime chờ đến giới hạn 30 giây rồi timeout. Đây giải thích đồng nhất `/api/health`, `/api/meta`, `/api/places`; lỗi xuất hiện trước khi cần kết luận Supabase hỏng.
+
+`GET /api/health` đã có trong `server/app.ts`, chạy `requestIdMiddleware` và `publicCache`, rồi trả JSON tĩnh. `publicCache` chỉ `await next()` và gắn header; route không tạo client hoặc gọi Supabase. Do đó health là route kiểm tra tối thiểu phù hợp. Không thêm truy vấn sâu hoặc dữ liệu giả.
+
+### Bản sửa
+
+- `api/[[...route]].ts` bỏ `hono/vercel`, export default object có `fetch(request: Request)` và trả `await app.fetch(request)`; đây là Web Handler của Vercel Node.js Functions.
+- `pnpm smoke:vercel-api` giờ import API entry thật và gọi `default.fetch(new Request(...))`; test health chạy trước các lần đọc Supabase. Bộ smoke còn lại chạy qua cùng handler.
+- Chưa thêm log Supabase: vì lỗi trực tiếp là chữ ký handler; sau bản sửa local, cả places và meta đều trả về. Nếu deployment mới trả health 200 nhưng route đọc dữ liệu còn timeout, khi đó mới thêm log từng bước có requestId/status và không chứa request data/secrets.
+
+### Đầu ra thật ở commit follow-up
+
+| Lệnh | Đầu ra |
+|---|---|
+| `pnpm typecheck` | Ban đầu có lỗi kiểu do `app.fetch` có kiểu `Response | Promise<Response>`; đổi wrapper sang `async` và chạy lại thành công: `$ tsc --noEmit`, exit 0. |
+| `pnpm lint` | `$ eslint .`, exit 0. |
+| `pnpm test -- --reporter=dot` | `Test Files 56 passed (56); Tests 328 passed (328)`, exit 0; chỉ cảnh báo JSDOM `scrollTo` như trước. |
+| `pnpm build` | Frontend Vite thành công; API SSR bundle 243.27 kB, 72 module. Warning Rollup `@__PURE__` trong Zod dependency, exit 0. |
+| `pnpm smoke:api` | Health + 10 endpoint assertions: tổng 11 đạt, 0 lỗi, 0 bỏ qua; 55 published được đọc. |
+| `pnpm smoke:vercel-api` | Cùng 11 assertions nhưng đi qua `default.fetch` của API entry: 11 đạt, 0 lỗi, 0 bỏ qua. Health xác nhận HTTP 200 và không truy cập Supabase. |
+| `vercel build` | Chưa chạy; Vercel CLI không có sẵn và không được cài theo yêu cầu. Production chưa được xác nhận. |
+
+Lần đầu chạy typecheck trên wrapper đồng bộ thất bại do kiểu trả về chưa chuẩn hóa; đây là lỗi mã đã sửa, không phải lỗi môi trường. Không có thao tác DB/migration; `LLM_ENABLED` giữ nguyên.
+
+### Xác nhận sau deploy
+
+Deploy commit follow-up, rồi xác nhận Runtime Logs không còn cảnh báo bỏ `Response`, `/api/health` trả 200 nhanh, `/api/meta` và `/api/places` trả 200. Chỉ khi các phản hồi production thật đạt mới xem incident đã được khắc phục. Nếu health đạt nhưng API đọc dữ liệu timeout, thêm chẩn đoán an toàn quanh repository query trước khi thay đổi timeout.

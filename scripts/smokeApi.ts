@@ -61,9 +61,24 @@ async function main(): Promise<void> {
   const url = process.env.SUPABASE_URL
   const anonKey = process.env.SUPABASE_ANON_KEY
   if (!url || !anonKey) throw new Error('Thiếu cấu hình Supabase URL/anon key trong .env.local')
-  const app = process.argv.includes('--vercel-bundle')
-    ? (await import('../api/_server.generated/app.js')).app
-    : (await import('../server/app')).app
+  const useVercelHandler = process.argv.includes('--vercel-handler')
+  const apiRequest = useVercelHandler
+    ? async (path: string) => {
+        const { default: handler } = await import('../api/[[...route]].ts')
+        return handler.fetch(new Request(new URL(path, 'http://localhost')))
+      }
+    : async (path: string) => {
+        const { app } = await import('../server/app')
+        return app.request(path)
+      }
+
+  await run('GET /api/health: Vercel Web Handler trả Response', async () => {
+    const response = await apiRequest('/api/health')
+    assert(response.status === 200, `HTTP ${response.status}`)
+    const body: unknown = await response.json()
+    assert(typeof body === 'object' && body !== null && 'status' in body && body.status === 'ok', 'Health body không hợp lệ')
+    return 'HTTP 200; default.fetch trả Web Response; không truy cập Supabase'
+  })
 
   let publishedSlugs: string[] = []
   let firstPage: ReturnType<typeof paginatedPlacesSchema.parse> | undefined
@@ -77,7 +92,7 @@ async function main(): Promise<void> {
   publishedSlugs = visiblePublished.map((place) => place.slug)
 
   await run('GET /api/meta: 10 tag và startPoints', async () => {
-    const response = await app.request('/api/meta')
+    const response = await apiRequest('/api/meta')
     assert(response.status === 200, `HTTP ${response.status}`)
     const parsed = placeMetaSchema.safeParse(await response.json())
     assert(parsed.success, 'Response không đúng schema meta')
@@ -87,7 +102,7 @@ async function main(): Promise<void> {
   })
 
   await run('GET /api/places: 200, phân trang và chỉ published', async () => {
-    const response = await app.request('/api/places?page=1&pageSize=2')
+    const response = await apiRequest('/api/places?page=1&pageSize=2')
     assert(response.status === 200, `HTTP ${response.status}`)
     const parsed = paginatedPlacesSchema.safeParse(await response.json())
     assert(parsed.success, 'Response không đúng schema phân trang')
@@ -104,7 +119,7 @@ async function main(): Promise<void> {
     const allPageIds = [...ids]
 
     if (parsed.data.total > parsed.data.pageSize) {
-      const secondResponse = await app.request('/api/places?page=2&pageSize=2')
+      const secondResponse = await apiRequest('/api/places?page=2&pageSize=2')
       assert(secondResponse.status === 200, `Trang 2 trả HTTP ${secondResponse.status}`)
       const second = paginatedPlacesSchema.safeParse(await secondResponse.json())
       assert(second.success, 'Trang 2 không đúng schema phân trang')
@@ -136,13 +151,13 @@ async function main(): Promise<void> {
   }
 
   await run('GET /api/places?category=<sai>: 400', async () => {
-    const response = await app.request('/api/places?category=invalid-category')
+    const response = await apiRequest('/api/places?category=invalid-category')
     assert(response.status === 400, `HTTP ${response.status}`)
     return `HTTP ${response.status}`
   })
 
   await run('GET /api/places/map: schema dữ liệu nhẹ', async () => {
-    const response = await app.request('/api/places/map')
+    const response = await apiRequest('/api/places/map')
     assert(response.status === 200, `HTTP ${response.status}`)
     const body: unknown = await response.json()
     const parsed = mapPlacesSchema.safeParse(body)
@@ -157,7 +172,7 @@ async function main(): Promise<void> {
     const slug = firstPage?.items[0]?.slug
     if (slug) {
       await run('GET /api/places/:slug: nearby RPC hoạt động, không có chính nó', async () => {
-        const response = await app.request(`/api/places/${encodeURIComponent(slug)}`)
+        const response = await apiRequest(`/api/places/${encodeURIComponent(slug)}`)
         assert(response.status === 200, `HTTP ${response.status}`)
         const parsed = placeDetailResponseSchema.safeParse(await response.json())
         assert(parsed.success, 'Response không đúng schema chi tiết')
@@ -173,13 +188,13 @@ async function main(): Promise<void> {
   }
 
   await run('GET /api/places/:slug không tồn tại: 404', async () => {
-    const response = await app.request('/api/places/__smoke-place-that-does-not-exist__')
+    const response = await apiRequest('/api/places/__smoke-place-that-does-not-exist__')
     assert(response.status === 404, `HTTP ${response.status}`)
     return `HTTP ${response.status}`
   })
 
   await run('GET /api/sitemap.xml: URL công khai và lastmod', async () => {
-    const response = await app.request('/api/sitemap.xml')
+    const response = await apiRequest('/api/sitemap.xml')
     assert(response.status === 200, `HTTP ${response.status}`)
     assert(Boolean(response.headers.get('content-type')?.includes('application/xml')), 'Content-Type không phải XML')
     const body = await response.text()
@@ -191,7 +206,7 @@ async function main(): Promise<void> {
   if (publishedSlugs.length > 0) {
     await run('GET /api/og/place/:slug thật: metadata không lỗi', async () => {
       const slug = publishedSlugs[0]
-      const response = await app.request(`/api/og/place/${encodeURIComponent(slug)}`)
+      const response = await apiRequest(`/api/og/place/${encodeURIComponent(slug)}`)
       assert(response.status === 200, `HTTP ${response.status}`)
       const html = await response.text()
       assert(html.includes('og:title') && html.includes('og:image') && html.includes('og:url'), 'OG metadata bị thiếu')
@@ -202,7 +217,7 @@ async function main(): Promise<void> {
   }
 
   await run('GET /api/og/share/token-sai: 404, noindex và no-store', async () => {
-    const response = await app.request('/api/og/share/not-a-valid-token')
+    const response = await apiRequest('/api/og/share/not-a-valid-token')
     assert(response.status === 404, `HTTP ${response.status}`)
     assert(response.headers.get('x-robots-tag') === 'noindex', 'Thiếu X-Robots-Tag noindex')
     assert(response.headers.get('cache-control') === 'no-store', 'Thiếu Cache-Control no-store')
@@ -221,7 +236,7 @@ async function main(): Promise<void> {
     record('GET draft slug: 404, không lộ dữ liệu', 'FAIL', 'Không truy vấn được draft để kiểm tra')
   } else if (draftPlaces.length > 0) {
     await run('GET draft slug: 404, không lộ dữ liệu', async () => {
-      const response = await app.request(`/api/places/${encodeURIComponent(draftPlaces[0].slug)}`)
+      const response = await apiRequest(`/api/places/${encodeURIComponent(draftPlaces[0].slug)}`)
       assert(response.status === 404, `HTTP ${response.status}`)
       return `HTTP ${response.status}`
     })

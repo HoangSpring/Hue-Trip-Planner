@@ -1,4 +1,9 @@
-import { handle } from 'hono/vercel'
 import { app } from './_server.generated/app.js'
 
-export default handle(app)
+const vercelHandler = {
+  async fetch(request: Request): Promise<Response> {
+    return await app.fetch(request)
+  },
+}
+
+export default vercelHandler
