@@ -1,21 +1,47 @@
 {
   "functions": {
-    "api/[[...route]].ts": { "maxDuration": 30 }
+    "api/[[...route]].ts": {
+      "maxDuration": 30
+    }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
+    {
+      "source": "/api/:match*",
+      "destination": "/api/[[...route]]"
+    },
     {
       "source": "/place/:slug",
-      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(facebookexternalhit|Zalo|Twitterbot|Slackbot|LinkedInBot|Googlebot|bingbot|Meta-ExternalAgent|Meta-ExternalFetcher).*" }],
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|Zalo|Twitterbot|Slackbot|LinkedInBot|Googlebot|bingbot|Meta-ExternalAgent|Meta-ExternalFetcher).*"
+        }
+      ],
       "destination": "/api/og/place/:slug"
     },
     {
       "source": "/s/:shareToken",
-      "has": [{ "type": "header", "key": "user-agent", "value": "(?i).*(facebookexternalhit|Zalo|Twitterbot|Slackbot|LinkedInBot|Googlebot|bingbot|Meta-ExternalAgent|Meta-ExternalFetcher).*" }],
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|Zalo|Twitterbot|Slackbot|LinkedInBot|Googlebot|bingbot|Meta-ExternalAgent|Meta-ExternalFetcher).*"
+        }
+      ],
       "destination": "/api/og/share/:shareToken"
     },
-    { "source": "/sitemap.xml", "destination": "/api/sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/api/robots.txt" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots.txt"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
