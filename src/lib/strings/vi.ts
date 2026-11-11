@@ -288,6 +288,7 @@ export const vi = {
       afternoon: 'Buổi chiều',
       evening: 'Buổi tối',
     },
+    exactStartTime: 'Giờ cụ thể',
     slotTimes: {
       morning: '08:00 – 11:30',
       noon: '11:30 – 13:30',

@@ -49,6 +49,16 @@ describe('AddToTripDialog', () => {
     const selects = container.querySelectorAll('select')
     expect(selects).toHaveLength(2)
     act(() => { (selects[1] as HTMLSelectElement).value = 'afternoon'; selects[1].dispatchEvent(new Event('change', { bubbles: true })) })
+    const timeInput = container.querySelector<HTMLInputElement>('input[type="time"]')
+    expect(timeInput?.value).toBe('14:00')
+    act(() => {
+      if (timeInput) {
+        const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+        valueSetter?.call(timeInput, '15:45')
+        timeInput.dispatchEvent(new Event('input', { bubbles: true }))
+        timeInput.dispatchEvent(new Event('change', { bubbles: true }))
+      }
+    })
     await act(async () => {
       container.querySelector('button:last-child')?.dispatchEvent(new MouseEvent('click', { bubbles: true }))
       await new Promise(resolve => setTimeout(resolve, 0))
@@ -59,6 +69,7 @@ describe('AddToTripDialog', () => {
     expect(updated?.days[0].items[1].travelMinFromPrev).toBeGreaterThan(0)
     expect(updated?.days[0].items[1].travelDistanceM).toBeGreaterThan(0)
     expect(updated?.days[0].items[1].slot).toBe('afternoon')
+    expect(updated?.days[0].items[1].startTime).toBe('15:45')
     act(() => root.unmount()); client.clear()
   })
 

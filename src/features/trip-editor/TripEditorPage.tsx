@@ -429,12 +429,13 @@ export function TripEditorPage({ savedTripId: propSavedTripId }: { savedTripId?:
   )
 
   const handleAddPlace = useCallback(
-    (place: PlaceSummary, slot: Slot) => {
+    (place: PlaceSummary, slot: Slot, startTime: string) => {
       dispatch({
         type: 'ADD_ITEM',
         payload: {
           dayIndex: state.activeDayIndex,
           slot,
+          startTime,
           place,
         },
       })

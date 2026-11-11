@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import type { PlaceSummary, Slot } from '@shared/schemas'
 import { getPlaces } from '@/lib/api'
 import { vi } from '@/lib/strings/vi'
 import { categoryColor } from '@/features/map/MapView'
+import { defaultStartTimeForSlot } from '../time'
 
 interface AddPlaceSheetProps {
   isOpen: boolean
@@ -11,7 +12,7 @@ interface AddPlaceSheetProps {
   allExistingPlaceIds: Set<string>
   defaultSlot?: Slot
   onClose: () => void
-  onAddPlace: (place: PlaceSummary, slot: Slot) => void
+  onAddPlace: (place: PlaceSummary, slot: Slot, startTime: string) => void
 }
 
 const slotOptions: { slot: Slot; label: string; icon: string }[] = [
@@ -31,6 +32,13 @@ export function AddPlaceSheet({
 }: AddPlaceSheetProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedSlot, setSelectedSlot] = useState<Slot>(defaultSlot)
+  const [startTime, setStartTime] = useState(defaultStartTimeForSlot(defaultSlot))
+
+  useEffect(() => {
+    if (!isOpen) return
+    setSelectedSlot(defaultSlot)
+    setStartTime(defaultStartTimeForSlot(defaultSlot))
+  }, [defaultSlot, isOpen])
 
   const query = useQuery({
     queryKey: ['places-search', searchQuery],
@@ -79,7 +87,7 @@ export function AddPlaceSheet({
               <button
                 key={opt.slot}
                 type="button"
-                onClick={() => setSelectedSlot(opt.slot)}
+                onClick={() => { setSelectedSlot(opt.slot); setStartTime(defaultStartTimeForSlot(opt.slot)) }}
                 className={`flex items-center justify-center gap-1 rounded-xl py-2 px-2 text-xs font-medium border transition-all ${
                   selectedSlot === opt.slot
                     ? 'border-primary bg-primary text-white shadow-xs font-bold'
@@ -91,6 +99,17 @@ export function AddPlaceSheet({
               </button>
             ))}
           </div>
+          <label htmlFor="add-place-start-time" className="mt-3 flex items-center gap-3 text-xs font-semibold text-ink-muted">
+            {vi.tripEditor.exactStartTime}
+            <input
+              id="add-place-start-time"
+              type="time"
+              value={startTime}
+              onChange={event => setStartTime(event.target.value)}
+              required
+              className="min-h-10 rounded-control border border-line bg-surface px-3 text-sm font-normal text-ink focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+          </label>
         </div>
 
         {/* Search input */}
@@ -186,7 +205,7 @@ export function AddPlaceSheet({
                   ) : (
                     <button
                       type="button"
-                      onClick={() => onAddPlace(place, selectedSlot)}
+                      onClick={() => onAddPlace(place, selectedSlot, startTime)}
                       className="shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-white shadow-xs hover:bg-primary-hover active:scale-95 transition-all"
                     >
                       + Thêm

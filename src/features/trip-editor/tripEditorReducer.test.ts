@@ -226,6 +226,16 @@ describe('tripEditorReducer', () => {
     expect(added.position).toBe(1)
   })
 
+  it('preserves a specific start time when adding a place', () => {
+    const state = createInitialEditorState(makeMockTrip())
+    const nextState = tripEditorReducer(state, {
+      type: 'ADD_ITEM',
+      payload: { dayIndex: 2, slot: 'afternoon', startTime: '15:45', place: mockPlaces[3] },
+    })
+
+    expect(nextState.trip.days[1].items.at(-1)?.startTime).toBe('15:45')
+  })
+
   it('replaces an item with an alternative without duplicating', () => {
     const state = createInitialEditorState(makeMockTrip())
     // Replace item-1 with mockPlaces[3] (Lăng Tự Đức)

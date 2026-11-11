@@ -23,7 +23,7 @@ export type TripEditorAction =
   | { type: 'DELETE_ITEM'; payload: { itemId: string } }
   | { type: 'UNDO' }
   | { type: 'REPLACE_ITEM'; payload: { itemId: string; newPlace: NonNullable<TripItem['place']>; reason?: string } }
-  | { type: 'ADD_ITEM'; payload: { dayIndex: number; slot: Slot; place: NonNullable<TripItem['place']> } }
+  | { type: 'ADD_ITEM'; payload: { dayIndex: number; slot: Slot; startTime?: string | null; place: NonNullable<TripItem['place']> } }
   | { type: 'REPLACE_DAY'; payload: { dayIndex: number; items: TripItem[] } }
 
 export function recalculateDayTravel(day: TripDay, transport: TripDraft['input']['transport']): TripDay {
@@ -319,7 +319,7 @@ export function tripEditorReducer(state: TripEditorState, action: TripEditorActi
     }
 
     case 'ADD_ITEM': {
-      const { dayIndex, slot, place } = action.payload
+      const { dayIndex, slot, startTime = null, place } = action.payload
       // Invariant: no duplicate placeId across the whole trip
       const allExistingPlaceIds = new Set(state.trip.days.flatMap((d) => d.items.map((it) => it.placeId)))
       if (allExistingPlaceIds.has(place.id)) {
@@ -336,7 +336,7 @@ export function tripEditorReducer(state: TripEditorState, action: TripEditorActi
         place,
         position: targetDay.items.length,
         slot,
-        startTime: null,
+        startTime,
         durationMin: 90,
         travelMinFromPrev: null,
         travelDistanceM: null,
