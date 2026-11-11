@@ -129,7 +129,7 @@ export function AlternativesSheet({
           ) : (
             items.map((alt) => {
               const place = alt.place
-              const color = categoryColor[place.category] || '#5B3A8C'
+              const color = categoryColor[place.category] || '#3A0F34'
               const distLabel =
                 alt.distanceM >= 1000
                   ? `Cách ${(alt.distanceM / 1000).toFixed(1)} km`

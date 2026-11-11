@@ -88,11 +88,10 @@ export function AddPlaceSheet({
                 key={opt.slot}
                 type="button"
                 onClick={() => { setSelectedSlot(opt.slot); setStartTime(defaultStartTimeForSlot(opt.slot)) }}
-                className={`flex items-center justify-center gap-1 rounded-xl py-2 px-2 text-xs font-medium border transition-all ${
-                  selectedSlot === opt.slot
+                className={`flex items-center justify-center gap-1 rounded-xl py-2 px-2 text-xs font-medium border transition-all ${selectedSlot === opt.slot
                     ? 'border-primary bg-primary text-white shadow-xs font-bold'
                     : 'border-line bg-surface-high text-ink hover:bg-surface-high/80'
-                }`}
+                  }`}
               >
                 <span>{opt.icon}</span>
                 <span>{opt.label}</span>
@@ -152,16 +151,15 @@ export function AddPlaceSheet({
           ) : (
             places.map((place) => {
               const isAlreadyAdded = allExistingPlaceIds.has(place.id)
-              const color = categoryColor[place.category] || '#5B3A8C'
+              const color = categoryColor[place.category] || '#3A0F34'
 
               return (
                 <article
                   key={place.id}
-                  className={`flex items-center justify-between gap-3 rounded-2xl border p-3 transition-colors ${
-                    isAlreadyAdded
+                  className={`flex items-center justify-between gap-3 rounded-2xl border p-3 transition-colors ${isAlreadyAdded
                       ? 'border-line/40 bg-surface-high/30 opacity-70'
                       : 'border-line bg-surface-high/40 hover:border-primary/40'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="size-14 shrink-0 overflow-hidden rounded-xl bg-surface-high border border-line/60">

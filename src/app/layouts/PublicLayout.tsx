@@ -63,7 +63,7 @@ function LandingHero() {
           <div className="mt-7 flex flex-wrap gap-3 sm:mt-9">
             <Link
               to={paths.planNew}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#69409b] px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#7950aa] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d994] sm:px-6 sm:py-4"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#3A0F34] px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#511747] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EAAA00] sm:px-6 sm:py-4"
             >
               <svg
                 aria-hidden="true"
@@ -102,7 +102,7 @@ function LandingHero() {
           {/* Thẻ kế hoạch trên banner */}
           <Link
             to={paths.tripDraft}
-            className="mt-5 flex w-full max-w-sm items-center justify-between gap-3 rounded-xl border border-white/25 bg-white/10 px-3 py-3 text-white shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f4d994] sm:px-4"
+            className="mt-5 flex w-full max-w-sm items-center justify-between gap-3 rounded-xl border border-white/25 bg-white/10 px-3 py-3 text-white shadow-lg backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#EAAA00] sm:px-4"
           >
             <span className="flex min-w-0 flex-col gap-1">
               <span className="text-xs text-white/70">
@@ -113,7 +113,7 @@ function LandingHero() {
               </span>
             </span>
 
-            <span className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-3 py-2 text-xs font-semibold text-[#60378c]">
+            <span className="inline-flex shrink-0 items-center justify-center rounded-lg bg-[#F7F6F5] px-3 py-2 text-xs font-semibold text-[#3A0F34] transition-colors hover:bg-[#FFF3CC]">
               Mở →
             </span>
           </Link>
@@ -251,16 +251,23 @@ export function PublicLayout() {
 
   useEffect(() => {
     if (!accountMenuOpen) return
+
     function closeOnOutsidePointer(event: PointerEvent) {
-      if (event.target instanceof Node && !accountMenuRef.current?.contains(event.target)) {
+      if (
+        event.target instanceof Node &&
+        !accountMenuRef.current?.contains(event.target)
+      ) {
         setAccountMenuOpen(false)
       }
     }
+
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') setAccountMenuOpen(false)
     }
+
     document.addEventListener('pointerdown', closeOnOutsidePointer)
     document.addEventListener('keydown', closeOnEscape)
+
     return () => {
       document.removeEventListener('pointerdown', closeOnOutsidePointer)
       document.removeEventListener('keydown', closeOnEscape)
@@ -272,11 +279,14 @@ export function PublicLayout() {
       setSignOutError(true)
       return
     }
+
     const { error } = await supabaseClient.auth.signOut()
+
     if (error) {
       setSignOutError(true)
       return
     }
+
     queryClient.clear()
     setAccountMenuOpen(false)
     navigate(paths.home, { replace: true })
@@ -284,7 +294,13 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen overflow-x-clip bg-bg text-ink">
-      <a href="#main-content" className="sr-only z-[100] rounded-control bg-white px-4 py-3 text-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Bỏ qua đến nội dung chính</a>
+      <a
+        href="#main-content"
+        className="sr-only z-[100] rounded-control bg-white px-4 py-3 text-primary focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      >
+        Bỏ qua đến nội dung chính
+      </a>
+
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-line/70 bg-surface/95 backdrop-blur-md">
         <div className="mx-auto flex min-h-[64px] max-w-content items-center justify-between gap-2 px-3 sm:min-h-[76px] sm:gap-4 sm:px-4 md:px-8">
@@ -357,29 +373,87 @@ export function PublicLayout() {
               <div className="relative" ref={accountMenuRef}>
                 <button
                   type="button"
-                  onClick={() => { setSignOutError(false); setAccountMenuOpen(open => !open) }}
+                  onClick={() => {
+                    setSignOutError(false)
+                    setAccountMenuOpen((open) => !open)
+                  }}
                   className="flex min-w-0 max-w-[180px] items-center gap-2 rounded-full py-2 text-sm font-medium text-ink-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label={`Tài khoản${userName ? ` ${userName}` : ''}`}
                   aria-expanded={accountMenuOpen}
                   aria-controls="account-menu"
                 >
-                <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-white sm:size-9">
-                  {userName ? userName.charAt(0).toUpperCase() : '●'}
-                </span>
+                  <span
+                    aria-hidden="true"
+                    className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-white sm:size-9"
+                  >
+                    {userName ? userName.charAt(0).toUpperCase() : '●'}
+                  </span>
 
-                <span className="hidden truncate xl:block">
-                  {userName || 'Tài khoản'}
-                </span>
+                  <span className="hidden truncate xl:block">
+                    {userName || 'Tài khoản'}
+                  </span>
                 </button>
-                {accountMenuOpen && <div id="account-menu" role="group" aria-label="Tài khoản" className="absolute right-0 top-full z-[60] mt-2 w-56 rounded-card border border-line bg-surface p-2 shadow-lg">
-                  <p className="truncate px-3 py-2 text-xs text-ink-muted">{auth.session.user.email}</p>
-                  <Link to={paths.accountTrips} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.navigation.myTrips}</Link>
-                  <Link to={paths.accountSaved} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.saved}</Link>
-                  <Link to={paths.accountSettings} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.settings}</Link>
-                  {profile.data?.role === 'admin' && <Link to={paths.adminPlaces} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.admin}</Link>}
-                  {signOutError && <p role="alert" className="px-3 py-2 text-xs text-danger">{vi.account.actionFailed}</p>}
-                  <button type="button" onClick={() => void signOut()} className="mt-1 block w-full rounded-control border-t border-line px-3 py-2.5 text-left text-sm font-semibold text-danger hover:bg-danger/5">{vi.navigation.signOut}</button>
-                </div>}
+
+                {accountMenuOpen && (
+                  <div
+                    id="account-menu"
+                    role="group"
+                    aria-label="Tài khoản"
+                    className="absolute right-0 top-full z-[60] mt-2 w-56 rounded-card border border-line bg-surface p-2 shadow-lg"
+                  >
+                    <p className="truncate px-3 py-2 text-xs text-ink-muted">
+                      {auth.session.user.email}
+                    </p>
+
+                    <Link
+                      to={paths.accountTrips}
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high"
+                    >
+                      {vi.navigation.myTrips}
+                    </Link>
+
+                    <Link
+                      to={paths.accountSaved}
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high"
+                    >
+                      {vi.layout.saved}
+                    </Link>
+
+                    <Link
+                      to={paths.accountSettings}
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high"
+                    >
+                      {vi.layout.settings}
+                    </Link>
+
+                    {profile.data?.role === 'admin' && (
+                      <Link
+                        to={paths.adminPlaces}
+                        onClick={() => setAccountMenuOpen(false)}
+                        className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high"
+                      >
+                        {vi.layout.admin}
+                      </Link>
+                    )}
+
+                    {signOutError && (
+                      <p role="alert" className="px-3 py-2 text-xs text-danger">
+                        {vi.account.actionFailed}
+                      </p>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => void signOut()}
+                      className="mt-1 block w-full rounded-control border-t border-line px-3 py-2.5 text-left text-sm font-semibold text-danger hover:bg-danger/5"
+                    >
+                      {vi.navigation.signOut}
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link
@@ -400,7 +474,11 @@ export function PublicLayout() {
       {isHome && <CloudTransition />}
 
       {/* Giữ nguyên nội dung của các trang */}
-      <main id="main-content" tabIndex={-1} className={isHome ? 'relative z-0' : undefined}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className={isHome ? 'relative z-0' : undefined}
+      >
         <Outlet />
       </main>
 

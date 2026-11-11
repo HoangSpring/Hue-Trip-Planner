@@ -20,7 +20,7 @@ const defaultInterestDetails: Record<string, { icon: string; subtitle: string; b
   heritage: {
     icon: '🏛️',
     subtitle: 'Đại Nội, Cấm Thành, Ngọ Môn',
-    bgClass: 'from-[#432173] via-[#5B3A8C] to-[#C8963E]/40',
+    bgClass: 'from-[#432173] via-[#3A0F34] to-[#C8963E]/40',
   },
   history: {
     icon: '📜',
@@ -93,11 +93,10 @@ export function Step3Interests({
           </div>
 
           <div
-            className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all md:self-end ${
-              isSatisfied
+            className={`inline-flex shrink-0 items-center gap-1.5 self-start rounded-full px-3 py-1 text-xs font-semibold shadow-sm transition-all md:self-end ${isSatisfied
                 ? 'bg-secondary/15 text-secondary border border-secondary/30'
                 : 'bg-primary/10 text-primary border border-primary/20'
-            }`}
+              }`}
           >
             <span>🏷️</span>
             <span>{vi.wizard.selectedBadge(selectedCount)}</span>
@@ -128,7 +127,7 @@ export function Step3Interests({
             const details = defaultInterestDetails[tag.slug] ?? {
               icon: '✦',
               subtitle: 'Điểm đến độc đáo ở Huế',
-              bgClass: 'from-[#432173] to-[#5B3A8C]',
+              bgClass: 'from-[#432173] to-[#3A0F34]',
             }
 
             return (
@@ -138,17 +137,15 @@ export function Step3Interests({
                 role="checkbox"
                 aria-checked={isSelected}
                 onClick={() => onToggleInterest(tag.slug)}
-                className={`group relative flex h-40 flex-col justify-end overflow-hidden rounded-card p-3.5 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  isSelected
+                className={`group relative flex h-40 flex-col justify-end overflow-hidden rounded-card p-3.5 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${isSelected
                     ? 'ring-2 ring-primary shadow-md scale-[1.01]'
                     : 'border border-line shadow-sm hover:shadow-md hover:scale-[1.01]'
-                }`}
+                  }`}
               >
                 {/* Visual Gradient Background (placeholder art) */}
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${details.bgClass} transition-opacity duration-300 ${
-                    isSelected ? 'opacity-95' : 'opacity-85 group-hover:opacity-95'
-                  }`}
+                  className={`absolute inset-0 bg-gradient-to-br ${details.bgClass} transition-opacity duration-300 ${isSelected ? 'opacity-95' : 'opacity-85 group-hover:opacity-95'
+                    }`}
                 />
 
                 {/* Subtle Geometric Overlay */}
@@ -156,11 +153,10 @@ export function Step3Interests({
 
                 {/* Top Corner Selection Indicator Badge */}
                 <div
-                  className={`absolute right-2.5 top-2.5 grid size-6 place-items-center rounded-full text-xs font-bold shadow-sm transition-all ${
-                    isSelected
+                  className={`absolute right-2.5 top-2.5 grid size-6 place-items-center rounded-full text-xs font-bold shadow-sm transition-all ${isSelected
                       ? 'bg-white text-primary ring-2 ring-primary'
                       : 'bg-black/30 backdrop-blur-sm text-white/90 group-hover:bg-black/45'
-                  }`}
+                    }`}
                   aria-hidden="true"
                 >
                   {isSelected ? '✓' : '+'}

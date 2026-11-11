@@ -66,7 +66,7 @@ export function TimelineItem({
 
   const place = item.place
   const category = place?.category ?? 'sightseeing'
-  const color = categoryColor[category] || '#5B3A8C'
+  const color = categoryColor[category] || '#3A0F34'
   const categoryLabel = vi.placeCategories[category] || category
 
   const endTime = calculateEndTime(item.startTime, item.durationMin)
@@ -106,11 +106,10 @@ export function TimelineItem({
           onDropOnItem?.(sourceId, item.id)
         }
       }}
-      className={`group relative rounded-2xl bg-surface border transition-all ${
-        isSelected
+      className={`group relative rounded-2xl bg-surface border transition-all ${isSelected
           ? 'border-primary ring-2 ring-primary/20 shadow-md'
           : 'border-line hover:border-line-dark shadow-xs hover:shadow-card'
-      }`}
+        }`}
     >
       <div className="flex flex-col sm:flex-row gap-4 p-4 sm:p-5">
         {/* Left: Thumbnail & Order Badge */}
@@ -169,11 +168,10 @@ export function TimelineItem({
                     type="button"
                     onClick={() => onToggleLock(item.id)}
                     title={item.isLocked ? vi.tripEditor.unlockItem : vi.tripEditor.lockItem}
-                    className={`flex size-7 items-center justify-center rounded-lg transition-colors ${
-                      item.isLocked
+                    className={`flex size-7 items-center justify-center rounded-lg transition-colors ${item.isLocked
                         ? 'text-primary bg-primary/10'
                         : 'text-ink-muted hover:text-ink hover:bg-surface-high'
-                    }`}
+                      }`}
                   >
                     {item.isLocked ? (
                       <svg className="size-4" fill="currentColor" viewBox="0 0 20 20">

@@ -31,7 +31,7 @@ export function AuthPageFrame({ title, intro, children, onSubmit, footer }: Prop
   return (
     <div className="grid min-h-[calc(100vh-5rem)] overflow-hidden rounded-card border border-line bg-surface shadow-card lg:grid-cols-[1fr_1fr]">
       <aside className="relative hidden min-h-[620px] overflow-hidden bg-primary p-10 text-white lg:flex lg:flex-col lg:justify-between">
-        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_18%,rgba(255,255,255,.17),transparent_38%),linear-gradient(145deg,#5B3A8C,#34234e)]" />
+        <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_18%,rgba(255,255,255,.17),transparent_38%),linear-gradient(145deg,#3A0F34,#34234e)]" />
         <div className="relative"><BrandMark inverse /></div>
         <div className="relative max-w-md py-12">
           <p className="text-sm font-semibold uppercase tracking-[.18em] text-[#ead8af]">Huế theo nhịp của bạn</p>

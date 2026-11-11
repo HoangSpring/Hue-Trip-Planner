@@ -34,11 +34,11 @@ export const categoryColor: Record<
   PlaceMapItemDto['category'],
   string
 > = {
-  heritage: '#5B3A8C',
-  food: '#A74625',
-  cafe: '#2F6F5E',
-  sightseeing: '#27647F',
-  shopping: '#79500F',
+  heritage: '#3A0F34',
+  food: '#8A6500',
+  cafe: '#6B6269',
+  sightseeing: '#76566F',
+  shopping: '#B78300',
 }
 
 const categoryLabel: Record<
@@ -209,12 +209,12 @@ function PlacesFallback({
   places: PlaceMapItemDto[]
 }) {
   return (
-    <div className="grid h-full min-h-56 place-content-center bg-white p-6 text-center">
-      <h3 className="font-serif text-xl">
+    <div className="grid h-full min-h-56 place-content-center bg-[#F7F6F5] p-6 text-center">
+      <h3 className="font-serif text-xl text-[#3A0F34]">
         {vi.map.mapUnavailable}
       </h3>
 
-      <p className="mt-2 text-sm text-ink-muted">
+      <p className="mt-2 text-sm text-[#6B6269]">
         {vi.map.listFallback}
       </p>
 
@@ -222,7 +222,7 @@ function PlacesFallback({
         {places.slice(0, 20).map((place) => (
           <li key={place.id}>
             <Link
-              className="text-sm font-semibold text-primary underline"
+              className="text-sm font-semibold text-[#3A0F34] underline"
               to={paths.place(place.slug)}
             >
               {place.name}
@@ -306,7 +306,7 @@ export function MapView({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-card border border-line bg-[#e8e4d8] ${className}`}
+      className={`relative overflow-hidden rounded-card border border-line bg-[#E5E4E2] ${className}`}
       style={{ height }}
     >
       <MapBoundary
@@ -351,7 +351,7 @@ export function MapView({
         )}
       </MapBoundary>
 
-      <div className="pointer-events-none absolute bottom-0 right-0 z-[500] bg-white/90 px-2 py-1 text-[11px] leading-4 text-ink">
+      <div className="pointer-events-none absolute bottom-0 right-0 z-[500] bg-[#F7F6F5]/95 px-2 py-1 text-[11px] leading-4 text-[#3A0F34]">
         <a
           className="pointer-events-auto underline"
           href="https://www.openstreetmap.org/copyright"
@@ -364,25 +364,25 @@ export function MapView({
 
       {activeSelected && (
         <aside
-          className="absolute left-3 top-3 z-[500] max-w-[calc(100%-24px)] rounded-card border border-line bg-white p-3 shadow-card sm:left-auto sm:right-3 sm:w-64"
+          className="absolute left-3 top-3 z-[500] max-w-[calc(100%-24px)] rounded-card border border-[#D1CECB] bg-[#F7F6F5] p-3 shadow-card sm:left-auto sm:right-3 sm:w-64"
           aria-live="polite"
         >
           <button
             type="button"
             onClick={handleClose}
             aria-label={vi.map.closeCard}
-            className="float-right grid size-8 place-items-center rounded-full text-ink-muted"
+            className="float-right grid size-8 place-items-center rounded-full text-[#6B6269] transition hover:bg-[#E5E4E2] hover:text-[#3A0F34]"
           >
             ×
           </button>
 
           <div className="flex items-start justify-between gap-2">
             <div>
-              <p className="pr-6 text-xs text-ink-muted">
+              <p className="pr-6 text-xs text-[#6B6269]">
                 {categoryLabel[activeSelected.category]}
               </p>
 
-              <h3 className="mt-1 font-serif text-lg leading-6">
+              <h3 className="mt-1 font-serif text-lg leading-6 text-[#3A0F34]">
                 {activeSelected.name}
               </h3>
             </div>
@@ -392,7 +392,7 @@ export function MapView({
 
           <Link
             to={paths.place(activeSelected.slug)}
-            className="mt-2 inline-flex min-h-10 items-center font-semibold text-primary underline underline-offset-4"
+            className="mt-2 inline-flex min-h-10 items-center font-semibold text-[#3A0F34] underline underline-offset-4 decoration-[#EAAA00] decoration-2"
           >
             {vi.map.details}
           </Link>

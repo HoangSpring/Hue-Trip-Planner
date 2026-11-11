@@ -159,28 +159,28 @@ export default function AdminPlaceListPage() {
 
   return (
     <section
-      className="min-w-0 space-y-6 pb-8 text-[#30213F]"
+      className="min-w-0 space-y-6 pb-8 text-[#3A0F34]"
       aria-labelledby="admin-places-title"
     >
       {/* PAGE HEADING */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#756B65]">
-            <span className="size-2 rounded-full bg-[#23866D]" />
+          <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#6B6269]">
+            <span className="size-2 rounded-full bg-[#EAAA00]" />
             Cơ sở dữ liệu trung tâm · Di sản cố đô
           </p>
 
           <h1
             id="admin-places-title"
-            className="font-serif text-3xl font-semibold tracking-tight text-[#46246D] sm:text-[34px]"
+            className="font-serif text-3xl font-semibold tracking-tight text-[#3A0F34] sm:text-[34px]"
           >
             Quản lý địa điểm
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#756B65]">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#6B6269]">
             Quản trị cơ sở dữ liệu di sản, ẩm thực và danh thắng
             Cố đô Huế. Tổng số{' '}
-            <strong className="font-semibold text-[#30213F]">
+            <strong className="font-semibold text-[#3A0F34]">
               {total} địa điểm
             </strong>.
           </p>
@@ -189,7 +189,7 @@ export default function AdminPlaceListPage() {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             to={paths.adminPlaceNew}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#57347D] px-5 text-sm font-semibold text-white shadow-[0_3px_8px_rgba(87,52,125,0.15)] transition-all hover:-translate-y-0.5 hover:bg-[#462765] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#57347D] focus-visible:ring-offset-2"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#3A0F34] px-5 text-sm font-semibold text-white shadow-[0_3px_8px_rgba(58,15,52,0.15)] transition-all hover:-translate-y-0.5 hover:bg-[#511747] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3A0F34] focus-visible:ring-offset-2"
           >
             <span aria-hidden="true" className="text-lg">＋</span>
             {vi.admin.add}
@@ -233,21 +233,21 @@ export default function AdminPlaceListPage() {
       </div>
 
       {/* FILTERS */}
-      <div className="rounded-2xl border border-[#F0E9DE] bg-white p-4 shadow-[0_4px_18px_rgba(48,33,63,0.035)] sm:p-5">
+      <div className="rounded-2xl border border-[#D1CECB] bg-white p-4 shadow-[0_4px_18px_rgba(58,15,52,0.035)] sm:p-5">
         <form
           onSubmit={submitSearch}
           className="flex flex-col gap-3 xl:flex-row xl:items-end"
         >
           <label className="min-w-0 flex-1">
-            <span className="mb-1.5 block text-xs font-semibold text-[#756B65]">
+            <span className="mb-1.5 block text-xs font-semibold text-[#6B6269]">
               Tìm kiếm địa điểm
             </span>
-            <div className="flex h-11 items-center gap-2 rounded-xl border border-[#E9E1D6] bg-[#FCFAF6] px-3 transition-colors focus-within:border-[#8C6BB0] focus-within:ring-2 focus-within:ring-[#57347D]/10">
-              <span aria-hidden="true" className="text-lg text-[#756B65]">
+            <div className="flex h-11 items-center gap-2 rounded-xl border border-[#D1CECB] bg-[#F7F6F5] px-3 transition-colors focus-within:border-[#76566F] focus-within:ring-2 focus-within:ring-[#3A0F34]/10">
+              <span aria-hidden="true" className="text-lg text-[#6B6269]">
                 ⌕
               </span>
               <input
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#A59B91]"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-[#8A8288]"
                 value={searchInput}
                 onChange={(event) => setSearchInput(event.target.value)}
                 placeholder="Tên địa điểm, slug..."
@@ -255,7 +255,7 @@ export default function AdminPlaceListPage() {
               />
               <button
                 type="submit"
-                className="rounded-lg bg-[#57347D] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#462765]"
+                className="rounded-lg bg-[#3A0F34] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#511747]"
               >
                 Tìm
               </button>
@@ -307,15 +307,15 @@ export default function AdminPlaceListPage() {
         </form>
 
         {hasFilters && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#F0E9DE] pt-3">
-            <p className="text-xs text-[#756B65]">
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-[#D1CECB] pt-3">
+            <p className="text-xs text-[#6B6269]">
               Đang áp dụng bộ lọc
             </p>
 
             <button
               type="button"
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-[#57347D] transition-colors hover:bg-[#F3EDF8]"
+              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-xs font-medium text-[#3A0F34] transition-colors hover:bg-[#F0E7EE]"
             >
               <span aria-hidden="true">×</span>
               Xóa bộ lọc
@@ -326,7 +326,7 @@ export default function AdminPlaceListPage() {
 
       {/* BULK ACTIONS */}
       {selected.length > 0 && (
-        <div className="rounded-2xl border border-[#46246D] bg-[#46246D] p-4 text-white shadow-[0_8px_20px_rgba(70,36,109,0.15)]">
+        <div className="rounded-2xl border border-[#3A0F34] bg-[#3A0F34] p-4 text-white shadow-[0_8px_20px_rgba(58,15,52,0.15)]">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-3">
               <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-lg">
@@ -351,14 +351,14 @@ export default function AdminPlaceListPage() {
                   disabled={bulk.isPending}
                   onClick={() => bulk.mutate(action.id)}
                   className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-3.5 text-xs font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50 ${action.id === 'publish'
-                      ? 'bg-[#A8EBD7] text-[#165D4D] hover:bg-[#8DDFC7]'
+                      ? 'bg-[#EAAA00] text-[#3A0F34] hover:bg-[#D69A00]'
                       : action.id === 'unpublish'
-                        ? 'bg-[#FFE0A8] text-[#704511] hover:bg-[#FFD48A]'
+                        ? 'bg-[#FFF3CC] text-[#6B6269] hover:bg-[#F5D978]'
                         : action.id === 'archive'
-                          ? 'bg-[#D6C6E9] text-[#46246D] hover:bg-[#C6B0E0]'
+                          ? 'bg-[#F0E7EE] text-[#3A0F34] hover:bg-[#E5D5E1]'
                           : action.id === 'verify'
                             ? 'bg-white/15 text-white hover:bg-white/25'
-                            : 'bg-[#B91C1C] text-white hover:bg-[#991B1B]'
+                            : 'bg-[#B3261E] text-white hover:bg-[#8E1B17]'
                     }`}
                 >
                   <span aria-hidden="true">{action.icon}</span>
@@ -404,20 +404,20 @@ export default function AdminPlaceListPage() {
       )}
 
       {/* TABLE */}
-      <div className="overflow-hidden rounded-2xl border border-[#EFE7DC] bg-white shadow-[0_5px_22px_rgba(48,33,63,0.04)]">
-        <div className="flex flex-col gap-2 border-b border-[#F0E9DE] bg-[#FCFAF6] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="overflow-hidden rounded-2xl border border-[#D1CECB] bg-white shadow-[0_5px_22px_rgba(58,15,52,0.04)]">
+        <div className="flex flex-col gap-2 border-b border-[#D1CECB] bg-[#F7F6F5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div>
-            <h2 className="text-sm font-semibold text-[#30213F]">
+            <h2 className="text-sm font-semibold text-[#3A0F34]">
               Danh sách địa điểm
             </h2>
-            <p className="mt-1 text-xs text-[#8A8077]">
+            <p className="mt-1 text-xs text-[#6B6269]">
               Quản lý thông tin, trạng thái xuất bản và chất lượng dữ liệu.
             </p>
           </div>
 
           {places.data && (
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#E8E0D5] bg-white px-3 py-1.5 text-xs text-[#756B65]">
-              <span className="size-1.5 rounded-full bg-[#23866D]" />
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-[#D1CECB] bg-white px-3 py-1.5 text-xs text-[#6B6269]">
+              <span className="size-1.5 rounded-full bg-[#EAAA00]" />
               {total} địa điểm
             </span>
           )}
@@ -426,21 +426,21 @@ export default function AdminPlaceListPage() {
         {places.isPending && (
           <div
             role="status"
-            className="p-12 text-center text-sm text-[#756B65]"
+            className="p-12 text-center text-sm text-[#6B6269]"
           >
-            <div className="mx-auto mb-3 size-8 animate-spin rounded-full border-2 border-[#E6DDED] border-t-[#57347D]" />
+            <div className="mx-auto mb-3 size-8 animate-spin rounded-full border-2 border-[#D1CECB] border-t-[#3A0F34]" />
             {vi.admin.loading}
           </div>
         )}
 
         {places.isError && (
           <div className="p-10 text-center" role="alert">
-            <p className="text-sm text-[#A61B1B]">
+            <p className="text-sm text-[#B3261E]">
               {places.error.message}
             </p>
             <button
               type="button"
-              className="mt-4 min-h-10 rounded-xl bg-[#57347D] px-4 text-sm font-semibold text-white hover:bg-[#462765]"
+              className="mt-4 min-h-10 rounded-xl bg-[#3A0F34] px-4 text-sm font-semibold text-white hover:bg-[#511747]"
               onClick={() => void places.refetch()}
             >
               {vi.admin.retry}
@@ -450,13 +450,13 @@ export default function AdminPlaceListPage() {
 
         {places.isSuccess && rows.length === 0 && (
           <div className="px-5 py-16 text-center">
-            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#F3EDF8] text-2xl text-[#57347D]">
+            <span className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-[#F0E7EE] text-2xl text-[#3A0F34]">
               ⌕
             </span>
-            <p className="mt-4 font-semibold text-[#30213F]">
+            <p className="mt-4 font-semibold text-[#3A0F34]">
               {vi.admin.empty}
             </p>
-            <p className="mt-1 text-sm text-[#8A8077]">
+            <p className="mt-1 text-sm text-[#6B6269]">
               Thử thay đổi từ khóa hoặc bộ lọc.
             </p>
           </div>
@@ -466,7 +466,7 @@ export default function AdminPlaceListPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
               <thead>
-                <tr className="bg-[#F7F3EC] text-[11px] font-semibold uppercase tracking-wide text-[#756B65]">
+                <tr className="bg-[#E5E4E2] text-[11px] font-semibold uppercase tracking-wide text-[#6B6269]">
                   <th className="w-12 px-4 py-4">
                     <input
                       type="checkbox"
@@ -475,7 +475,7 @@ export default function AdminPlaceListPage() {
                       onChange={(event) =>
                         togglePage(event.target.checked)
                       }
-                      className="size-4 cursor-pointer accent-[#57347D]"
+                      className="size-4 cursor-pointer accent-[#3A0F34]"
                     />
                   </th>
                   <th className="px-3 py-4">Ảnh</th>
@@ -488,7 +488,7 @@ export default function AdminPlaceListPage() {
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-[#F0E9DE]">
+              <tbody className="divide-y divide-[#D1CECB]">
                 {rows.map((place) => (
                   <PlaceRow
                     key={place.id}
@@ -504,39 +504,39 @@ export default function AdminPlaceListPage() {
 
         {/* PAGINATION */}
         {places.data && rows.length > 0 && (
-          <div className="flex flex-col gap-4 border-t border-[#EFE7DC] bg-[#FCFAF6] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <p className="text-xs text-[#756B65]">
+          <div className="flex flex-col gap-4 border-t border-[#D1CECB] bg-[#F7F6F5] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <p className="text-xs text-[#6B6269]">
               Hiển thị{' '}
-              <strong className="text-[#30213F]">
+              <strong className="text-[#3A0F34]">
                 {(page - 1) * pageSize + 1}–
                 {(page - 1) * pageSize + rows.length}
               </strong>{' '}
               trong tổng số{' '}
-              <strong className="text-[#30213F]">{total}</strong>{' '}
+              <strong className="text-[#3A0F34]">{total}</strong>{' '}
               địa điểm
             </p>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="min-h-9 rounded-lg border border-[#E7DED2] bg-white px-3 text-xs font-medium text-[#756B65] transition-colors hover:border-[#C8B4DA] hover:text-[#57347D] disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-9 rounded-lg border border-[#D1CECB] bg-white px-3 text-xs font-medium text-[#6B6269] transition-colors hover:border-[#A99AA5] hover:text-[#3A0F34] disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page <= 1}
                 onClick={() => setFilter('page', String(page - 1))}
               >
                 ← Trước
               </button>
 
-              <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-[#57347D] px-3 text-xs font-semibold text-white">
+              <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-[#3A0F34] px-3 text-xs font-semibold text-white">
                 {page}
               </span>
 
-              <span className="px-1 text-xs text-[#756B65]">
+              <span className="px-1 text-xs text-[#6B6269]">
                 / {pages}
               </span>
 
               <button
                 type="button"
-                className="min-h-9 rounded-lg border border-[#E7DED2] bg-white px-3 text-xs font-medium text-[#756B65] transition-colors hover:border-[#C8B4DA] hover:text-[#57347D] disabled:cursor-not-allowed disabled:opacity-40"
+                className="min-h-9 rounded-lg border border-[#D1CECB] bg-white px-3 text-xs font-medium text-[#6B6269] transition-colors hover:border-[#A99AA5] hover:text-[#3A0F34] disabled:cursor-not-allowed disabled:opacity-40"
                 disabled={page >= pages}
                 onClick={() => setFilter('page', String(page + 1))}
               >
@@ -565,35 +565,35 @@ function StatCard({
 }) {
   const styles = {
     purple: {
-      icon: 'bg-[#F0E9F5] text-[#57347D]',
-      number: 'text-[#30213F]',
-      border: 'bg-[#D7C7E6]',
-      note: 'bg-[#F2EDF6] text-[#57347D]',
+      icon: 'bg-[#F0E7EE] text-[#3A0F34]',
+      number: 'text-[#3A0F34]',
+      border: 'bg-[#E5D5E1]',
+      note: 'bg-[#F0E7EE] text-[#3A0F34]',
     },
     green: {
-      icon: 'bg-[#DDF7EE] text-[#18745D]',
-      number: 'text-[#18745D]',
-      border: 'bg-[#A9E7D5]',
-      note: 'bg-[#DDF7EE] text-[#18745D]',
+      icon: 'bg-[#FFF3CC] text-[#3A0F34]',
+      number: 'text-[#3A0F34]',
+      border: 'bg-[#EAAA00]',
+      note: 'bg-[#FFF3CC] text-[#3A0F34]',
     },
     amber: {
-      icon: 'bg-[#FFF0D9] text-[#89521C]',
-      number: 'text-[#71421C]',
-      border: 'bg-[#F5C46E]',
-      note: 'bg-[#FFF0D9] text-[#89521C]',
+      icon: 'bg-[#FFF3CC] text-[#8A6500]',
+      number: 'text-[#8A6500]',
+      border: 'bg-[#EAAA00]',
+      note: 'bg-[#FFF3CC] text-[#8A6500]',
     },
     red: {
-      icon: 'bg-[#FDE8E7] text-[#B42318]',
-      number: 'text-[#B42318]',
-      border: 'bg-[#F2B5B0]',
-      note: 'bg-[#FDE8E7] text-[#B42318]',
+      icon: 'bg-[#F8E8E6] text-[#B3261E]',
+      number: 'text-[#B3261E]',
+      border: 'bg-[#E5B6B1]',
+      note: 'bg-[#F8E8E6] text-[#B3261E]',
     },
   }[tone]
 
   return (
-    <article className="relative overflow-hidden rounded-2xl border border-[#F0E9DE] bg-white p-5 pb-6 shadow-[0_3px_14px_rgba(48,33,63,0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(48,33,63,0.07)]">
+    <article className="relative overflow-hidden rounded-2xl border border-[#D1CECB] bg-white p-5 pb-6 shadow-[0_3px_14px_rgba(58,15,52,0.035)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_22px_rgba(58,15,52,0.07)]">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-xs font-medium text-[#756B65]">{label}</p>
+        <p className="text-xs font-medium text-[#6B6269]">{label}</p>
         <span
           className={`flex size-9 shrink-0 items-center justify-center rounded-xl text-lg ${styles.icon}`}
           aria-hidden="true"
@@ -629,11 +629,11 @@ function FilterSelect({
 }) {
   return (
     <label className="block min-w-0 xl:w-[155px]">
-      <span className="mb-1.5 block text-xs font-semibold text-[#756B65]">
+      <span className="mb-1.5 block text-xs font-semibold text-[#6B6269]">
         {label}
       </span>
       <select
-        className="h-11 w-full cursor-pointer rounded-xl border border-[#E9E1D6] bg-[#FCFAF6] px-3 text-sm text-[#30213F] outline-none transition-colors hover:border-[#D3C3E1] focus:border-[#8C6BB0] focus:ring-2 focus:ring-[#57347D]/10"
+        className="h-11 w-full cursor-pointer rounded-xl border border-[#D1CECB] bg-[#F7F6F5] px-3 text-sm text-[#3A0F34] outline-none transition-colors hover:border-[#A99AA5] focus:border-[#76566F] focus:ring-2 focus:ring-[#3A0F34]/10"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >
@@ -659,14 +659,14 @@ function PlaceRow({
 }) {
   const statusStyle =
     place.status === 'published'
-      ? 'bg-[#A8EBD7] text-[#165D4D]'
+      ? 'bg-[#EAAA00] text-[#3A0F34]'
       : place.status === 'draft'
-        ? 'bg-[#FFE4B8] text-[#7C4A12]'
-        : 'bg-[#EAE5EE] text-[#62566D]'
+        ? 'bg-[#FFF3CC] text-[#6B6269]'
+        : 'bg-[#F0E7EE] text-[#6B6269]'
 
   return (
     <tr
-      className={`align-middle transition-colors hover:bg-[#FAF7F0] ${selected ? 'bg-[#F8F3FC]' : 'bg-white'
+      className={`align-middle transition-colors hover:bg-[#F0E7EE] ${selected ? 'bg-[#F0E7EE]' : 'bg-white'
         }`}
     >
       <td className="px-4 py-3.5">
@@ -675,7 +675,7 @@ function PlaceRow({
           aria-label={`Chọn ${place.name}`}
           checked={selected}
           onChange={onToggle}
-          className="size-4 cursor-pointer accent-[#57347D]"
+          className="size-4 cursor-pointer accent-[#3A0F34]"
         />
       </td>
 
@@ -690,7 +690,7 @@ function PlaceRow({
             />
             {(place.imageCredit || place.imageLicense) && (
               <p
-                className="mt-1 max-w-[90px] truncate text-[9px] text-[#8A8077]"
+                className="mt-1 max-w-[90px] truncate text-[9px] text-[#6B6269]"
                 title={`${place.imageCredit ?? ''} ${place.imageLicense ?? ''}`}
               >
                 {place.imageCredit}
@@ -698,7 +698,7 @@ function PlaceRow({
             )}
           </div>
         ) : (
-          <div className="flex h-12 w-[62px] items-center justify-center rounded-lg border border-dashed border-[#D8CFC2] bg-[#F7F3EC] px-1 text-center text-[9px] text-[#8A8077]">
+          <div className="flex h-12 w-[62px] items-center justify-center rounded-lg border border-dashed border-[#D1CECB] bg-[#E5E4E2] px-1 text-center text-[9px] text-[#6B6269]">
             Chưa có ảnh
           </div>
         )}
@@ -706,18 +706,18 @@ function PlaceRow({
 
       <td className="max-w-[270px] px-3 py-3.5">
         <Link
-          className="font-semibold leading-5 text-[#30213F] transition-colors hover:text-[#57347D] hover:underline"
+          className="font-semibold leading-5 text-[#3A0F34] transition-colors hover:text-[#3A0F34] hover:underline"
           to={paths.adminPlace(place.id)}
         >
           {place.name}
         </Link>
-        <p className="mt-1 break-all text-[11px] leading-4 text-[#8A8077]">
+        <p className="mt-1 break-all text-[11px] leading-4 text-[#6B6269]">
           /{place.slug}
         </p>
       </td>
 
       <td className="px-3 py-3.5">
-        <span className="inline-flex max-w-[150px] rounded-full bg-[#F0ECE5] px-2.5 py-1.5 text-[10px] font-medium leading-4 text-[#57347D]">
+        <span className="inline-flex max-w-[150px] rounded-full bg-[#E5E4E2] px-2.5 py-1.5 text-[10px] font-medium leading-4 text-[#3A0F34]">
           {labels[place.category] ?? place.category}
         </span>
       </td>
@@ -731,12 +731,12 @@ function PlaceRow({
 
       <td className="px-3 py-3.5">
         {place.verified ? (
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-[#18745D]">
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-[#3A0F34]">
             <span aria-hidden="true">✓</span>
             Đã duyệt
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-[#8A6740]">
+          <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-[#8A6500]">
             <span aria-hidden="true">◷</span>
             Chờ duyệt
           </span>
@@ -749,20 +749,20 @@ function PlaceRow({
             {place.missingFields.slice(0, 2).map((field) => (
               <span
                 key={field}
-                className="inline-flex items-center gap-1 rounded-md bg-[#FDE8E7] px-2 py-1 text-[10px] leading-4 text-[#A61B1B]"
+                className="inline-flex items-center gap-1 rounded-md bg-[#F8E8E6] px-2 py-1 text-[10px] leading-4 text-[#B3261E]"
               >
                 <span aria-hidden="true">!</span>
                 {String(vi.admin[field as keyof typeof vi.admin] ?? field)}
               </span>
             ))}
             {place.missingFields.length > 2 && (
-              <span className="rounded-md bg-[#F0ECE5] px-2 py-1 text-[10px] text-[#756B65]">
+              <span className="rounded-md bg-[#E5E4E2] px-2 py-1 text-[10px] text-[#6B6269]">
                 +{place.missingFields.length - 2}
               </span>
             )}
           </div>
         ) : (
-          <span className="inline-flex items-center gap-1 rounded-md bg-[#DDF7EE] px-2 py-1 text-[10px] font-medium text-[#18745D]">
+          <span className="inline-flex items-center gap-1 rounded-md bg-[#FFF3CC] px-2 py-1 text-[10px] font-medium text-[#3A0F34]">
             <span aria-hidden="true">✓</span>
             Đủ dữ liệu
           </span>
@@ -771,7 +771,7 @@ function PlaceRow({
 
       <td className="px-3 py-3.5 text-right">
         <Link
-          className="inline-flex min-h-9 items-center justify-center rounded-lg border border-[#E5D8EE] bg-white px-3 text-xs font-semibold text-[#57347D] transition-colors hover:border-[#57347D] hover:bg-[#F3EDF8]"
+          className="inline-flex min-h-9 items-center justify-center rounded-lg border border-[#D1CECB] bg-white px-3 text-xs font-semibold text-[#3A0F34] transition-colors hover:border-[#3A0F34] hover:bg-[#F0E7EE]"
           to={paths.adminPlace(place.id)}
         >
           Chỉnh sửa
