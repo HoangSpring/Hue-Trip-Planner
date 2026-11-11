@@ -63,4 +63,36 @@ describe('SavedPlaceButton', () => {
     act(() => root.unmount())
     client.clear()
   })
+
+  it('shows the API save failure and lets the user retry after rolling back', async () => {
+    authMock.current = { status: 'authenticated', session: { access_token: 'fake-jwt' }, user: { id: 'a0000000-0000-4000-8000-000000000001' }, isLoading: false, isAuthenticated: true }
+    let failed = false
+    let serverSaved = false
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input) === '/api/saved') return new Response(JSON.stringify({ items: serverSaved ? [place] : [] }), { status: 200 })
+      if (String(input).endsWith(`/api/saved/${place.id}`) && init?.method === 'PUT') {
+        if (!failed) {
+          failed = true
+          return new Response(JSON.stringify({ error: { code: 'SERVICE_UNAVAILABLE', message: 'Chưa thể lưu địa điểm lúc này.', requestId: 'req_test' } }), { status: 503 })
+        }
+        serverSaved = true
+        return new Response(null, { status: 204 })
+      }
+      return new Response(null, { status: 404 })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    const { container, root, client } = mount()
+    const button = container.querySelector('button')!
+    await act(async () => { await new Promise(resolve => setTimeout(resolve, 20)) })
+    await act(async () => { button.dispatchEvent(new MouseEvent('click', { bubbles: true })); await new Promise(resolve => setTimeout(resolve, 30)) })
+    expect(container.querySelector('[role="alert"]')?.textContent).toContain('Chưa thể lưu địa điểm lúc này.')
+    expect(button.getAttribute('aria-pressed')).toBe('false')
+    const retry = [...container.querySelectorAll('button')].find(candidate => candidate.textContent === 'Thử lại')
+    expect(retry).toBeDefined()
+    await act(async () => { retry?.dispatchEvent(new MouseEvent('click', { bubbles: true })); await new Promise(resolve => setTimeout(resolve, 30)) })
+    expect(button.getAttribute('aria-pressed')).toBe('true')
+    expect(container.querySelector('[role="alert"]')).toBeNull()
+    act(() => root.unmount())
+    client.clear()
+  })
 })
