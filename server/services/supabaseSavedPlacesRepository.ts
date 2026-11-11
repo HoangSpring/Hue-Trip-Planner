@@ -7,36 +7,49 @@ import type { SavedPlacesRepository } from './savedPlacesService'
 
 type PlaceRow = Tables<'places'>
 
+type SupabaseFailure = { code?: string } | null
+
+function throwSavedPlaceFailure(operation: string, error: SupabaseFailure, message: string): never {
+  const code = error?.code ?? 'unknown'
+  // Log only the operation and Postgres/PostgREST code; never log tokens or row data.
+  console.error('[saved_places] database request failed', { operation, code })
+  if (code === '42501') throw new AppError(403, 'FORBIDDEN', 'Phiên đăng nhập chưa đủ quyền lưu địa điểm. Hãy đăng nhập lại.')
+  if (code === '42P01' || code === 'PGRST205') {
+    throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chức năng lưu địa điểm chưa được cấu hình đầy đủ.')
+  }
+  throw new AppError(503, 'SERVICE_UNAVAILABLE', message)
+}
+
 export class SupabaseSavedPlacesRepository implements SavedPlacesRepository {
   constructor(private readonly client: SupabaseClient<Database>) {}
 
   async isPublished(placeId: string): Promise<boolean> {
     const { data, error } = await this.client.from('places').select('id').eq('id', placeId).eq('status', 'published').maybeSingle()
-    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Dịch vụ địa điểm chưa sẵn sàng.')
+    if (error) throwSavedPlaceFailure('check_published', error, 'Dịch vụ địa điểm chưa sẵn sàng.')
     return Boolean(data)
   }
 
   async list(userId: string, category?: Category): Promise<PlaceSummary[]> {
     const { data: saved, error: savedError } = await this.client.from('saved_places').select('place_id, created_at').eq('user_id', userId).order('created_at', { ascending: false })
-    if (savedError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể tải địa điểm đã lưu.')
+    if (savedError) throwSavedPlaceFailure('list_saved', savedError, 'Chưa thể tải địa điểm đã lưu.')
     const ids = (saved ?? []).map(row => row.place_id)
     if (!ids.length) return []
 
     let placesQuery = this.client.from('places').select('*').in('id', ids).eq('status', 'published')
     if (category) placesQuery = placesQuery.eq('category', category)
     const { data: places, error: placesError } = await placesQuery
-    if (placesError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể tải địa điểm đã lưu.')
+    if (placesError) throwSavedPlaceFailure('list_places', placesError, 'Chưa thể tải địa điểm đã lưu.')
     const rows = (places ?? []) as PlaceRow[]
     if (!rows.length) return []
 
     const placeIds = rows.map(row => row.id)
     const { data: links, error: linksError } = await this.client.from('place_tags').select('place_id, tag_id').in('place_id', placeIds)
-    if (linksError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể tải địa điểm đã lưu.')
+    if (linksError) throwSavedPlaceFailure('list_tags', linksError, 'Chưa thể tải địa điểm đã lưu.')
     const tagIds = [...new Set((links ?? []).map(link => link.tag_id))]
     const { data: tags, error: tagsError } = tagIds.length
       ? await this.client.from('tags').select('id, slug, name').in('id', tagIds)
       : { data: [], error: null }
-    if (tagsError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể tải địa điểm đã lưu.')
+    if (tagsError) throwSavedPlaceFailure('load_tags', tagsError, 'Chưa thể tải địa điểm đã lưu.')
     const tagsById = new Map((tags ?? []).map(tag => [tag.id, { slug: tag.slug, name: tag.name }]))
     const tagsByPlace = new Map<string, PlaceTag[]>()
     for (const link of links ?? []) {
@@ -52,11 +65,11 @@ export class SupabaseSavedPlacesRepository implements SavedPlacesRepository {
 
   async save(userId: string, placeId: string): Promise<void> {
     const { error } = await this.client.from('saved_places').upsert({ user_id: userId, place_id: placeId }, { onConflict: 'user_id,place_id', ignoreDuplicates: true })
-    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể lưu địa điểm lúc này.')
+    if (error) throwSavedPlaceFailure('save', error, 'Chưa thể lưu địa điểm lúc này.')
   }
 
   async remove(userId: string, placeId: string): Promise<void> {
     const { error } = await this.client.from('saved_places').delete().eq('user_id', userId).eq('place_id', placeId)
-    if (error) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Chưa thể bỏ lưu địa điểm lúc này.')
+    if (error) throwSavedPlaceFailure('remove', error, 'Chưa thể bỏ lưu địa điểm lúc này.')
   }
 }

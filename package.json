@@ -19,6 +19,7 @@
     "db:types": "supabase gen types typescript --linked --schema public > src/types/supabase.ts",
     "db:test:rls": "supabase test db --local supabase/tests",
     "smoke:api": "tsx scripts/smokeApi.ts",
+    "smoke:saved": "tsx scripts/smokeSavedPlaces.ts",
     "smoke:vercel-api": "tsx scripts/smokeApi.ts --vercel-handler",
     "smoke:trips": "tsx scripts/smokeTrips.ts",
     "smoke:admin": "tsx scripts/smokeAdmin.ts",

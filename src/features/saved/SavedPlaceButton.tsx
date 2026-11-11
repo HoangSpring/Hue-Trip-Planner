@@ -22,15 +22,32 @@ export function SavedPlaceButton({ place, className = '' }: { place: Pick<PlaceS
   const saved = optimisticSaved ?? (savedQuery.data?.items.some(item => item.id === place.id) ?? false)
 
   const mutation = useMutation({
-    mutationFn: () => saved ? deleteSavedPlaceApi(place.id, token!) : putSavedPlaceApi(place.id, token!),
-    onMutate: async () => {
+    mutationFn: (currentlySaved: boolean) => currentlySaved ? deleteSavedPlaceApi(place.id, token!) : putSavedPlaceApi(place.id, token!),
+    onMutate: async (currentlySaved: boolean) => {
       setError('')
-      setOptimisticSaved(!saved)
+      setOptimisticSaved(!currentlySaved)
       await queryClient.cancelQueries({ queryKey: key })
       const previous = queryClient.getQueryData<{ items: PlaceSummary[] }>(key)
       const candidate = placeSummarySchema.safeParse(place)
-      if (saved) queryClient.setQueryData<{ items: PlaceSummary[] }>(key, current => ({ items: (current?.items ?? []).filter(item => item.id !== place.id) }))
-      else if (candidate.success) queryClient.setQueryData<{ items: PlaceSummary[] }>(key, current => ({ items: [...(current?.items ?? []), candidate.data] }))
+      const summary: PlaceSummary = candidate.success ? candidate.data : {
+        id: place.id,
+        slug: place.slug ?? '',
+        name: place.name,
+        category: place.category ?? 'sightseeing',
+        shortDescription: place.shortDescription ?? null,
+        area: place.area ?? null,
+        lat: place.lat ?? 0,
+        lng: place.lng ?? 0,
+        coverImageUrl: place.coverImageUrl ?? null,
+        coverImageAlt: place.coverImageAlt ?? null,
+        imageCredit: place.imageCredit ?? null,
+        imageLicense: place.imageLicense ?? null,
+        imageSourceUrl: place.imageSourceUrl ?? null,
+        tags: place.tags ?? [],
+        verified: place.verified ?? false,
+      }
+      if (currentlySaved) queryClient.setQueryData<{ items: PlaceSummary[] }>(key, current => ({ items: (current?.items ?? []).filter(item => item.id !== place.id) }))
+      else queryClient.setQueryData<{ items: PlaceSummary[] }>(key, current => ({ items: [...(current?.items ?? []), summary] }))
       return { previous }
     },
     onError: (error, _variables, context) => {
@@ -42,14 +59,16 @@ export function SavedPlaceButton({ place, className = '' }: { place: Pick<PlaceS
     onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
   })
 
-  function handleClick() {
+  function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault()
+    event.stopPropagation()
     if (auth.status === 'loading') return
     if (!token) {
       writePendingAction({ type: 'save_place', placeId: place.id })
       setLoginOpen(true)
       return
     }
-    mutation.mutate()
+    mutation.mutate(saved)
   }
 
   const next = `${location.pathname}${location.search}`
@@ -59,7 +78,7 @@ export function SavedPlaceButton({ place, className = '' }: { place: Pick<PlaceS
     </button>
     {error && <div className="mt-2 flex items-center gap-2 text-sm text-danger" role="alert">
       <span>{error}</span>
-      <button type="button" className="font-semibold underline" onClick={() => mutation.mutate()}>{vi.system.retry}</button>
+      <button type="button" className="font-semibold underline" onClick={() => mutation.mutate(saved)}>{vi.system.retry}</button>
     </div>}
     {loginOpen && <div className="fixed inset-0 z-[1000] grid place-items-center bg-ink/50 p-4"><section role="dialog" aria-modal="true" aria-labelledby="save-place-login-title" className="w-full max-w-md rounded-card border border-line bg-surface p-6 shadow-card">
       <h2 id="save-place-login-title" className="font-serif text-xl font-semibold">{vi.saved.loginTitle}</h2><p className="mt-2 text-sm leading-6 text-ink-muted">{vi.saved.loginBody(place.name)}</p>

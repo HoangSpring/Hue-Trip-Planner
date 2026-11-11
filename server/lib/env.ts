@@ -25,9 +25,11 @@ export const envSchema = z.object({
 export const env = envSchema.parse(process.env)
 
 export function requireSupabasePublicConfig(): { url: string; anonKey: string } {
+  const url = env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+  const anonKey = env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY
   const parsed = z.object({ url: z.string().url(), anonKey: z.string().min(1) }).safeParse({
-    url: env.SUPABASE_URL,
-    anonKey: env.SUPABASE_ANON_KEY,
+    url,
+    anonKey,
   })
   if (!parsed.success) throw new Error('Supabase chưa được cấu hình')
   return parsed.data
