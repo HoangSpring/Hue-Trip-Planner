@@ -254,6 +254,11 @@ interface Notice { code: 'FALLBACK_USED'|'FEW_CANDIDATES'|'FILTER_RELAXED'|'LLM_
 | 30 | POST | `/api/admin/places/bulk` | requireAdmin | Thao tác hàng loạt trên địa điểm | F-12 |
 | 31 | POST | `/api/admin/import/preview` | requireAdmin | Xem trước CSV | F-12 |
 | 32 | POST | `/api/admin/import/commit` | requireAdmin | Ghi dữ liệu import | F-12 |
+| 33 | GET | `/api/admin/dashboard` | requireAdmin | Số liệu tổng quan | F-15 |
+| 34 | GET | `/api/admin/users` | requireAdmin | Danh sách người dùng phân trang | F-15 |
+| 35 | PATCH | `/api/admin/users/:id/role` | requireAdmin | Đổi vai trò | F-15 |
+| 36 | POST | `/api/admin/users/:id/suspension` | requireAdmin | Khóa/mở khóa | F-15 |
+| 37 | DELETE | `/api/admin/users/:id` | requireAdmin | Xóa tài khoản, cần `{ "confirm": "DELETE" }` | F-15 |
 | 33 | GET | `/api/health` | public | Kiểm tra sống | — |
 | 34 | GET | `/api/sitemap.xml` | public | Sitemap | F-14 |
 | 35 | GET | `/api/og/place/:slug` | public | HTML meta cho bot | F-14 |
@@ -488,6 +493,17 @@ Body: `{ "ids": ["<uuid>"], "action": "publish" | "unpublish" | "archive" | "ver
 - `errorCsv` là nội dung CSV UTF-8 gồm dòng lỗi và lý do (không phải data URL).
 - Commit gọi `admin_import_place(p_row, p_overwrite_verified)` qua JWT admin. Place, tags và audit của mỗi dòng cùng transaction. Nếu migration 13 chưa được áp dụng hoặc RPC chưa hiện trong schema cache, trả 503 với thông báo cần migration; không chuyển sang ghi nhiều bước bằng service role.
 
+### 9.6 Dashboard và quản lý người dùng
+
+- Mọi route đặt `Cache-Control: private, no-store`; yêu cầu `requireAdmin`.
+- `GET /api/admin/dashboard` trả số lượng hồ sơ, địa điểm tổng/đã xuất bản/bản nháp và chuyến đi; chỉ trả số tổng hợp.
+- `GET /api/admin/users?page=1&pageSize=25` trả email, tên hồ sơ, role, ngày tạo, lần đăng nhập gần nhất, trạng thái khóa; không trả user metadata, token hay Auth payload thô.
+- `PATCH /api/admin/users/:id/role` body strict `{ "role": "user"|"admin" }`. Không tự hạ quyền admin; không hạ quyền admin cuối cùng.
+- `POST /api/admin/users/:id/suspension` body strict `{ "suspended": boolean }`. Dùng Auth Admin API để chặn đăng nhập và `profiles.is_suspended` để middleware từ chối access token còn hạn. Không cho tự khóa.
+- `DELETE /api/admin/users/:id` yêu cầu `{ "confirm": "DELETE" }`; không cho tự xóa. Chỉ xóa được tài khoản role `user`; cần hạ quyền quản trị viên trước. Auth xóa user và cascade dữ liệu theo `docs/05` mục 11; nếu Auth user sở hữu object Storage, thao tác có thể bị Supabase từ chối.
+- Các thao tác `auth.admin.*` và số liệu tổng hợp dùng service role chỉ sau `requireAdmin`. Cập nhật role/suspended dùng JWT admin để RLS vẫn hiệu lực.
+- Dashboard chỉ trả số tổng hợp và không cần migration 14. `/api/admin/users*` trả 503 đến khi migration 14 đã áp dụng và `ADMIN_USER_MANAGEMENT_ENABLED=true`. Mặc định công tắc là `false`.
+
 ## 10. Hàm cơ sở dữ liệu (RPC) cần tạo
 
 Các hàm được chia theo task để migration theo đúng thứ tự:
@@ -497,6 +513,7 @@ Các hàm được chia theo task để migration theo đúng thứ tự:
 - Migration 10, task T-034: `save_trip` và `create_trip_from_payload`.
 - Migration 12, task T-043: `admin_save_place_with_tags`, lưu place và thay tags nguyên tử dưới JWT admin.
 - Migration 13, T-045 server: `admin_import_place`, nhập place, tags không rỗng và audit nguyên tử; trả `created|updated|skipped` cùng `place_id` và lý do.
+- Migration 14, T-053: thêm `profiles.is_suspended` và `admin_set_user_role` (SECURITY INVOKER).
 
 | Hàm | Mục đích |
 |---|---|
@@ -516,6 +533,8 @@ Chỉ những nơi sau; mỗi nơi phải **tự kiểm tra quyền** trước k
 2. Ghi `generation_events` và `place_audit_log` của API quản trị địa điểm (import ghi audit bên trong RPC migration 13 với JWT admin).
 3. `DELETE /api/me` (xóa `auth.users`).
 4. `/api/sitemap.xml`, `/api/og/*` (đọc dữ liệu công khai, có thể dùng anon key).
+5. `/api/admin/dashboard` (chỉ đọc số liệu tổng hợp sau `requireAdmin`).
+6. `/api/admin/users` dùng Auth Admin API để liệt kê, khóa/mở khóa, xóa user sau `requireAdmin`; thay đổi role và trạng thái trong `profiles` dùng JWT admin.
 
 Mọi nơi còn lại dùng client kèm JWT người dùng (hoặc anon key cho dữ liệu công khai).
 
@@ -552,6 +571,7 @@ Trả HTML tối giản chứa thẻ `<title>`, `description`, Open Graph (`og:t
 |---|---|---|
 | `SUPABASE_URL`, `SUPABASE_ANON_KEY` | Kết nối Supabase | — |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chỉ backend | — |
+| `ADMIN_USER_MANAGEMENT_ENABLED` | Bật API quản lý user sau migration 14 | `false` |
 | `LLM_API_KEY`, `LLM_MODEL` | Gọi LLM | — |
 | `LLM_ENABLED` | Công tắc khẩn cấp (mặc định fallback trong Phase 2) | `false` |
 | `LLM_TIMEOUT_MS` | Thời gian chờ mỗi lần gọi LLM | `12000` |

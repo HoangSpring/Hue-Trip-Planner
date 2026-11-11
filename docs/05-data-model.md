@@ -84,6 +84,7 @@ supabase/migrations/
   20261104000011_allow_service_role_profile_updates.sql # sửa trigger role cho thao tác tin cậy khi auth.uid() IS NULL
   20261104000012_admin_save_place_with_tags.sql # lưu địa điểm và thay tags nguyên tử cho admin
   20261105000013_admin_import_place_atomic.sql # import một dòng place+tags+audit nguyên tử bằng JWT admin
+  20261111000014_admin_user_management.sql # is_suspended cho khóa tài khoản (F-15; chưa áp dụng)
 supabase/seed/
   001_tags.sql
   002_start_points.sql
@@ -131,6 +132,7 @@ create table public.profiles (
   display_name  text,
   avatar_url    text,
   role          text not null default 'user' check (role in ('user', 'admin')),
+  is_suspended  boolean not null default false, -- migration 14: middleware chặn cả access token hiện hữu khi bị khóa
   created_at    timestamptz not null default now(),
   updated_at    timestamptz not null default now()
 );
@@ -438,6 +440,8 @@ create trigger trg_trip_items_consistency
 `create_trip_from_payload(jsonb)` và `save_trip(uuid,jsonb,timestamptz)` được tạo trong migration 10. Cả hai là `SECURITY INVOKER`, xác định người dùng qua `auth.uid()` và chịu các policy RLS ở mục 5.6. `create_trip_from_payload` chống trùng theo `(user_id, client_draft_id)` và giới hạn mặc định 50 chuyến/người; có thể cấu hình ở DB bằng `app.max_trips_per_user`. `save_trip` khóa trip bằng `FOR UPDATE`, phát SQLSTATE `PT409` (`TRIP_VERSION_CONFLICT`) khi phiên bản cũ, giữ nguyên `num_days`, đồng bộ days/items trong một transaction và đánh lại `position` do API đã kiểm tra. Không được áp dụng migration 10 trước khi chủ dự án review.
 
 Migration 13 thêm `admin_import_place(p_row jsonb, p_overwrite_verified boolean)` với `SECURITY INVOKER` và kiểm tra `public.is_admin()` ở đầu hàm. RPC khóa theo slug, tạo place mới ở `draft`/`verified=false`, giữ nguyên `status`/`verified` của place cũ, bỏ qua place verified nếu chưa chọn ghi đè; thay tags chỉ khi CSV có tag; và ghi `place_audit_log` trong cùng transaction. Kết quả JSON gồm `action` (`created|updated|skipped`), `place_id`, `reason`. Import gọi RPC bằng JWT admin. Nếu RPC chưa khả dụng API trả 503 rõ ràng, không quay về ghi place/tag/audit rời rạc.
+
+Migration 14 thêm `profiles.is_suspended boolean not null default false` và RPC `admin_set_user_role` (SECURITY INVOKER), khóa cập nhật vai trò để không thể đồng thời hạ quyền quản trị viên cuối cùng. Khi `ADMIN_USER_MANAGEMENT_ENABLED=true`, middleware kiểm tra cờ này bằng JWT user và từ chối request đã xác thực của tài khoản bị khóa; cờ mặc định false để các tài khoản hiện có tiếp tục hoạt động.
 
 > **Đổi thứ tự (`position`):** không đặt ràng buộc `unique (trip_day_id, position)` để việc hoán đổi không bị lỗi tạm thời. Khi lưu, backend ghi lại toàn bộ `position` của ngày trong **một transaction** (hàm RPC hoặc `upsert` hàng loạt), đánh số liên tục 0..n-1.
 

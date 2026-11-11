@@ -46,6 +46,8 @@ const SharedTripPage = lazy(() => import('@/features/share/SharedTripPage'))
 const AdminPlaceListPage = lazy(() => import('@/features/admin/AdminPlaceListPage'))
 const AdminPlaceFormPage = lazy(() => import('@/features/admin/AdminPlaceFormPage'))
 const AdminImportPage = lazy(() => import('@/features/admin/AdminImportPage'))
+const AdminDashboardPage = lazy(() => import('@/features/admin/AdminDashboardPage'))
+const AdminUsersPage = lazy(() => import('@/features/admin/AdminUsersPage'))
 const loading = <p className="p-8 text-center text-ink-muted" role="status">{vi.system.loading}</p>
 function TripIdPage() {
   const { id = '' } = useParams()
@@ -59,7 +61,7 @@ export const routePaths = [
   paths.planNew, paths.planGenerating, paths.tripDraft, paths.tripPattern, paths.sharedTripPattern,
   paths.login, paths.register, paths.forgotPassword, paths.resetPassword, paths.authCallback,
   paths.account, paths.accountTrips, paths.accountSaved, paths.accountSettings,
-  paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
+  paths.admin, paths.adminDashboard, paths.adminUsers, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
   paths.devComponents, paths.devAuth, paths.forbidden, '*',
 ]
 
@@ -104,7 +106,9 @@ export function createAppRoutes(authClient: SupabaseClient | null = supabaseClie
       { path: paths.accountSettings, element: <Suspense fallback={loading}><AccountSettingsPage /></Suspense> },
     ] }] }] },
     { path: paths.admin, element: <RequireAdmin />, children: [{ element: <AdminLayout />, children: [
-      { index: true, element: <Navigate to={paths.adminPlaces} replace /> },
+      { index: true, element: <Navigate to={paths.adminDashboard} replace /> },
+      { path: paths.adminDashboard, element: <Suspense fallback={loading}><AdminDashboardPage /></Suspense> },
+      { path: paths.adminUsers, element: <Suspense fallback={loading}><AdminUsersPage /></Suspense> },
       { path: paths.adminPlaces, element: <Suspense fallback={loading}><AdminPlaceListPage /></Suspense> },
       { path: paths.adminPlaceNew, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },
       { path: paths.adminPlacePattern, element: <Suspense fallback={loading}><AdminPlaceFormPage /></Suspense> },

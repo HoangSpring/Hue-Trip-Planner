@@ -7,7 +7,7 @@ export const paths = {
   login: '/login', register: '/register', forgotPassword: '/forgot-password',
   resetPassword: '/reset-password', authCallback: '/auth/callback', account: '/account',
   accountTrips: '/account/trips', accountSaved: '/account/saved', accountSettings: '/account/settings',
-  admin: '/admin', adminPlaces: '/admin/places', adminPlaceNew: '/admin/places/new',
+  admin: '/admin', adminDashboard: '/admin/dashboard', adminUsers: '/admin/users', adminPlaces: '/admin/places', adminPlaceNew: '/admin/places/new',
   adminPlace: (id: string) => `/admin/places/${encodeURIComponent(id)}`,
   adminPlacePattern: '/admin/places/:id', adminImport: '/admin/import', forbidden: '/403',
   devComponents: '/dev/components', devAuth: '/dev/auth',

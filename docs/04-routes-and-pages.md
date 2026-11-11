@@ -57,7 +57,9 @@
 
 | Path | Trang | Quyền | SEO | Tính năng |
 |---|---|---|---|---|
-| `/admin` | Chuyển hướng → `/admin/places` | Admin | noindex | — |
+| `/admin` | Chuyển hướng → `/admin/dashboard` | Admin | noindex | F-15 |
+| `/admin/dashboard` | `AdminDashboardPage` | Admin | noindex | F-15 |
+| `/admin/users` | `AdminUsersPage` | Admin | noindex | F-15 |
 | `/admin/places` | `AdminPlaceListPage` | Admin | noindex | F-12 |
 | `/admin/places/new` | `AdminPlaceFormPage` (tạo) | Admin | noindex | F-12 |
 | `/admin/places/:id` | `AdminPlaceFormPage` (sửa) | Admin | noindex | F-12 |

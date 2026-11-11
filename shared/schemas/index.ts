@@ -1,5 +1,6 @@
 export * from './apiError'
 export * from './adminPlace'
+export * from './adminUser'
 export * from './auth'
 export * from './enums'
 export * from './place'

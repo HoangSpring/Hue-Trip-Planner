@@ -114,6 +114,8 @@ const documentedRoutes: Array<{ label: string; path: string; expected: string }>
   { label: 'account saved guard', path: paths.accountSaved, expected: paths.login },
   { label: 'account settings guard', path: paths.accountSettings, expected: paths.login },
   { label: 'admin index guard', path: paths.admin, expected: paths.login },
+  { label: 'admin dashboard guard', path: paths.adminDashboard, expected: paths.login },
+  { label: 'admin users guard', path: paths.adminUsers, expected: paths.login },
   { label: 'admin places guard', path: paths.adminPlaces, expected: paths.login },
   { label: 'admin create guard', path: paths.adminPlaceNew, expected: paths.login },
   { label: 'admin edit guard', path: paths.adminPlace('c0000000-0000-4000-8000-000000000003'), expected: paths.login },
@@ -183,6 +185,8 @@ describe('memory router for every route in docs/04', () => {
     try {
       expect(admin.router.state.location.pathname).toBe(paths.adminPlaces)
       await waitForText(admin.container, 'Quản trị nội dung')
+      expect(admin.container.textContent).toContain('Tổng quan')
+      expect(admin.container.textContent).toContain('Người dùng')
       const request = vi.mocked(fetch).mock.calls[0]
       expect(new Headers(request?.[1]?.headers).get('Authorization')).toBe('Bearer test-session-token')
     } finally {
@@ -196,7 +200,7 @@ describe('memory router for every route in docs/04', () => {
       paths.planNew, paths.planGenerating, paths.tripDraft, paths.tripPattern, paths.sharedTripPattern,
       paths.login, paths.register, paths.forgotPassword, paths.resetPassword, paths.authCallback,
       paths.account, paths.accountTrips, paths.accountSaved, paths.accountSettings,
-      paths.admin, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
+      paths.admin, paths.adminDashboard, paths.adminUsers, paths.adminPlaces, paths.adminPlaceNew, paths.adminPlacePattern, paths.adminImport,
       paths.devComponents, paths.devAuth, paths.forbidden, '*',
     ]))
   })

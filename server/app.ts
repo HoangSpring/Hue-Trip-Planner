@@ -12,6 +12,7 @@ import { createMeRoutes } from './routes/me'
 import { createSavedPlacesRoutes } from './routes/savedPlaces'
 import { createTripSharingRoutes } from './routes/tripSharing'
 import { createAdminRoutes } from './routes/admin'
+import { createAdminUserRoutes } from './routes/adminUsers'
 import { createSeoRoutes } from './routes/seo'
 
 export const app = new Hono<ApiEnv>()
@@ -31,3 +32,4 @@ app.route('/api', createMeRoutes())
 app.route('/api', createSavedPlacesRoutes())
 app.route('/api', createTripSharingRoutes())
 app.route('/api', createAdminRoutes())
+app.route('/api', createAdminUserRoutes())

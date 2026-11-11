@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { Hono } from 'hono'
 import { errorHandler } from './errorHandler'
 import { requireAdmin, requireAuth } from './auth'
@@ -8,10 +8,13 @@ import type { ApiEnv } from '../types'
 const { createUserSupabaseClient } = vi.hoisted(() => ({ createUserSupabaseClient: vi.fn() }))
 vi.mock('../lib/supabase', () => ({ createUserSupabaseClient }))
 
-function createTestApp(role: 'user' | 'admin' = 'user') {
+function createTestApp(role: 'user' | 'admin' = 'user', suspended = false) {
   createUserSupabaseClient.mockReturnValue({
     auth: { getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'user-1', email: 'test@example.com' } }, error: null }) },
-    from: vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({ single: vi.fn().mockResolvedValue({ data: { role }, error: null }) }) }) }),
+    from: vi.fn().mockReturnValue({ select: vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({
+      single: vi.fn().mockResolvedValue({ data: { role }, error: null }),
+      maybeSingle: vi.fn().mockResolvedValue({ data: { is_suspended: suspended }, error: null }),
+    }) }) }),
   })
   const app = new Hono<ApiEnv>()
   app.use('*', requestIdMiddleware)
@@ -24,6 +27,7 @@ function createTestApp(role: 'user' | 'admin' = 'user') {
 
 describe('API auth middleware', () => {
   beforeEach(() => vi.clearAllMocks())
+  afterEach(() => vi.unstubAllEnvs())
 
   it('returns a normalized 401 and request id when the token is missing', async () => {
     const response = await createTestApp().request('/private')
@@ -44,6 +48,13 @@ describe('API auth middleware', () => {
     })
     expect(response.status).toBe(200)
     expect(response.headers.get('X-Request-Id')).toBe('req_client_1')
+  })
+
+  it('blocks a suspended user even with an otherwise valid access token when management is enabled', async () => {
+    vi.stubEnv('ADMIN_USER_MANAGEMENT_ENABLED', 'true')
+    const response = await createTestApp('user', true).request('/private', { headers: { Authorization: 'Bearer still-valid-token' } })
+    expect(response.status).toBe(403)
+    expect(await response.json()).toMatchObject({ error: { code: 'FORBIDDEN', message: expect.stringContaining('đã bị khóa') } })
   })
 
   it('normalizes unexpected errors without exposing internal details', async () => {

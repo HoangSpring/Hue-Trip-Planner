@@ -21,6 +21,11 @@ export const requireAuth: MiddlewareHandler<ApiEnv> = async (context, next) => {
 
   const { data, error } = await client.auth.getUser(match[1])
   if (error || !data.user) throw unauthorized()
+  if (process.env.ADMIN_USER_MANAGEMENT_ENABLED === 'true') {
+    const { data: profile, error: profileError } = await client.from('profiles').select('is_suspended').eq('id', data.user.id).maybeSingle()
+    if (profileError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể kiểm tra trạng thái tài khoản. Kiểm tra migration quản lý người dùng đã được áp dụng.')
+    if (profile?.is_suspended) throw new AppError(403, 'FORBIDDEN', 'Tài khoản đã bị khóa. Liên hệ quản trị viên để được hỗ trợ.')
+  }
   context.set('user', { id: data.user.id, email: data.user.email ?? null })
   context.set('accessToken', match[1])
   await next()
@@ -40,6 +45,11 @@ export const optionalAuth: MiddlewareHandler<ApiEnv> = async (context, next) => 
   }
   const { data, error } = await client.auth.getUser(match[1])
   if (error || !data.user) throw unauthorized()
+  if (process.env.ADMIN_USER_MANAGEMENT_ENABLED === 'true') {
+    const { data: profile, error: profileError } = await client.from('profiles').select('is_suspended').eq('id', data.user.id).maybeSingle()
+    if (profileError) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Không thể kiểm tra trạng thái tài khoản. Kiểm tra migration quản lý người dùng đã được áp dụng.')
+    if (profile?.is_suspended) throw new AppError(403, 'FORBIDDEN', 'Tài khoản đã bị khóa. Liên hệ quản trị viên để được hỗ trợ.')
+  }
   context.set('user', { id: data.user.id, email: data.user.email ?? null })
   context.set('accessToken', match[1])
   await next()

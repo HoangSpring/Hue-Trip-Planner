@@ -28,6 +28,7 @@
 | F-12 | Quản trị địa điểm và import CSV | P0 | Admin |
 | F-13 | Trang tĩnh | P1 | Mọi người |
 | F-14 | Yêu cầu phi chức năng | P0 | — |
+| F-15 | Dashboard và quản lý người dùng admin | P1 | Admin |
 | F-20+ | Giai đoạn 2 | P2 | — |
 
 ---
@@ -387,6 +388,24 @@
 | Quan sát | Ghi log lỗi server (không chứa dữ liệu cá nhân); ghi nhận số lần dùng fallback và thời gian sinh lịch trình |
 | Trình duyệt | Hai phiên bản mới nhất của Chrome, Safari, Edge, Firefox; Safari iOS và Chrome Android |
 | Ngôn ngữ | Tiếng Việt; chuỗi giao diện tách riêng để dễ dịch sau |
+
+## F-15 — Dashboard và quản lý người dùng admin (P1)
+
+**Routes:** `/admin/dashboard`, `/admin/users` (chỉ admin).
+
+- Dashboard tổng quan số tài khoản, địa điểm (tổng/đã xuất bản/bản nháp) và chuyến đi đã lưu; có lối tắt tới quản lý địa điểm và người dùng.
+- Danh sách tài khoản phân trang, hiển thị email, tên, vai trò, ngày tạo, lần đăng nhập gần nhất và trạng thái khóa.
+- Admin có thể đổi vai trò user/admin, khóa/mở khóa và xóa tài khoản khác.
+- Không cho tự hạ quyền, tự khóa/xóa hoặc hạ/xóa quản trị viên cuối cùng. Xóa cần nhập `DELETE`; thao tác xóa Auth sẽ cascade hồ sơ, chuyến đi và địa điểm đã lưu.
+- Khóa cập nhật Supabase Auth và `profiles.is_suspended`; server từ chối mọi request cần xác thực của tài khoản bị khóa. Admin không thể khóa tài khoản của chính mình.
+- Chỉ API server được dùng service role cho Auth Admin API và số liệu tổng hợp; API kiểm tra JWT + `profiles.role` trước.
+
+**AC:**
+
+- [ ] Chỉ admin xem được dashboard và danh sách người dùng; user thường nhận 403.
+- [ ] Đổi role, khóa/mở khóa phản ánh đúng ở Supabase Auth/API; không thể khóa truy cập bằng JWT cũ.
+- [ ] Không thể tự khóa/tự xóa hoặc xóa/hạ quyền admin cuối cùng.
+- [ ] Xóa yêu cầu nhập `DELETE`, đồng thời xóa dữ liệu liên quan theo chính sách cascade.
 
 ---
 

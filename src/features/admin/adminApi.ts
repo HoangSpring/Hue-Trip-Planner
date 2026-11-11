@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { adminPlaceInputSchema } from '@shared/schemas/adminPlace'
+import { adminDashboardSchema, adminUserListSchema, adminUserSchema } from '@shared/schemas/adminUser'
 import { apiRequest } from '@/lib/api'
 
 export const adminPlaceSchema = adminPlaceInputSchema.extend({
@@ -10,6 +11,22 @@ export const adminListSchema = z.object({ items: z.array(adminPlaceSchema), page
 export const adminAuditSchema = z.object({ items: z.array(z.object({ id: z.number(), action: z.string(), changes: z.unknown().nullable(), created_at: z.string(), actor_id: z.string().nullable() })) })
 export const bulkResultSchema = z.object({ results: z.array(z.object({ id: z.string(), success: z.boolean(), reason: z.string().optional() })) })
 export type AdminPlace = z.infer<typeof adminPlaceSchema>
+
+export function getAdminDashboard(token: string) {
+  return apiRequest('admin/dashboard', adminDashboardSchema, { accessToken: token })
+}
+export function listAdminUsers(token: string, page: number) {
+  return apiRequest(`admin/users?page=${page}&pageSize=25`, adminUserListSchema, { accessToken: token })
+}
+export function updateAdminUserRole(id: string, role: 'user' | 'admin', token: string) {
+  return apiRequest(`admin/users/${encodeURIComponent(id)}/role`, adminUserSchema, { method: 'PATCH', body: { role }, accessToken: token })
+}
+export function setAdminUserSuspension(id: string, suspended: boolean, token: string) {
+  return apiRequest(`admin/users/${encodeURIComponent(id)}/suspension`, adminUserSchema, { method: 'POST', body: { suspended }, accessToken: token })
+}
+export function deleteAdminUser(id: string, token: string) {
+  return apiRequest(`admin/users/${encodeURIComponent(id)}`, z.undefined(), { method: 'DELETE', body: { confirm: 'DELETE' }, accessToken: token })
+}
 
 export function listAdminPlaces(token: string, query: URLSearchParams) {
   return apiRequest(`admin/places?${query}`, adminListSchema, { accessToken: token })

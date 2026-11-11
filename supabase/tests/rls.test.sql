@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select extensions.plan(24);
+select extensions.plan(25);
 
 -- Fixtures are inserted as the migration owner and rolled back at the end.
 insert into auth.users (
@@ -81,6 +81,11 @@ select extensions.throws_ok(
   $$select public.save_trip('c0000000-0000-4000-8000-000000000003', '{"numDays":1,"days":[]}', now())$$,
   'PT404', 'TRIP_NOT_FOUND',
   'User A cannot call save_trip for user B trip'
+);
+select extensions.throws_ok(
+  $$select public.admin_set_user_role('b0000000-0000-4000-8000-000000000002', 'admin')$$,
+  '42501', 'ADMIN_REQUIRED',
+  'Regular users cannot change another profile role'
 );
 
 select extensions.is(

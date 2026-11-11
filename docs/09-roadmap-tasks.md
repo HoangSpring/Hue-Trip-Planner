@@ -413,6 +413,12 @@ M0 ──► M1 ──► M2 ──► M3
 - **Làm:** project Vercel + biến môi trường production; Supabase production (migration, seed tag/mốc, tài khoản admin đầu tiên gán thủ công); cấu hình Auth (URL chuyển hướng, nhà cung cấp Google, email); tên miền và HTTPS; kiểm tra giới hạn gói Vercel (thời gian chạy tối đa, kích thước body) khớp `maxDuration` đã đặt; sao lưu DB.
 - **Hoàn thành khi:** chạy trọn luồng chính trên domain thật; checklist ra mắt (mục 5) hoàn tất.
 
+### [ ] T-053 · Dashboard và quản lý người dùng admin · `L`
+- **Tham chiếu:** `docs/02` F-15; `docs/04` Quản trị; `docs/06` mục 9.6
+- **Làm:** sidebar, dashboard tổng quan, danh sách người dùng phân trang; đổi role, khóa/mở khóa, xóa tài khoản có kiểm tra và xác nhận; migration 14 thêm `profiles.is_suspended` và RPC đổi role.
+- **Hoàn thành khi:** migration 14 áp dụng; test API/UI qua; user bị khóa bị chặn cả khi access token cũ còn hạn; thao tác admin không cho tự khóa/xóa hoặc gỡ admin cuối cùng.
+- **Ghi chú:** code và migration được chuẩn bị; chưa tick đến khi migration 14 áp dụng và kiểm thử với admin/user thật.
+
 ---
 
 ## 4. Việc không thuộc task kỹ thuật (chủ dự án)
@@ -431,7 +437,7 @@ M0 ──► M1 ──► M2 ──► M3
 
 ## 5. Checklist ra mắt (T-052)
 
-- [ ] Toàn bộ AC của F-01 → F-14 (mục P0 và P1) đạt trên bản production.
+- [ ] Toàn bộ AC của F-01 → F-15 (mục P0 và P1) đạt trên bản production.
 - [ ] ≥ 40 địa điểm `published`; địa điểm dùng cho lịch trình đều có `visit_duration_min`, giờ mở cửa (nếu có), ảnh có ghi công.
 - [ ] Tỷ lệ địa điểm `verified` đạt mức chủ dự án chấp nhận (khuyến nghị 100% cho địa điểm nổi bật).
 - [ ] RLS đã kiểm tra tự động; không có secret trong bundle; `.env` không nằm trong repo.
@@ -443,6 +449,7 @@ M0 ──► M1 ──► M2 ──► M3
 - [ ] Open Graph hiển thị đúng khi chia sẻ qua Zalo/Facebook/Messenger.
 - [ ] Đã thử trên điện thoại thật (iOS Safari, Android Chrome).
 - [ ] Có kế hoạch sao lưu DB và cách quay lui triển khai.
+
 
 ## 6. Sau MVP (giai đoạn 2, chưa lên task chi tiết)
 

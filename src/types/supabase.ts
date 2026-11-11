@@ -359,6 +359,7 @@ export type Database = {
           created_at: string
           display_name: string | null
           id: string
+          is_suspended: boolean
           role: string
           updated_at: string
         }
@@ -367,6 +368,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id: string
+          is_suspended?: boolean
           role?: string
           updated_at?: string
         }
@@ -375,6 +377,7 @@ export type Database = {
           created_at?: string
           display_name?: string | null
           id?: string
+          is_suspended?: boolean
           role?: string
           updated_at?: string
         }
@@ -657,6 +660,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_set_user_role: {
+        Args: { p_role: string; p_user_id: string }
+        Returns: Json
+      }
       admin_import_place: {
         Args: { p_overwrite_verified: boolean; p_row: Json }
         Returns: Json
