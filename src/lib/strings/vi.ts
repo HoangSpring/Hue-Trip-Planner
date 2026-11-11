@@ -11,7 +11,7 @@ export const vi = {
   },
   navigation: {
     home: 'Trang chủ', explore: 'Khám phá', createTrip: 'Tạo lịch trình',
-    map: 'Bản đồ', me: 'Tôi', myTrips: 'Chuyến đi của tôi', signIn: 'Đăng nhập',
+    map: 'Bản đồ', me: 'Tôi', myTrips: 'Chuyến đi của tôi', signIn: 'Đăng nhập', signOut: 'Đăng xuất',
   },
   layout: {
     primaryNavigation: 'Điều hướng chính', mobileNavigation: 'Điều hướng trên điện thoại',

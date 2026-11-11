@@ -10,6 +10,11 @@ import { paths } from '../paths'
 
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true })
 
+const { mockSignOut } = vi.hoisted(() => ({ mockSignOut: vi.fn(async () => ({ error: null })) }))
+vi.mock('@/lib/supabase', () => ({
+  supabaseClient: { auth: { signOut: mockSignOut } },
+}))
+
 const mockUserId = 'a0000000-0000-4000-8000-000000000001'
 
 function mockClient(session: Session | null): SupabaseClient {
@@ -116,7 +121,7 @@ describe('PublicLayout Navbar', () => {
     }
   })
 
-  it('displays user displayName and links to /account/settings when authenticated', async () => {
+  it('displays account info and opens account menu when authenticated', async () => {
     const authenticatedSession = {
       access_token: 'test-token',
       token_type: 'bearer',
@@ -143,19 +148,52 @@ describe('PublicLayout Navbar', () => {
       expect(headerText).toContain('Lê Lợi')
       expect(headerText).not.toContain('Đăng nhập')
 
-      // Desktop link to account settings
-      const settingsLink = rendered.container.querySelector(`header a[href="${paths.accountSettings}"]`)
-      expect(settingsLink).not.toBeNull()
-      expect(settingsLink?.textContent).toContain('Lê Lợi')
+      const accountButton = rendered.container.querySelector<HTMLButtonElement>('header button[aria-label^="Tài khoản"]')
+      expect(accountButton).not.toBeNull()
+      expect(accountButton?.textContent).toContain('Lê Lợi')
 
       // Initial letter in avatar circle
-      const avatarBadge = settingsLink?.querySelector('span[aria-hidden="true"]')
+      const avatarBadge = accountButton?.querySelector('span[aria-hidden="true"]')
       expect(avatarBadge?.textContent).toBe('L')
+
+      await act(async () => accountButton?.click())
+      expect(rendered.container.querySelector('#account-menu')).not.toBeNull()
+      expect(rendered.container.querySelector(`a[href="${paths.accountSettings}"]`)).not.toBeNull()
+      expect(rendered.container.textContent).toContain('Đăng xuất')
 
       // Bottom mobile navigation should link "Tôi" to account trips
       const mobileNav = rendered.container.querySelector('nav[aria-label="Điều hướng trên thiết bị di động"]')
       const myTripsTab = mobileNav?.querySelector(`a[href="${paths.accountTrips}"]`)
       expect(myTripsTab).not.toBeNull()
+    } finally {
+      await rendered.cleanup()
+    }
+  })
+
+  it('signs out through Supabase when the account menu action is selected', async () => {
+    mockSignOut.mockClear()
+    const authenticatedSession = {
+      access_token: 'test-token',
+      token_type: 'bearer',
+      expires_in: 3600,
+      expires_at: 4_000_000_000,
+      refresh_token: 'test-refresh-token',
+      user: {
+        id: mockUserId, aud: 'authenticated', role: 'authenticated', email: 'leloi@example.test',
+        app_metadata: { provider: 'email', providers: ['email'] }, user_metadata: {},
+        created_at: '2026-01-01T00:00:00.000Z', is_anonymous: false,
+      },
+    } as unknown as Session
+    const rendered = await renderPublicLayout(authenticatedSession, { displayName: 'Lê Lợi' })
+    try {
+      const accountButton = rendered.container.querySelector<HTMLButtonElement>('header button[aria-label^="Tài khoản"]')
+      await act(async () => accountButton?.click())
+      const signOutButton = Array.from(rendered.container.querySelectorAll<HTMLButtonElement>('#account-menu button'))
+        .find(button => button.textContent === 'Đăng xuất')
+      expect(signOutButton).toBeDefined()
+      await act(async () => signOutButton?.click())
+      expect(mockSignOut).toHaveBeenCalledOnce()
+      expect(rendered.container.querySelector('#account-menu')).toBeNull()
     } finally {
       await rendered.cleanup()
     }

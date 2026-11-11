@@ -1,10 +1,13 @@
 
-import { useEffect, useState, type CSSProperties } from 'react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { BrandMark } from '@/components/BrandMark'
 import { paths } from '@/app/paths'
 import { useSession } from '@/features/auth/hooks/useSession'
 import { useProfile } from '@/features/auth/hooks/useProfile'
+import { supabaseClient } from '@/lib/supabase'
+import { vi } from '@/lib/strings/vi'
 
 function LandingHero() {
   return (
@@ -219,8 +222,13 @@ function MobileTab({
 
 export function PublicLayout() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const auth = useSession()
   const profile = useProfile()
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false)
+  const [signOutError, setSignOutError] = useState(false)
+  const accountMenuRef = useRef<HTMLDivElement>(null)
 
   const isHome = location.pathname === paths.home
 
@@ -235,6 +243,44 @@ export function PublicLayout() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' })
   }, [location.pathname])
+
+  useEffect(() => {
+    setAccountMenuOpen(false)
+    setSignOutError(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!accountMenuOpen) return
+    function closeOnOutsidePointer(event: PointerEvent) {
+      if (event.target instanceof Node && !accountMenuRef.current?.contains(event.target)) {
+        setAccountMenuOpen(false)
+      }
+    }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') setAccountMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', closeOnOutsidePointer)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [accountMenuOpen])
+
+  async function signOut() {
+    if (!supabaseClient) {
+      setSignOutError(true)
+      return
+    }
+    const { error } = await supabaseClient.auth.signOut()
+    if (error) {
+      setSignOutError(true)
+      return
+    }
+    queryClient.clear()
+    setAccountMenuOpen(false)
+    navigate(paths.home, { replace: true })
+  }
 
   return (
     <div className="min-h-screen overflow-x-clip bg-bg text-ink">
@@ -308,11 +354,15 @@ export function PublicLayout() {
             </Link>
 
             {auth.session ? (
-              <Link
-                to={paths.accountSettings}
-                className="flex min-w-0 max-w-[180px] items-center gap-2 rounded-full py-2 text-sm font-medium text-ink-muted hover:text-primary"
-                aria-label={`Tài khoản${userName ? ` ${userName}` : ''}`}
-              >
+              <div className="relative" ref={accountMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => { setSignOutError(false); setAccountMenuOpen(open => !open) }}
+                  className="flex min-w-0 max-w-[180px] items-center gap-2 rounded-full py-2 text-sm font-medium text-ink-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={`Tài khoản${userName ? ` ${userName}` : ''}`}
+                  aria-expanded={accountMenuOpen}
+                  aria-controls="account-menu"
+                >
                 <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-white sm:size-9">
                   {userName ? userName.charAt(0).toUpperCase() : '●'}
                 </span>
@@ -320,7 +370,17 @@ export function PublicLayout() {
                 <span className="hidden truncate xl:block">
                   {userName || 'Tài khoản'}
                 </span>
-              </Link>
+                </button>
+                {accountMenuOpen && <div id="account-menu" role="group" aria-label="Tài khoản" className="absolute right-0 top-full z-[60] mt-2 w-56 rounded-card border border-line bg-surface p-2 shadow-lg">
+                  <p className="truncate px-3 py-2 text-xs text-ink-muted">{auth.session.user.email}</p>
+                  <Link to={paths.accountTrips} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.navigation.myTrips}</Link>
+                  <Link to={paths.accountSaved} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.saved}</Link>
+                  <Link to={paths.accountSettings} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.settings}</Link>
+                  {profile.data?.role === 'admin' && <Link to={paths.adminPlaces} onClick={() => setAccountMenuOpen(false)} className="block rounded-control px-3 py-2.5 text-sm hover:bg-surface-high">{vi.layout.admin}</Link>}
+                  {signOutError && <p role="alert" className="px-3 py-2 text-xs text-danger">{vi.account.actionFailed}</p>}
+                  <button type="button" onClick={() => void signOut()} className="mt-1 block w-full rounded-control border-t border-line px-3 py-2.5 text-left text-sm font-semibold text-danger hover:bg-danger/5">{vi.navigation.signOut}</button>
+                </div>}
+              </div>
             ) : (
               <Link
                 to={paths.login}
