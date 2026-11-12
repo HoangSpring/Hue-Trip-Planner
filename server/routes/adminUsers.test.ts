@@ -71,6 +71,12 @@ describe('admin user routes', () => {
     expect(await users.json()).toMatchObject({ items: [{ id: userId, role: 'user', suspended: false }], hasNext: false })
   })
 
+  it('ignores unrelated query parameters when listing users', async () => {
+    const response = await api().request('/admin/users?match=name&page=1&pageSize=25', { headers: adminHeaders })
+    expect(response.status).toBe(200)
+    expect(await response.json()).toMatchObject({ items: [{ id: userId }], page: 1, pageSize: 25, hasNext: false })
+  })
+
   it('updates a user role and suspension using strict request bodies', async () => {
     const testApi = api()
     const role = await testApi.request(`/admin/users/${userId}/role`, { method: 'PATCH', headers: { ...adminHeaders, 'Content-Type': 'application/json' }, body: JSON.stringify({ role: 'admin' }) })
