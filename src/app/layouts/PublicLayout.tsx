@@ -377,19 +377,19 @@ export function PublicLayout() {
                     setSignOutError(false)
                     setAccountMenuOpen((open) => !open)
                   }}
-                  className="flex min-w-0 max-w-[180px] items-center gap-2 rounded-full py-2 text-sm font-medium text-ink-muted hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="flex min-w-0 max-w-[125px] items-center gap-1.5 rounded-full py-1 pl-1 pr-2 text-xs font-medium text-ink hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:max-w-[200px] sm:gap-2 sm:py-2 sm:pl-1.5 sm:pr-3 sm:text-sm"
                   aria-label={`Tài khoản${userName ? ` ${userName}` : ''}`}
                   aria-expanded={accountMenuOpen}
                   aria-controls="account-menu"
                 >
                   <span
                     aria-hidden="true"
-                    className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-white sm:size-9"
+                    className="grid size-7 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-white sm:size-9 sm:text-sm"
                   >
                     {userName ? userName.charAt(0).toUpperCase() : '●'}
                   </span>
 
-                  <span className="hidden truncate xl:block">
+                  <span className="truncate">
                     {userName || 'Tài khoản'}
                   </span>
                 </button>
@@ -458,9 +458,9 @@ export function PublicLayout() {
             ) : (
               <Link
                 to={paths.login}
-                className="hidden min-h-10 items-center justify-center rounded-xl px-2 text-xs font-semibold text-primary hover:bg-primary-tint sm:inline-flex sm:px-3 sm:text-sm"
+                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-primary/20 bg-primary/5 px-2.5 py-1 text-xs font-semibold text-primary transition hover:bg-primary hover:text-white sm:min-h-11 sm:rounded-xl sm:border-transparent sm:bg-transparent sm:px-3 sm:py-2 sm:text-sm sm:hover:bg-primary-tint sm:hover:text-primary"
               >
-                Đăng nhập
+                {vi.navigation.signIn}
               </Link>
             )}
           </div>
@@ -562,8 +562,8 @@ export function PublicLayout() {
 
         <MobileTab
           to={auth.session ? paths.accountTrips : paths.login}
-          label="Chuyến đi"
-          icon="▤"
+          label={auth.session ? vi.layout.accountTrips : vi.navigation.signIn}
+          icon={auth.session ? '▤' : '👤'}
         />
       </nav>
     </div>

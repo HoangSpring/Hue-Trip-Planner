@@ -114,8 +114,16 @@ describe('PublicLayout Navbar', () => {
       const loginLinks = rendered.container.querySelectorAll(`a[href="${paths.login}"]`)
       expect(loginLinks.length).toBeGreaterThan(0)
 
-      const headerText = rendered.container.querySelector('header')?.textContent
-      expect(headerText).toContain('Đăng nhập')
+      const headerLogin = rendered.container.querySelector(`header a[href="${paths.login}"]`)
+      expect(headerLogin).not.toBeNull()
+      expect(headerLogin?.textContent).toContain('Đăng nhập')
+      expect(headerLogin?.className).not.toContain('hidden')
+
+      // Mobile bottom bar should also have a login link
+      const mobileNav = rendered.container.querySelector('nav[aria-label="Điều hướng trên thiết bị di động"]')
+      const mobileLoginTab = mobileNav?.querySelector(`a[href="${paths.login}"]`)
+      expect(mobileLoginTab).not.toBeNull()
+      expect(mobileLoginTab?.textContent).toContain('Đăng nhập')
     } finally {
       await rendered.cleanup()
     }
@@ -151,6 +159,12 @@ describe('PublicLayout Navbar', () => {
       const accountButton = rendered.container.querySelector<HTMLButtonElement>('header button[aria-label^="Tài khoản"]')
       expect(accountButton).not.toBeNull()
       expect(accountButton?.textContent).toContain('Lê Lợi')
+
+      // Account name is visible on mobile too (not hidden on smaller breakpoints)
+      const nameSpan = accountButton?.querySelector('span.truncate')
+      expect(nameSpan).not.toBeNull()
+      expect(nameSpan?.className).not.toContain('hidden')
+      expect(nameSpan?.textContent).toBe('Lê Lợi')
 
       // Initial letter in avatar circle
       const avatarBadge = accountButton?.querySelector('span[aria-hidden="true"]')
