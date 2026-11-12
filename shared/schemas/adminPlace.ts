@@ -84,7 +84,7 @@ export const adminPlaceListQuerySchema = z.object({
   missing: z.enum(['hours', 'duration', 'image', 'coords', 'meal_type', 'best_time']).optional(),
   page: queryNumber(1, 1_000_000),
   pageSize: queryNumber(25, 100),
-}).strict()
+})
 
 export type AdminPlaceInput = z.infer<typeof adminPlaceInputSchema>
 export type AdminPlaceStatus = z.infer<typeof placeStatusSchema>

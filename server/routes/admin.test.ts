@@ -127,6 +127,12 @@ describe('admin routes', () => {
     expect((await existing.json() as { items: Array<{ missingFields: string[] }> }).items[0]?.missingFields).toEqual([])
   })
 
+  it('ignores legacy and unrelated query parameters when listing places', async () => {
+    const response = await api().request('/admin/places?match=name&page=1&pageSize=10', { headers })
+    expect(response.status).toBe(200)
+    expect(await response.json()).toMatchObject({ items: [{ id: placeId }], page: 1, pageSize: 10, total: 1 })
+  })
+
   it('rejects invalid image URLs and attribution and returns all publication omissions', async () => {
     const testApi = api()
     const noCredit = { ...placeInput(), imageCredit: null }
