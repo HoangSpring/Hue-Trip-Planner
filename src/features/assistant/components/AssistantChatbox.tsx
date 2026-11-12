@@ -192,7 +192,7 @@ export function AssistantChatbox() {
     }
   }
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend ?? inputText).trim()
     if (!text || isTyping) return
 
@@ -203,23 +203,50 @@ export function AssistantChatbox() {
       timestamp: formatTime(),
     }
 
-    setMessages((prev) => [...prev, userMsg])
+    const nextMessages = [...messages, userMsg]
+    setMessages(nextMessages)
     setInputText('')
     setIsTyping(true)
 
-    // Simulate smart thinking delay
-    setTimeout(() => {
-      const reply = getAssistantResponse(text)
-      const assistantMsg: ChatMessage = {
-        id: `assistant-${Date.now()}`,
-        sender: 'assistant',
-        text: reply.text,
-        actions: reply.actions,
-        timestamp: formatTime(),
+    try {
+      const response = await fetch('/api/assistant/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          history: nextMessages.slice(-10).map((m) => ({ sender: m.sender, text: m.text })),
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (typeof data.text === 'string' && data.text.trim()) {
+          const assistantMsg: ChatMessage = {
+            id: `assistant-${Date.now()}`,
+            sender: 'assistant',
+            text: data.text,
+            actions: data.actions,
+            timestamp: formatTime(),
+          }
+          setMessages((prev) => [...prev, assistantMsg])
+          setIsTyping(false)
+          return
+        }
       }
-      setMessages((prev) => [...prev, assistantMsg])
-      setIsTyping(false)
-    }, 380)
+    } catch {
+      // Fallback on network or endpoint failure
+    }
+
+    const reply = getAssistantResponse(text)
+    const assistantMsg: ChatMessage = {
+      id: `assistant-${Date.now()}`,
+      sender: 'assistant',
+      text: reply.text,
+      actions: reply.actions,
+      timestamp: formatTime(),
+    }
+    setMessages((prev) => [...prev, assistantMsg])
+    setIsTyping(false)
   }
 
   const handleResetChat = () => {
