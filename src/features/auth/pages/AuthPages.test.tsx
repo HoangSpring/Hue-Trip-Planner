@@ -3,8 +3,8 @@ import { createRoot, type Root } from 'react-dom/client'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-const authMocks = vi.hoisted(() => ({ signUp: vi.fn(), signIn: vi.fn() }))
-vi.mock('@/lib/supabase', () => ({ supabaseClient: { auth: { signUp: authMocks.signUp, signInWithPassword: authMocks.signIn } } }))
+const authMocks = vi.hoisted(() => ({ signUp: vi.fn(), signIn: vi.fn(), signInWithOAuth: vi.fn() }))
+vi.mock('@/lib/supabase', () => ({ supabaseClient: { auth: { signUp: authMocks.signUp, signInWithPassword: authMocks.signIn, signInWithOAuth: authMocks.signInWithOAuth } } }))
 
 import LoginPage from './LoginPage'
 import RegisterPage from './RegisterPage'
@@ -37,6 +37,7 @@ describe('auth pages', () => {
   beforeEach(() => {
     authMocks.signUp.mockReset()
     authMocks.signIn.mockReset()
+    authMocks.signInWithOAuth.mockReset()
     warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
   })
   afterEach(() => warn.mockRestore())
@@ -68,6 +69,20 @@ describe('auth pages', () => {
     expect(alert?.textContent).toBe('Bạn cần xác nhận email trước khi đăng nhập.')
     expect(alert?.textContent).not.toContain('person@example.test')
     expect(page.container.querySelector('a[href^="/register?"]')?.getAttribute('href')).toBe('/register?next=%2Faccount%2Ftrips')
+    page.unmount()
+  })
+
+  it('starts Google OAuth with a safe callback destination', async () => {
+    authMocks.signInWithOAuth.mockResolvedValue({ error: null })
+    const page = mount(<LoginPage />, '/login?next=%2Fplace%2Flang-tu-duc')
+    const googleButton = [...page.container.querySelectorAll('button')].find(button => button.textContent?.includes('Tiếp tục với Google'))
+
+    await act(async () => googleButton?.dispatchEvent(new MouseEvent('click', { bubbles: true })))
+
+    expect(authMocks.signInWithOAuth).toHaveBeenCalledWith({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=%2Fplace%2Flang-tu-duc` },
+    })
     page.unmount()
   })
 })

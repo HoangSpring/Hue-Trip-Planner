@@ -304,7 +304,7 @@ M0 ──► M1 ──► M2 ──► M3
 - **Dep:** T-008, T-007
 - **Làm:** `/login`, `/register`, `/forgot-password`, `/reset-password`, `/auth/callback`; email + mật khẩu và Google (nếu đã chốt); giữ `next` an toàn; thông báo lỗi tiếng Việt, không tiết lộ email có tồn tại.
 - **Hoàn thành khi:** đạt AC F-08 (trừ đồng bộ nháp, làm ở T-038).
-- **Ghi chú:** đã có trang email/mật khẩu, xác nhận email, đặt lại mật khẩu, callback và kiểm thử next an toàn; Google không triển khai theo phạm vi yêu cầu. Chờ chủ dự án xác nhận tự đăng ký và đăng nhập được trên trình duyệt rồi mới tick hoàn thành.
+- **Ghi chú:** đã bổ sung nút Google OAuth trên trang đăng nhập, dùng callback hiện có và giữ `next` nội bộ an toàn. Cần bật Google provider và URL chuyển hướng tương ứng trong Supabase; vẫn cần xác nhận luồng đăng nhập thật trên trình duyệt trước khi tick hoàn thành.
 
 ### [x] T-038 · Đồng bộ nháp khi đăng nhập · `M`
 - **Tham chiếu:** `docs/03` FL-03
