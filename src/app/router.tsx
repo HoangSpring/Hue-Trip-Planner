@@ -22,6 +22,7 @@ import { vi } from '@/lib/strings/vi'
 import { supabaseClient } from '@/lib/supabase'
 import { PlacePageSkeleton } from '@/features/place/PlacePageSkeleton'
 import { ExplorePageSkeleton } from '@/features/explore/ExplorePageSkeleton'
+import { AssistantChatbox } from '@/features/assistant'
 
 const ExplorePage = lazy(() => import('@/features/explore/ExplorePage'))
 const MapPage = lazy(() => import('@/features/map/MapPage'))
@@ -67,7 +68,12 @@ export const routePaths = [
 
 export function createAppRoutes(authClient: SupabaseClient | null = supabaseClient) {
   return [{
-  element: <AuthProvider client={authClient}><SeoBoundary /></AuthProvider>, errorElement: <ErrorPage />,
+  element: (
+    <AuthProvider client={authClient}>
+      <SeoBoundary />
+      <AssistantChatbox />
+    </AuthProvider>
+  ), errorElement: <ErrorPage />,
   children: [
     { element: <PublicLayout />, children: [
       { index: true, element: <Suspense fallback={loading}><HomePage /></Suspense> },
